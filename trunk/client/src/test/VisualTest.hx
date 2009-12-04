@@ -33,8 +33,10 @@ class ItemData
 
 class VisualTest extends RemoteClient
 {
+	static public var RADIUS:Int = 10;
+	
 	static private var REMOTE_ID:String = '00';
-	static private var MAX_ITEMS:Int = 1;
+	static private var MAX_ITEMS:Int = 50;
 	
 	private var content:Sprite;
 	private var connection:RemoteConnection;
@@ -73,7 +75,7 @@ class VisualTest extends RemoteClient
 	
 	private function onEnterFrame(e:Event):Void 
 	{
-		moveItems();
+		//moveItems();
 //content.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		if (myItems.length < MAX_ITEMS)
 		{
@@ -89,9 +91,9 @@ class VisualTest extends RemoteClient
 		}
 		else
 		{
-			/*var data:ItemData = myItems.first();
+			var data:ItemData = myItems.first();
 			myItems.remove(data);
-			remote.removeState(data.getStateId());*/
+			remote.removeState(data.getStateId());
 		}
 	}
 	
@@ -213,7 +215,7 @@ class ItemSprite extends Sprite
 	{
 		this.graphics.clear();
 		this.graphics.beginFill(data.color);
-		this.graphics.drawCircle(0, 0, 20);
+		this.graphics.drawCircle(0, 0, VisualTest.RADIUS);
 		this.graphics.endFill();
 	}
 }
