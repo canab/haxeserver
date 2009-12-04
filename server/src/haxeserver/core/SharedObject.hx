@@ -121,6 +121,7 @@ class SharedObject
 	public function lockState(user:UserAdapter, func:String, stateId:String, stateData:Dynamic):Void
 	{
 		var state:State = states.get(stateId);
+		log(state);
 		if (state != null && state.lockerId == -1 || state.lockerId == user.id)
 		{
 			state.lockerId = user.id;
