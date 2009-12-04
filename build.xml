@@ -8,8 +8,8 @@
     	<mkdir dir="${deploy.dir}"/>
 		
 		<exec executable="${haxe.path}" failonerror="true">
-			<arg line="-cp ../server/src"/>
-			<arg line="-cp ../library"/>
+			<arg line="-cp server/src"/>
+			<arg line="-cp library"/>
 			<arg line="-main NekoServer"/>
 			<arg line="-neko ${deploy.dir}/server.n"/>
 			<arg line="-debug"/>
