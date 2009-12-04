@@ -1,0 +1,20 @@
+<project name="build-server" default="deploy">
+	
+	<property name="deploy.dir" value="bin"/>
+	<property name="haxe.path" value="haxe.exe"/>
+	
+	<target name="deploy">
+		<delete dir="${deploy.dir}" quiet="true"/>
+    	<mkdir dir="${deploy.dir}"/>
+		
+		<exec executable="${haxe.path}" failonerror="true">
+			<arg line="-cp src"/>
+			<arg line="-cp ../library"/>
+			<arg line="-main NekoServer"/>
+			<arg line="-neko ${deploy.dir}/server.n"/>
+			<arg line="-debug"/>
+		</exec>
+		
+	</target>
+	
+</project>
