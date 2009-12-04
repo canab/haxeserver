@@ -11,7 +11,7 @@ class NekoServer extends ThreadRemotingServer
 		Application.createInstance();
 		var server = new NekoServer();
 		Application.instance.logger.trace("Start NekoServer");
-		server.run("localhost", 4040);
+		server.run("204.232.209.12", 4040);
 	}
 
 	override function initClientApi(connection:SocketConnection, context:Context)
