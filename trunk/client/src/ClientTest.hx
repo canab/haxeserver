@@ -32,7 +32,8 @@ class ClientTest extends flash.display.MovieClip
 	private function createConnection():Void
 	{
 		connection = new RemoteConnection();
-		connection.host = "localhost";
+		connection.host = "204.232.209.12";
+		//connection.host = "localhost";
 		connection.port = 4040;
 		connection.connectEvent.addListener(onConnect);
 		connection.errorEvent.addListener(onError);
