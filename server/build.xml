@@ -1,7 +1,7 @@
 <project name="build-server" default="deploy">
 	
 	<property name="deploy.dir" value="bin"/>
-	<property name="haxe.path" value="haxe.exe"/>
+	<property name="haxe.path" value="haxe"/>
 	
 	<target name="deploy">
 		<delete dir="${deploy.dir}" quiet="true"/>
