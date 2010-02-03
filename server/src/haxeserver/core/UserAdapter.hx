@@ -1,6 +1,7 @@
 ﻿package haxeserver.core;
 
 import haxeserver.interfaces.IServerAPI;
+import haxeserver.services.SOService;
 
 import haxe.remoting.AsyncProxy;
 import haxe.remoting.SocketConnection;
@@ -72,4 +73,13 @@ class UserAdapter implements IServerAPI
 	{
 		sharedObjects.get(remoteId).sendCommand(commandId, parameters);
 	}
+	
+	public function callService(className:String, func:String, args:Array<Dynamic>):Dynamic
+	{
+		var service:Dynamic = Type.createInstance(Type.resolveClass(className), []);
+		var method:Dynamic = Reflect.field(service, func);
+		var result:Dynamic = Reflect.callMethod(service, method, args);
+		return result;
+	}
+	
 }

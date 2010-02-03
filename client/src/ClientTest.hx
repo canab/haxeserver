@@ -2,6 +2,7 @@
 import flash.events.Event;
 import flash.Lib;
 import haxeserver.RemoteConnection;
+import test.ServiceTest;
 import test.VisualTest;
 
 class ClientTest extends flash.display.MovieClip
@@ -49,6 +50,7 @@ class ClientTest extends flash.display.MovieClip
 	private function onConnect(sender:RemoteConnection):Void
 	{
 		trace("connected: id=" + connection.userId);
-		new VisualTest(connection, this);
+		//new VisualTest(connection, this);
+		new ServiceTest(connection);
 	}
 }

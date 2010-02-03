@@ -11,4 +11,5 @@ interface IServerAPI
 	function soCall(remoteId:String, func:String, arguments:Array<Dynamic>):Void;
 	function soRemove(remoteId:String, stateId:String):Void;
 	function soCommand(remoteId:String, commandId:Int, parameters:Dynamic):Void;
+	function callService(className:String, func:String, args:Array<Dynamic>):Dynamic;
 }
