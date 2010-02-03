@@ -4,6 +4,8 @@
  */
 
 package haxeserver;
+import haxeserver.services.ServiceBase;
+import haxeserver.services.SOService;
 
 class Library 
 {
@@ -13,6 +15,8 @@ class Library
 		RemoteConnection;
 		RemoteObject;
 		RemoteClient;
+		ServiceBase;
+		SOService;
 	}
 	
 }
