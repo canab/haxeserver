@@ -18,7 +18,7 @@ class ArrayUtil
 			if (array[i] == item)
 				return i;
 		}
-		return - 1;
+		return -1;
 	}
 	
 }
