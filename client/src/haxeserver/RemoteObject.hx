@@ -14,6 +14,7 @@ class RemoteObject
 	public var states(default, null):Hash<Dynamic>;
 	public var users(default, null):List<Int>;
 	public var client(default, null):IRemoteClient;
+	public var maxUsers:Int;
 	
 	public var userId(getUserId, null):Int;
 	private function getUserId():Int
@@ -30,6 +31,7 @@ class RemoteObject
 	{
 		connection = remoteConnection;
 		id = remoteId;
+		maxUsers = 0;
 		ready = false;
 		connected = false;
 		
@@ -47,7 +49,7 @@ class RemoteObject
 		{
 			this.client = client;
 			connected = true;
-			connection.serverAPI.soConnect(id);
+			connection.serverAPI.soConnect(id, maxUsers);
 		}
 	}
 	
@@ -75,6 +77,21 @@ class RemoteObject
 		ready = true;
 		client.onReady();
 	}
+	
+	public function applyFull():Void 
+	{
+		try
+		{
+			connection.remoteObjects.remove(this.id);
+			client.onSharedObjectFull();
+		}
+		catch (e:Error)
+		{
+			trace(e.message);
+			trace(e.getStackTrace());
+		}
+	}
+	
 	
 	public function createState(stateId:String, state:Dynamic, autoRemove:Bool = false):Void 
 	{

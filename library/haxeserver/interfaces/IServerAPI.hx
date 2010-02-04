@@ -2,7 +2,7 @@
 
 interface IServerAPI
 {
-	function soConnect(remoteId:String):Void;
+	function soConnect(remoteId:String, maxUsers:Int):Void;
 	function soDisconnect(remoteId:String):Void;
 	function soCreate(autoRemove:Bool, typeId:Int, remoteId:String, stateId:String, stateData:Dynamic):Void;
 	function soSend(remoteId:String, func:String, stateId:String, stateData:Dynamic):Void;

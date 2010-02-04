@@ -107,7 +107,7 @@ class RemoteConnection implements IClientAPI
 		}
 	}
 	
-	public function createRemoteObject(remoteId:String) :RemoteObject
+	public function getRemoteObject(remoteId:String) :RemoteObject
 	{
 		var remote:RemoteObject = remoteObjects.get(remoteId);
 		if (remote == null)
@@ -143,28 +143,28 @@ class RemoteConnection implements IClientAPI
 			remote.applyCreateState(typeId, stateId, stateData);
 	}
 	
-	public function soRestore(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>)
+	public function soRestore(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>):Void
 	{
 		var remote:RemoteObject = remoteObjects.get(remoteId);
 		if (remote != null)
 			remote.restore(usersList, statesList);
 	}
 	
-	public function soUserConnect(remoteId:String, userId:Int)
+	public function soUserConnect(remoteId:String, userId:Int):Void
 	{
 		var remote:RemoteObject = remoteObjects.get(remoteId);
 		if (remote != null)
 			remote.applyUserConnect(userId);
 	}
 	
-	public function soUserDisconnect(remoteId:String, userId:Int)
+	public function soUserDisconnect(remoteId:String, userId:Int):Void
 	{
 		var remote:RemoteObject = remoteObjects.get(remoteId);
 		if (remote != null)
 			remote.applyUserDisconnect(userId);
 	}
 	
-	public function soSend(remoteId:String, func:String, stateId:String, state:Dynamic)
+	public function soSend(remoteId:String, func:String, stateId:String, state:Dynamic):Void
 	{
 		var remote:RemoteObject = remoteObjects.get(remoteId);
 		if (remote != null)
@@ -178,14 +178,21 @@ class RemoteConnection implements IClientAPI
 			remote.applyCall(func, arguments);
 	}
 	
-	public function soRemove(remoteId:String, stateId:String)
+	public function soRemove(remoteId:String, stateId:String):Void
 	{
 		var remote:RemoteObject = remoteObjects.get(remoteId);
 		if (remote != null)
 			remote.applyRemove(stateId);
 	}
 	
-	public function soCommand(remoteId:String, commandId:Int, parameters:Dynamic)
+	public function soFull(remoteId:String):Void
+	{
+		var remote:RemoteObject = remoteObjects.get(remoteId);
+		if (remote != null)
+			remote.applyFull();
+	}
+	
+	public function soCommand(remoteId:String, commandId:Int, parameters:Dynamic):Void
 	{
 		var remote:RemoteObject = remoteObjects.get(remoteId);
 		if (remote != null)

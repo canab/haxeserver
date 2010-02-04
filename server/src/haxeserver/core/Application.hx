@@ -54,22 +54,30 @@ class Application
 		users.remove(user.id);
 	}
 	
-	public function createSharedObject(remoteId:String):SharedObject
+	public function getSharedObject(remoteId:String, maxUsers:Int):SharedObject
 	{
 		var so:SharedObject = sharedObjects.get(remoteId);
 		if (so == null)
 		{
 			so = new SharedObject(remoteId);
+			so.maxUsers = maxUsers;
 			sharedObjects.set(remoteId, so);
 		}
 		return so;
 	}
 	
-	public function addUserToSO(user:UserAdapter, remoteId:String) 
+	public function addUserToSO(user:UserAdapter, remoteId:String, maxUsers:Int) 
 	{
-		var so:SharedObject = createSharedObject(remoteId);
-		user.sharedObjects.set(so.id, so);
-		so.addUser(user);
+		var so:SharedObject = getSharedObject(remoteId, maxUsers);
+		if (so.users.length == 0 || so.users.length < so.maxUsers)
+		{
+			user.sharedObjects.set(so.id, so);
+			so.addUser(user);
+		}
+		else
+		{
+			user.clientAPI.soFull(so.id);
+		}
 	}
 	
 	public function removeUserFromSO(user:UserAdapter, remoteId:String) 
