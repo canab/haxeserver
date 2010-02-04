@@ -10,6 +10,7 @@ class SharedObject
 {
 	public var id(default, null):String;
 	public var users(default, null):Array<UserAdapter>;
+	public var maxUsers:Int;
 	
 	private var states:Hash<State>;
 	
@@ -18,6 +19,7 @@ class SharedObject
 		id = remoteId;
 		users = new Array<UserAdapter>();
 		states = new Hash<State>();
+		maxUsers = 0;
 		
 		log("created");
 	}

@@ -64,7 +64,7 @@ class VisualTest extends RemoteClient
 	
 	private function initialize():Void
 	{
-		remote = connection.createRemoteObject(REMOTE_ID);
+		remote = connection.getRemoteObject(REMOTE_ID);
 		remote.connect(this);
 	}
 	
