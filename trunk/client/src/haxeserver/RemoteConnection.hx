@@ -7,6 +7,7 @@ package haxeserver;
 
 import flash.events.Event;
 import flash.events.IOErrorEvent;
+import flash.events.SecurityErrorEvent;
 import haxe.remoting.SocketProtocol;
 import haxe.remoting.Context;
 import haxe.remoting.SocketConnection;
@@ -79,6 +80,7 @@ class RemoteConnection implements IClientAPI
 		socket = new haxe.remoting.Socket();
 		socket.addEventListener(Event.CONNECT, onConnect);
 		socket.addEventListener(IOErrorEvent.IO_ERROR, onError);
+		socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSequrityError);
 		socket.connect(host, port);
 		
 		var context:Context = new Context();
@@ -87,10 +89,17 @@ class RemoteConnection implements IClientAPI
 		serverAPI = new ServerApi(connection.S);
 	}
 	
+	private function onSequrityError(e:SecurityErrorEvent):Void 
+	{
+		connected = false;
+		errorMessage = e.text;
+		errorEvent.sendEvent();
+	}
+	
 	private function onError(e:IOErrorEvent):Void 
 	{
-		errorMessage = e.text;
 		connected = false;
+		errorMessage = e.text;
 		errorEvent.sendEvent();
 	}
 	
