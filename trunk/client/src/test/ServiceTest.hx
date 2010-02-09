@@ -22,11 +22,11 @@ class ServiceTest extends RemoteClient
 		ServiceBase.defaultConnection = connection;
 		
 		var remote:RemoteObject = connection.getRemoteObject("qweqwe");
-		remote.maxUsers = 2;
+		//remote.maxUsers = 2;
 		remote.connect(this);
 		//connection.getRemoteObject("asdasd").connect(this);
 		
-		//new SOService(onResult).getSharedObjects();
+		new SOService(onResult).getSharedObjects();
 		//new SOService(onResult).getSharedObjects("qw");
 		//new SOService(onResult).getSharedObjects("a");
 		//new SOService(onResult).getSharedObjects("qww");

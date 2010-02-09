@@ -6,13 +6,20 @@
 package haxeserver.services;
 import haxeserver.core.Application;
 
-class SOService 
+class SOService extends ServiceBase
 {
 	public function new() 
 	{
+		super();
 	}
 	
-	public function getSharedObjects(namePrefix:String):Dynamic
+	public function connectToFreeSO(soPrefix:String, maxUsers:Int):String
+	{
+		var remoteId:String = "";
+		return remoteId;
+	}
+	
+	public function getSharedObjects(namePrefix:String):Array<Dynamic>
 	{
 		var result:Array<Dynamic> = [];
 		for (so in Application.instance.sharedObjects)

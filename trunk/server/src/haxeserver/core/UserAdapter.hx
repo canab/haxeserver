@@ -1,6 +1,7 @@
 ﻿package haxeserver.core;
 
 import haxeserver.interfaces.IServerAPI;
+import haxeserver.services.ServiceBase;
 import haxeserver.services.SOService;
 
 import haxe.remoting.AsyncProxy;
@@ -76,7 +77,8 @@ class UserAdapter implements IServerAPI
 	
 	public function callService(className:String, func:String, args:Array<Dynamic>):Dynamic
 	{
-		var service:Dynamic = Type.createInstance(Type.resolveClass(className), []);
+		var service:ServiceBase = Type.createInstance(Type.resolveClass(className), []);
+		service.currentUser = this;
 		var method:Dynamic = Reflect.field(service, func);
 		var result:Dynamic = Reflect.callMethod(service, method, args);
 		return result;

@@ -69,7 +69,7 @@ class Application
 	public function addUserToSO(user:UserAdapter, remoteId:String, maxUsers:Int) 
 	{
 		var so:SharedObject = getSharedObject(remoteId, maxUsers);
-		if (so.users.length == 0 || so.users.length < so.maxUsers)
+		if (so.maxUsers == 0 || so.users.length < so.maxUsers)
 		{
 			user.sharedObjects.set(so.id, so);
 			so.addUser(user);
