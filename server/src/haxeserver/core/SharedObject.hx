@@ -12,6 +12,7 @@ class SharedObject
 	public var id(default, null):String;
 	public var users(default, null):Array<UserAdapter>;
 	public var maxUsers:Int;
+	public var isWaiting(default, null):Bool;
 	
 	private var states:Hash<State>;
 	private var mutex:Mutex;
@@ -24,6 +25,7 @@ class SharedObject
 		users = new Array<UserAdapter>();
 		states = new Hash<State>();
 		maxUsers = 0;
+		isWaiting = true;
 		
 		log("created");
 	}
@@ -39,6 +41,9 @@ class SharedObject
 			
 			if (needRestoreState)
 				restoreState(adapter);
+				
+			if (users.length == maxUsers)
+				isWaiting = false;
 			
 			for (user in users)
 			{
