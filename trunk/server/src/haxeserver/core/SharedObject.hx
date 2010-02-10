@@ -36,7 +36,13 @@ class SharedObject
 		mutex.acquire();
 		
 		var result:Bool;
-		if (maxUsers == 0 || users.length < maxUsers)
+		if (ArrayUtil.contains(users, adapter))
+		{
+			if (needRestoreState)
+				restoreState(adapter);
+			result = true;
+		}
+		else if (maxUsers == 0 || users.length < maxUsers)
 		{
 			users.push(adapter);
 			
