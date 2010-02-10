@@ -21,4 +21,8 @@ class ArrayUtil
 		return -1;
 	}
 	
+	static public function contains(array:Array<Dynamic>, item:Dynamic):Bool
+	{
+		return indexOf(array, item) >= 0;
+	}
 }

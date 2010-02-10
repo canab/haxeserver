@@ -28,7 +28,7 @@ class ClientAPI implements IClientAPI
 	
 	public function setId(value:Int)
 	{
-		connection.userId = value;
+		connection.setUserId(value);
 	}
 	
 	public function soCreate(remoteId:String, stateId:String, stateData:Dynamic, typeId:Int):Void

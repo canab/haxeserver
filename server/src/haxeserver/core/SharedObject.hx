@@ -4,6 +4,7 @@
  */
 
 package haxeserver.core;
+import haxelib.common.utils.ArrayUtil;
 import haxelib.utils.ReflectUtil;
 import neko.vm.Mutex;
 
