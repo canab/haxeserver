@@ -54,6 +54,11 @@ class Application
 		users.remove(user.id);
 	}
 	
+	public function hasSharedObject(remoteId:String):Bool
+	{
+		return (sharedObjects.get(remoteId) != null);
+	}
+	
 	public function getSharedObject(remoteId:String, maxUsers:Int):SharedObject
 	{
 		var so:SharedObject = sharedObjects.get(remoteId);
@@ -66,17 +71,18 @@ class Application
 		return so;
 	}
 	
-	public function addUserToSO(user:UserAdapter, remoteId:String, maxUsers:Int) 
+	public function addUserToSO(user:UserAdapter, remoteId:String, maxUsers:Int, needRestoreState:Bool):Bool
 	{
 		var so:SharedObject = getSharedObject(remoteId, maxUsers);
-		if (so.maxUsers == 0 || so.users.length < so.maxUsers)
+		if (so.addUser(user, needRestoreState))
 		{
 			user.sharedObjects.set(so.id, so);
-			so.addUser(user);
+			return true;
 		}
 		else
 		{
 			user.clientAPI.soFull(so.id);
+			return false;
 		}
 	}
 	
