@@ -21,15 +21,22 @@ class ServiceTest extends RemoteClient
 		this.connection = connection;
 		ServiceBase.defaultConnection = connection;
 		
-		var remote:RemoteObject = connection.getRemoteObject("qweqwe");
+		//var remote:RemoteObject = connection.getRemoteObject("qweqwe");
 		//remote.maxUsers = 2;
-		remote.connect(this);
+		//remote.connect(this);
 		//connection.getRemoteObject("asdasd").connect(this);
 		
-		new SOService(onResult).getSharedObjects();
+		//new SOService(onResult).getSharedObjects();
 		//new SOService(onResult).getSharedObjects("qw");
 		//new SOService(onResult).getSharedObjects("a");
 		//new SOService(onResult).getSharedObjects("qww");
+		
+		new SOService(onGetRemoteId).connectToFreeSO('FS', 2);
+	}
+	
+	private function onGetRemoteId(remoteId:String):Void
+	{
+		trace(remoteId);
 	}
 	
 	override public function onReady():Void

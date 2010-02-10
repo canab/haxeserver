@@ -31,7 +31,7 @@ class UserAdapter implements IServerAPI
 	
 	public function soConnect(remoteId:String, maxUsers:Int)
 	{
-		application.addUserToSO(this, remoteId, maxUsers);
+		application.addUserToSO(this, remoteId, maxUsers, true);
 	}
 	
 	public function soDisconnect(remoteId:String)

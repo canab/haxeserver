@@ -28,23 +28,36 @@ class SharedObject
 		log("created");
 	}
 	
-	public function addUser(target:UserAdapter) 
+	public function addUser(adapter:UserAdapter, needRestoreState:Bool):Bool
 	{
 		mutex.acquire();
 		
-		users.push(target);
-		restoreState(target);
-		for (user in users)
+		var result:Bool;
+		if (maxUsers == 0 || users.length < maxUsers)
 		{
-			if (user.id != target.id)
-				user.clientAPI.soUserConnect(this.id, target.id);
+			users.push(adapter);
+			
+			if (needRestoreState)
+				restoreState(adapter);
+			
+			for (user in users)
+			{
+				if (user.id != adapter.id)
+					user.clientAPI.soUserConnect(this.id, adapter.id);
+			}
+			log("user connected: " + adapter.id);
+			result = true;
 		}
-		log("user connected: " + target.id);
+		else
+		{
+			result = false;
+		}
 		
 		mutex.release();
+		return result;
 	}
 	
-	private function restoreState(target:UserAdapter):Void
+	private function restoreState(adapter:UserAdapter):Void
 	{
 		var usersList:Array<Dynamic> = [];
 		for (user in users)
@@ -63,33 +76,33 @@ class SharedObject
 			stateData.push(state.data);
 			statesList.push(stateData);
 		}
-		target.clientAPI.soRestore(this.id, usersList, statesList);
+		adapter.clientAPI.soRestore(this.id, usersList, statesList);
 	}
 
-	public function removeUser(target:UserAdapter) 
+	public function removeUser(adapter:UserAdapter) 
 	{
 		mutex.acquire();
 		
-		removeUserStates(target);
-		users.remove(target);
+		removeUserStates(adapter);
+		users.remove(adapter);
 		for (user in users)
 		{
-			user.clientAPI.soUserDisconnect(this.id, target.id);
+			user.clientAPI.soUserDisconnect(this.id, adapter.id);
 		}
-		log("user disconnected: " + target.id);
+		log("user disconnected: " + adapter.id);
 		
 		mutex.release();
 	}
 	
-	private function removeUserStates(user:UserAdapter):Void
+	private function removeUserStates(adapter:UserAdapter):Void
 	{
 		var removedStates:Array<String> = [];
 		for (stateId in states.keys())
 		{
 			var state:State = states.get(stateId);
-			if (state.ownerId == user.id)
+			if (state.ownerId == adapter.id)
 				removedStates.push(stateId);
-			else if (state.lockerId == user.id)
+			else if (state.lockerId == adapter.id)
 				state.lockerId = -1;
 		}
 		for (stateId in removedStates)
@@ -138,37 +151,37 @@ class SharedObject
 		mutex.release();
 	}
 	
-	public function lockState(user:UserAdapter, func:String, stateId:String, stateData:Dynamic):Void
+	public function lockState(adapter:UserAdapter, func:String, stateId:String, stateData:Dynamic):Void
 	{
 		mutex.acquire();
 		
 		var state:State = states.get(stateId);
-		if (state != null && (state.lockerId == -1 || state.lockerId == user.id))
+		if (state != null && (state.lockerId == -1 || state.lockerId == adapter.id))
 		{
-			state.lockerId = user.id;
+			state.lockerId = adapter.id;
 			sendState(func, stateId, stateData);
 		}
 		else
 		{
-			user.clientAPI.soSend(this.id, func, stateId, null);
+			adapter.clientAPI.soSend(this.id, func, stateId, null);
 		}
 		
 		mutex.release();
 	}
 	
-	public function unLockState(user:UserAdapter, func:String, stateId:String, stateData:Dynamic):Void
+	public function unLockState(adapter:UserAdapter, func:String, stateId:String, stateData:Dynamic):Void
 	{
 		mutex.acquire();
 
 		var state:State = states.get(stateId);
-		if (state != null && (state.lockerId == -1 || state.lockerId == user.id))
+		if (state != null && (state.lockerId == -1 || state.lockerId == adapter.id))
 		{
 			state.lockerId = -1;
 			sendState(func, stateId, stateData);
 		}
 		else
 		{
-			user.clientAPI.soSend(this.id, func, stateId, null);
+			adapter.clientAPI.soSend(this.id, func, stateId, null);
 		}
 		
 		mutex.release();
