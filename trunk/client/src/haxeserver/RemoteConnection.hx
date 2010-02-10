@@ -31,10 +31,9 @@ class RemoteConnection
 	public var host:String;
 	public var port:Int;
 	
-	public var userId(getUserId, setUserId):Int;
+	public var userId(default, null):Int;
 	public var errorMessage(default, null):String;
 	
-	private var _userId:Int;
 	private var socket:haxe.remoting.Socket;
 	private var clientAPI:ClientAPI;
 	private var connected:Bool;
@@ -48,16 +47,10 @@ class RemoteConnection
 		classMap = new Array<Class<Dynamic>>();
 	}
 	
-	private function getUserId():Int
+	public function setUserId(value:Int):Void
 	{
-		return _userId;
-	}
-	
-	private function setUserId(value:Int):Int
-	{
-		_userId = value;
+		userId = value;
 		connectEvent.sendEvent();
-		return _userId;
 	}
 	
 	public function registerClass(classRef:Class<Dynamic>):Void 

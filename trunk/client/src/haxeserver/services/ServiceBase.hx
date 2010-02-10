@@ -22,8 +22,16 @@ class ServiceBase
 	
 	private function doCall(func:String, args:Array<Dynamic>):Void
 	{
-		var className:String = Type.getClassName(Type.getClass(this));
-		getConnection().serverAPI.callService(className, func, args, resultHandler);
+		var connection:RemoteConnection = getConnection();
+		if (connection != null)
+		{
+			var className:String = Type.getClassName(Type.getClass(this));
+			connection.serverAPI.callService(className, func, args, resultHandler);
+		}
+		else
+		{
+			throw "Connection for this service has not been set";
+		}
 	}
 	
 	private function getConnection():RemoteConnection
