@@ -4,6 +4,7 @@
  */
 
 package haxeserver.services;
+import haxeserver.core.SharedObject;
 import neko.vm.Mutex;
 
 class SOService extends ServiceBase
@@ -26,15 +27,13 @@ class SOService extends ServiceBase
 		soMutex.acquire();
 		
 		var remoteId:String = null;
-		for (so in application.sharedObjects)
+		var waitingObjects:Array<SharedObject> = getWaitingObjects(soPrefix);
+		for (so in waitingObjects)
 		{
-			if (so.id.indexOf(soPrefix) == 0)
+			if (application.addUserToSO(currentUser, so.id, maxUsers, false))
 			{
-				if (application.addUserToSO(currentUser, so.id, maxUsers, false))
-				{
-					remoteId = so.id;
-					break;
-				}
+				remoteId = so.id;
+				break;
 			}
 		}
 		
@@ -48,19 +47,30 @@ class SOService extends ServiceBase
 		return remoteId;
 	}
 	
-	private function getNextRemoteId(soPrefix:String):String
+	private function getWaitingObjects(prefix:String):Array<SharedObject>
 	{
-		if (soIds.get(soPrefix) == null)
-			soIds.set(soPrefix, 0);
+		var result:Array<SharedObject> = [];
+		for (so in application.sharedObjects)
+		{
+			if (so.isWaiting && so.id.indexOf(prefix) == 0)
+				result.push(so);
+		}
+		return result;
+	}
+	
+	private function getNextRemoteId(prefix:String):String
+	{
+		if (soIds.get(prefix) == null)
+			soIds.set(prefix, 0);
 		
-		var nextNum:Int = soIds.get(soPrefix) + 1;
-		var remoteId:String = soPrefix + Std.string(nextNum);
+		var nextNum:Int = soIds.get(prefix) + 1;
+		var remoteId:String = prefix + Std.string(nextNum);
 		while (application.hasSharedObject(remoteId))
 		{
 			nextNum++;
-			remoteId = soPrefix + Std.string(nextNum);
+			remoteId = prefix + Std.string(nextNum);
 		}
-		soIds.set(soPrefix, nextNum);
+		soIds.set(prefix, nextNum);
 		return remoteId;
 	}
 	
