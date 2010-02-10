@@ -14,13 +14,12 @@ import haxe.remoting.SocketConnection;
 import haxelib.common.events.EventSender;
 import haxelib.common.utils.ArrayUtil;
 import haxelib.utils.ReflectUtil;
-import haxeserver.interfaces.IClientAPI;
 
 class ServerApi extends haxe.remoting.AsyncProxy<haxeserver.interfaces.IServerAPI>
 {
 }
 
-class RemoteConnection implements IClientAPI
+class RemoteConnection
 {
 	public var connectEvent(default, null):EventSender<RemoteConnection>;
 	public var errorEvent(default, null):EventSender<RemoteConnection>;
@@ -32,10 +31,12 @@ class RemoteConnection implements IClientAPI
 	public var host:String;
 	public var port:Int;
 	
-	public var userId(default, null):Int;
+	public var userId(getUserId, setUserId):Int;
 	public var errorMessage(default, null):String;
 	
+	private var _userId:Int;
 	private var socket:haxe.remoting.Socket;
+	private var clientAPI:ClientAPI;
 	private var connected:Bool;
 	
 	public function new() 
@@ -47,12 +48,24 @@ class RemoteConnection implements IClientAPI
 		classMap = new Array<Class<Dynamic>>();
 	}
 	
+	private function getUserId():Int
+	{
+		return _userId;
+	}
+	
+	private function setUserId(value:Int):Int
+	{
+		_userId = value;
+		connectEvent.sendEvent();
+		return _userId;
+	}
+	
 	public function registerClass(classRef:Class<Dynamic>):Void 
 	{
 		classMap.push(classRef);
 	}
 	
-	public function getInstance(typeId:Int, instanceData:Dynamic):Dynamic
+	public function getTypedObject(typeId:Int, instanceData:Dynamic):Dynamic
 	{
 		var classRef:Class<Dynamic> = classMap[typeId];
 		var result:Dynamic = Type.createInstance(classRef, []);
@@ -73,6 +86,12 @@ class RemoteConnection implements IClientAPI
 			createConnection();
 	}
 	
+	public function disconnect() 
+	{
+		if (connected)
+			closeConnection();
+	}
+	
 	private function createConnection():Void
 	{
 		connected = true;
@@ -84,9 +103,19 @@ class RemoteConnection implements IClientAPI
 		socket.connect(host, port);
 		
 		var context:Context = new Context();
-		context.addObject("C", this);
+		clientAPI = new ClientAPI(this);
+		context.addObject("C", clientAPI);
 		var connection:SocketConnection = SocketConnection.create(socket, context);
 		serverAPI = new ServerApi(connection.S);
+	}
+	
+	private function closeConnection():Void 
+	{
+		socket.removeEventListener(Event.CONNECT, onConnect);
+		socket.removeEventListener(IOErrorEvent.IO_ERROR, onError);
+		socket.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onSequrityError);
+		connected = false;
+		socket.close();
 	}
 	
 	private function onSequrityError(e:SecurityErrorEvent):Void 
@@ -98,22 +127,13 @@ class RemoteConnection implements IClientAPI
 	
 	private function onError(e:IOErrorEvent):Void 
 	{
-		connected = false;
+		disconnect();
 		errorMessage = e.text;
 		errorEvent.sendEvent();
 	}
 	
 	public static function onConnect(e:Event)
 	{
-	}
-	
-	public function disconnect() 
-	{
-		if (!connected)
-		{
-			connected = false;
-			socket.close();
-		}
 	}
 	
 	public function getRemoteObject(remoteId:String) :RemoteObject
@@ -131,80 +151,5 @@ class RemoteConnection implements IClientAPI
 	{
 		remoteObjects.remove(remoteId);
 		serverAPI.soDisconnect(remoteId);
-	}
-	
-	////////////////////////////////////////////////////////////
-	//
-	// IClientAPI implementation
-	//
-	////////////////////////////////////////////////////////////
-	
-	public function setId(value:Int)
-	{
-		userId = value;
-		connectEvent.sendEvent();
-	}
-	
-	public function soCreate(remoteId:String, stateId:String, stateData:Dynamic, typeId:Int):Void
-	{
-		var remote:RemoteObject = remoteObjects.get(remoteId);
-		if (remote != null)
-			remote.applyCreateState(typeId, stateId, stateData);
-	}
-	
-	public function soRestore(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>):Void
-	{
-		var remote:RemoteObject = remoteObjects.get(remoteId);
-		if (remote != null)
-			remote.restore(usersList, statesList);
-	}
-	
-	public function soUserConnect(remoteId:String, userId:Int):Void
-	{
-		var remote:RemoteObject = remoteObjects.get(remoteId);
-		if (remote != null)
-			remote.applyUserConnect(userId);
-	}
-	
-	public function soUserDisconnect(remoteId:String, userId:Int):Void
-	{
-		var remote:RemoteObject = remoteObjects.get(remoteId);
-		if (remote != null)
-			remote.applyUserDisconnect(userId);
-	}
-	
-	public function soSend(remoteId:String, func:String, stateId:String, state:Dynamic):Void
-	{
-		var remote:RemoteObject = remoteObjects.get(remoteId);
-		if (remote != null)
-			remote.applySend(func, stateId, state);
-	}
-	
-	public function soCall(remoteId:String, func:String, arguments:Array<Dynamic>):Void
-	{
-		var remote:RemoteObject = remoteObjects.get(remoteId);
-		if (remote != null)
-			remote.applyCall(func, arguments);
-	}
-	
-	public function soRemove(remoteId:String, stateId:String):Void
-	{
-		var remote:RemoteObject = remoteObjects.get(remoteId);
-		if (remote != null)
-			remote.applyRemove(stateId);
-	}
-	
-	public function soFull(remoteId:String):Void
-	{
-		var remote:RemoteObject = remoteObjects.get(remoteId);
-		if (remote != null)
-			remote.applyFull();
-	}
-	
-	public function soCommand(remoteId:String, commandId:Int, parameters:Dynamic):Void
-	{
-		var remote:RemoteObject = remoteObjects.get(remoteId);
-		if (remote != null)
-			remote.applyCommand(commandId, parameters);
 	}
 }
