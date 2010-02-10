@@ -30,7 +30,7 @@ class ServiceBase
 		}
 		else
 		{
-			throw "Connection for this service has not been set";
+			throw "Connection for this service has not been set.";
 		}
 	}
 	

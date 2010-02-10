@@ -118,7 +118,9 @@ class SharedObject
 				state.lockerId = -1;
 		}
 		for (stateId in removedStates)
+		{
 			removeState(stateId);
+		}
 	}
 	
 	public function createState(ownerId:Int, typeId:Int, stateId:String, stateData:Dynamic):Void 
