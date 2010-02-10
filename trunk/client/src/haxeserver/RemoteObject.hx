@@ -178,7 +178,7 @@ class RemoteObject
 			if (typeId == -1)
 				state = stateData;
 			else
-				state = connection.getInstance(typeId, stateData);
+				state = connection.getTypedObject(typeId, stateData);
 			
 			states.set(stateId, state);
 			client.onStateCreated(stateId, state);
@@ -246,7 +246,7 @@ class RemoteObject
 	{
 		try
 		{
-			var command:ICommand = connection.getInstance(commandId, parameters);
+			var command:ICommand = connection.getTypedObject(commandId, parameters);
 			client.onCommand(command);
 		}
 		catch (e:Error)
