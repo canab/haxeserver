@@ -27,7 +27,7 @@ class SOService extends ServiceBase
 		soMutex.acquire();
 		
 		var remoteId:String = null;
-		var waitingObjects:Array<SharedObject> = getWaitingObjects(soPrefix);
+		var waitingObjects:Array<SharedObject> = getWaitingObjects(soPrefix, maxUsers);
 		for (so in waitingObjects)
 		{
 			if (application.addUserToSO(currentUser, so.id, maxUsers, false))
@@ -47,12 +47,12 @@ class SOService extends ServiceBase
 		return remoteId;
 	}
 	
-	private function getWaitingObjects(prefix:String):Array<SharedObject>
+	private function getWaitingObjects(prefix:String, maxUsers:Int):Array<SharedObject>
 	{
 		var result:Array<SharedObject> = [];
 		for (so in application.sharedObjects)
 		{
-			if (so.isWaiting && so.id.indexOf(prefix) == 0)
+			if (so.isWaiting && so.maxUsers == maxUsers && so.id.indexOf(prefix) == 0)
 				result.push(so);
 		}
 		return result;

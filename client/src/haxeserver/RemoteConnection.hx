@@ -109,6 +109,7 @@ class RemoteConnection
 		socket.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onSequrityError);
 		connected = false;
 		socket.close();
+		remoteObjects = new Hash<RemoteObject>();
 	}
 	
 	private function onSequrityError(e:SecurityErrorEvent):Void 
