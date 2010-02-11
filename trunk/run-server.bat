@@ -1,5 +1,5 @@
 @echo off
 tskill neko
-cd bin
+cd server\bin
 neko server.n
 rem pause
