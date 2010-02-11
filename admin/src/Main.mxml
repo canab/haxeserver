@@ -1,4 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:Application
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	creationComplete="onCreationComplete()"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+			import admin.AdminApplication;
+			
+			private function onCreationComplete():void 
+			{
+				AdminApplication.instance.initialize(this);
+			}
+		]]>
+	</mx:Script>
 	
 </mx:Application>

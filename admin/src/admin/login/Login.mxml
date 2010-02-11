@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<login:LoginBase
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:login="admin.login.*"
+	creationComplete="onCreationComplete()"
+	>
+	
+	<mx:VBox>
+		<mx:Label text="login" />
+		<mx:TextInput
+			id="loginInput"
+			enter="doLogin()"
+			change="refresh()"
+			enabled="{inputEnabled}"
+		/>
+		<mx:Label text="password"/>
+		<mx:TextInput
+			id="passwordInput"
+			enter="doLogin()"
+			change="refresh()"
+			enabled="{inputEnabled}"
+		/>
+		<mx:Button
+			id="loginButon"
+			label="Login"
+			click="doLogin()"
+			enabled="{loginEnabled}"
+		/>
+		<mx:Label
+			text="Connecting..."
+			visible="{!inputEnabled}"
+		/>
+	</mx:VBox>
+	
+</login:LoginBase>
