@@ -3,18 +3,18 @@
 	<property name="build.server.dir" value="output/server"/>
 	<property name="build.admin.dir" value="output/admin"/>
 	
-	<path id="ant.lib.dir">
-		<fileset dir="lib">
-			<include name="**/*.jar"/>
-		</fileset>
-	</path>
-	
-    <taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"  classpathref="ant.lib.dir"/>
+    <taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"/>
+	<taskdef name="if" classname="ise.antelope.tasks.IfTask"/>
 	
 	<target name="svn-update">
-		<svn javahl="false">
-			<update dir=".."/>
-		</svn>
+		<if name="svn.update" value="true">
+			<svn javahl="false">
+				<update dir=".."/>
+			</svn>
+			<else>
+				<echo>disabled</echo>
+			</else>
+		</if>
 	</target>
 	
 	<target name="deploy-all" depends="build-all, deploy-server, deploy-admin"/>
