@@ -1,37 +1,40 @@
-<project name="haxeServer" default="deploy">
+<project name="haxeServer" default="deploy-all">
+	
+	<property name="build.server.dir" value="output/server"/>
+	<property name="build.admin.dir" value="output/admin"/>
 	
 	<target name="svn-update">
+		<echo>Svn update task</echo>
 	</target>
 	
-	<taskdef name="deploy">
-		<antcall target="deploy-server"/>
-		<antcall target="deploy-admin"/>
-	</taskdef>
+	<target name="deploy-all" depends="build-all, deploy-server, deploy-admin"/>
+	<target name="build-all" depends="build-server, build-admin"/>
 	
 	<target name="deploy-server" depends="build-server">
+		<delete dir="${deploy.server.dir}"/>
+		<mkdir dir="${deploy.server.dir}"/>
+	 	<copy todir="${deploy.server.dir}">
+	 		<fileset dir="${build.server.dir}"/>
+	 	</copy>
 	</target>
 	
 	<target name="deploy-admin" depends="build-admin">
+		<delete dir="${deploy.admin.dir}"/>
+		<mkdir dir="${deploy.admin.dir}"/>
+	 	<copy todir="${deploy.admin.dir}">
+	 		<fileset dir="${build.admin.dir}"/>
+	 	</copy>
 	</target>
-	
-	<taskdef name="build">
-		<antcall target="build-server"/>
-		<antcall target="build-admin"/>
-	</taskdef>
 	
 	<target name="build-server" depends="svn-update">
 		<delete dir="${build.server.dir}"/>
 		<mkdir dir="${build.server.dir}"/>
-		<if>
+		
+		<condition property="haxe.compiler.debug" value="-debug" else="">
 			<istrue value="${build.server.debug}"/>
-			<then>
-				<property name="haxe.compiler.debug" value="-debug"/>
-			</then>
-			<else>
-				<property name="haxe.compiler.debug" value=""/>
-			</else>
-		</if>
-s		<exec executable="${haxe.compiler}" failonerror="true">
+		</condition>
+		
+		<exec executable="${haxe.compiler}" failonerror="true">
 			<arg line="-cp ../server/src"/>
 			<arg line="-cp ../library"/>
 			<arg line="-main NekoServer"/>
@@ -41,5 +44,7 @@ s		<exec executable="${haxe.compiler}" failonerror="true">
 	</target>
 	
 	<target name="build-admin" depends="svn-update">
+		<delete dir="${build.admin.dir}"/>
+		<mkdir dir="${build.admin.dir}"/>
 	</target>
 </project>
