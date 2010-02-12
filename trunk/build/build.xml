@@ -1,20 +1,45 @@
-<project name="build-server" default="deploy">
+<project name="haxeServer" default="deploy">
 	
-	<property name="deploy.dir" value="bin"/>
-	<property name="haxe.path" value="haxe"/>
-	
-	<target name="deploy">
-		<delete dir="${deploy.dir}" quiet="true"/>
-    	<mkdir dir="${deploy.dir}"/>
-		
-		<exec executable="${haxe.path}" failonerror="true">
-			<arg line="-cp server/src"/>
-			<arg line="-cp library"/>
-			<arg line="-main NekoServer"/>
-			<arg line="-neko ${deploy.dir}/server.n"/>
-			<arg line="-debug"/>
-		</exec>
-		
+	<target name="svn-update">
 	</target>
 	
+	<taskdef name="deploy">
+		<antcall target="deploy-server"/>
+		<antcall target="deploy-admin"/>
+	</taskdef>
+	
+	<target name="deploy-server" depends="build-server">
+	</target>
+	
+	<target name="deploy-admin" depends="build-admin">
+	</target>
+	
+	<taskdef name="build">
+		<antcall target="build-server"/>
+		<antcall target="build-admin"/>
+	</taskdef>
+	
+	<target name="build-server" depends="svn-update">
+		<delete dir="${build.server.dir}"/>
+		<mkdir dir="${build.server.dir}"/>
+		<if>
+			<istrue value="${build.server.debug}"/>
+			<then>
+				<property name="haxe.compiler.debug" value="-debug"/>
+			</then>
+			<else>
+				<property name="haxe.compiler.debug" value=""/>
+			</else>
+		</if>
+s		<exec executable="${haxe.compiler}" failonerror="true">
+			<arg line="-cp ../server/src"/>
+			<arg line="-cp ../library"/>
+			<arg line="-main NekoServer"/>
+			<arg line="-neko ${build.server.dir}/server.n"/>
+			<arg line="${haxe.compiler.debug}"/>
+		</exec>
+	</target>
+	
+	<target name="build-admin" depends="svn-update">
+	</target>
 </project>
