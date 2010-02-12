@@ -3,8 +3,18 @@
 	<property name="build.server.dir" value="output/server"/>
 	<property name="build.admin.dir" value="output/admin"/>
 	
+	<path id="ant.lib.dir">
+		<fileset dir="lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	
+    <taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"  classpathref="ant.lib.dir"/>
+	
 	<target name="svn-update">
-		<echo>Svn update task</echo>
+		<svn javahl="false">
+			<update dir=".."/>
+		</svn>
 	</target>
 	
 	<target name="deploy-all" depends="build-all, deploy-server, deploy-admin"/>
