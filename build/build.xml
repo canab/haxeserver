@@ -3,12 +3,12 @@
 	<property name="build.server.dir" value="output/server"/>
 	<property name="build.admin.dir" value="output/admin"/>
 	
-    <taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"/>
+	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"/>
 	<taskdef name="if" classname="ise.antelope.tasks.IfTask"/>
 	
 	<target name="svn-update">
 		<if name="svn.update" value="true">
-			<svn javahl="false">
+			<svn javahl="false" svnkit="true" username="canab.ua" password="gM9by4kJ5MB2">
 				<update dir=".."/>
 			</svn>
 			<else>
