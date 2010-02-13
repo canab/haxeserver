@@ -6,6 +6,8 @@
 	
 	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"/>
 	<taskdef name="if" classname="ise.antelope.tasks.IfTask"/>
+    <taskdef name="var" classname="ise.antelope.tasks.Variable"/>
+	
 	
 	<target name="svn-update">
 		<if name="svn.update" value="true">
@@ -47,16 +49,17 @@
 		<replace file="${output.server.dir}/server-config.xml" token="{login}" value="${server.config.login}"/>
 		<replace file="${output.server.dir}/server-config.xml" token="{password}" value="${server.config.password}"/>
 		
-		<condition property="haxe.compiler.debug" value="-debug" else="">
-			<istrue value="${server.build.debug}"/>
-		</condition>
+		<var name="compiler.debug" value=""/>
+		<if name="server.build.debug" value="true">
+			<var name="compiler.debug" value="-debug"/>
+		</if>
 		
 		<exec executable="${haxe.compiler}" failonerror="true">
 			<arg line="-cp ../server/src"/>
 			<arg line="-cp ../library"/>
 			<arg line="-main NekoServer"/>
 			<arg line="-neko ${output.server.dir}/server.n"/>
-			<arg line="${haxe.compiler.debug}"/>
+			<arg line="${compiler.debug}"/>
 		</exec>
 	</target>
 	
@@ -64,16 +67,17 @@
 		<delete dir="${output.client.dir}"/>
 		<mkdir dir="${output.client.dir}"/>
 		
-		<condition property="haxe.compiler.debug" value="-debug" else="">
-			<istrue value="${server.build.debug}"/>
-		</condition>
+		<var name="compiler.debug" value=""/>
+		<if name="admin.build.debug" value="true">
+			<var name="compiler.debug" value="-debug"/>
+		</if>
 		
 		<exec executable="${haxe.compiler}" failonerror="true">
 			<arg line="-cp ../client/src"/>
 			<arg line="-cp ../library"/>
 			<arg line="haxeserver.Library"/>
 			<arg line="-swf9 ${output.client.dir}/remote-lib.swc"/>
-			<arg line="${haxe.compiler.debug}"/>
+			<arg line="${compiler.debug}"/>
 		</exec>
 	</target>
 	
