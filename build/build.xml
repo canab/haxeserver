@@ -2,6 +2,7 @@
 	
 	<property name="output.server.dir" value="output/server"/>
 	<property name="output.admin.dir" value="output/admin"/>
+	<property name="output.client.dir" value="output/client"/>
 	
 	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"/>
 	<taskdef name="if" classname="ise.antelope.tasks.IfTask"/>
@@ -59,12 +60,32 @@
 		</exec>
 	</target>
 	
-	<target name="build-admin" depends="svn-update">
-		<condition property="mxmlc.compiler.debug" value="-debug" else="">
-			<istrue value="${admin.build.debug}"/>
+	<target name="build-client-lib" depends="svn-update">
+		<delete dir="${output.client.dir}"/>
+		<mkdir dir="${output.client.dir}"/>
+		
+		<condition property="haxe.compiler.debug" value="-debug" else="">
+			<istrue value="${server.build.debug}"/>
 		</condition>
 		
+		<exec executable="${haxe.compiler}" failonerror="true">
+			<arg line="-cp ../client/src"/>
+			<arg line="-cp ../library"/>
+			<arg line="haxeserver.Library"/>
+			<arg line="-swf9 ${output.client.dir}/remote-lib.swc"/>
+			<arg line="${haxe.compiler.debug}"/>
+		</exec>
+	</target>
+	
+	<target name="build-admin" depends="svn-update, build-client-lib">
 		<delete dir="${output.admin.dir}"/>
 		<mkdir dir="${output.admin.dir}"/>
+		
+		<exec executable="${flex.compiler}" failonerror="true">
+			<arg line="../admin/src/Main.mxml"/>
+			<arg line="-library-path+=${output.client.dir}"/>
+			<arg line="-output=${output.admin.dir}/admin.swf"/>
+			<arg line="-debug=${admin.build.debug}"/>
+		</exec>
 	</target>
 </project>
