@@ -1,0 +1,6 @@
+<config>
+	<host>{host}</host>
+	<port>{port}</port>
+	<login>{login}</login>
+	<password>{password}</password>
+</config>

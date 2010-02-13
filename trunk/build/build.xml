@@ -1,7 +1,7 @@
 <project name="haxeServer" default="deploy-all">
 	
-	<property name="build.server.dir" value="output/server"/>
-	<property name="build.admin.dir" value="output/admin"/>
+	<property name="output.server.dir" value="output/server"/>
+	<property name="output.admin.dir" value="output/admin"/>
 	
 	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"/>
 	<taskdef name="if" classname="ise.antelope.tasks.IfTask"/>
@@ -21,40 +21,50 @@
 	<target name="build-all" depends="build-server, build-admin"/>
 	
 	<target name="deploy-server" depends="build-server">
-		<delete dir="${deploy.server.dir}"/>
-		<mkdir dir="${deploy.server.dir}"/>
-	 	<copy todir="${deploy.server.dir}">
-	 		<fileset dir="${build.server.dir}"/>
+		<delete dir="${server.deploy.dir}"/>
+		<mkdir dir="${server.deploy.dir}"/>
+	 	<copy todir="${server.deploy.dir}">
+	 		<fileset dir="${output.server.dir}"/>
 	 	</copy>
 	</target>
 	
 	<target name="deploy-admin" depends="build-admin">
-		<delete dir="${deploy.admin.dir}"/>
-		<mkdir dir="${deploy.admin.dir}"/>
-	 	<copy todir="${deploy.admin.dir}">
-	 		<fileset dir="${build.admin.dir}"/>
+		<delete dir="${admin.deploy.dir}"/>
+		<mkdir dir="${admin.deploy.dir}"/>
+	 	<copy todir="${admin.deploy.dir}">
+	 		<fileset dir="${output.admin.dir}"/>
 	 	</copy>
 	</target>
 	
 	<target name="build-server" depends="svn-update">
-		<delete dir="${build.server.dir}"/>
-		<mkdir dir="${build.server.dir}"/>
+		<delete dir="${output.server.dir}"/>
+		<mkdir dir="${output.server.dir}"/>
+		
+	 	<copy file="../server/server-config.xml" todir="${output.server.dir}"/>
+		<replace file="${output.server.dir}/server-config.xml" token="{host}" value="${server.config.host}"/>
+		<replace file="${output.server.dir}/server-config.xml" token="{port}" value="${server.config.port}"/>
+		<replace file="${output.server.dir}/server-config.xml" token="{login}" value="${server.config.login}"/>
+		<replace file="${output.server.dir}/server-config.xml" token="{password}" value="${server.config.password}"/>
 		
 		<condition property="haxe.compiler.debug" value="-debug" else="">
-			<istrue value="${build.server.debug}"/>
+			<istrue value="${server.build.debug}"/>
 		</condition>
 		
 		<exec executable="${haxe.compiler}" failonerror="true">
 			<arg line="-cp ../server/src"/>
 			<arg line="-cp ../library"/>
 			<arg line="-main NekoServer"/>
-			<arg line="-neko ${build.server.dir}/server.n"/>
+			<arg line="-neko ${output.server.dir}/server.n"/>
 			<arg line="${haxe.compiler.debug}"/>
 		</exec>
 	</target>
 	
 	<target name="build-admin" depends="svn-update">
-		<delete dir="${build.admin.dir}"/>
-		<mkdir dir="${build.admin.dir}"/>
+		<condition property="mxmlc.compiler.debug" value="-debug" else="">
+			<istrue value="${admin.build.debug}"/>
+		</condition>
+		
+		<delete dir="${output.admin.dir}"/>
+		<mkdir dir="${output.admin.dir}"/>
 	</target>
 </project>
