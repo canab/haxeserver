@@ -2,6 +2,8 @@
 <mx:Canvas
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:general="admin.general.*"
+	xmlns:profiler="admin.profiler.*"
+	xmlns:stat="admin.stat.*"
 	width="100%"
 	height="100%"
 	>
@@ -16,18 +18,18 @@
 			height="100%"
 		/>
 		
-		<mx:Canvas
-			label="tab1"
+		<profiler:Profiler
+			label="Profiler"
 			width="100%"
 			height="100%"
 		/>
 		
-		<mx:Canvas
-			label="tab1"
+		<stat:Statistycs
+			label="Statistycs"
 			width="100%"
 			height="100%"
 		/>
-	
+		
 	</mx:TabNavigator>
 	
 	
