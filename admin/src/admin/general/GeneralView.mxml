@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GeneralViewBase
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns="admin.general.*"
+	>
+	
+	<mx:VBox>
+		<mx:Button
+			id="refreshButton"
+			label="Refresh"
+			click="onRefresh()" />
+		<mx:HBox>
+			<mx:Label text="Users:"/>
+			<mx:Label id="usersLabel"/>
+		</mx:HBox>
+		
+		<mx:HBox>
+			<mx:Label text="SharedObjects:"/>
+			<mx:Label id="soLabel"/>
+		</mx:HBox>
+	</mx:VBox>
+	
+</GeneralViewBase>
