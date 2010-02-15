@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<flex-config>
+	<compiler>
+		<define>
+			<name>CONFIG::host</name>
+			<value>"localhost"</value>
+		</define>
+		<define>
+			<name>CONFIG::port</name>
+			<value>8080</value>
+		</define>
+		<define>
+			<name>CONFIG::autologin</name>
+			<value>true</value>
+		</define>
+		<define>
+			<name>CONFIG::login</name>
+			<value>"admin"</value>
+		</define>
+		<define>
+			<name>CONFIG::password</name>
+			<value>"123"</value>
+		</define>
+	</compiler>
+</flex-config>

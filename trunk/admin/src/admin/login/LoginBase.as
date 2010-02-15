@@ -26,6 +26,15 @@
 		{
 			refresh();
 			loginInput.setFocus();
+			
+			CONFIG::autologin
+			{
+				loginInput.text = CONFIG::login;
+				passwordInput.text = CONFIG::password;
+				refresh();
+				doLogin();
+			}
+			
 		}
 		
 		protected function doLogin():void 

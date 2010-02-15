@@ -22,7 +22,7 @@
     <option benchmark="False" />
     <option es="False" />
     <option locale="" />
-    <option loadConfig="" />
+    <option loadConfig="admin\build-config.xml" />
     <option optimize="True" />
     <option showActionScriptWarnings="True" />
     <option showBindingWarnings="True" />
