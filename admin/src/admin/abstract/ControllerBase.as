@@ -1,11 +1,8 @@
 package admin.abstract
 {
+	import admin.AdminApplication;
 	import common.events.EventManager;
 	import common.events.EventSender;
-	import admin.Application;
-	import admin.ApplicationData;
-	import admin.game.Game;
-	import admin.MainWindow;
 	/**
 	 * ...
 	 * @author canab
@@ -28,29 +25,9 @@ package admin.abstract
 				_eventManager.clearEvents();
 		}
 		
-		protected function get application():Application
+		protected function get app():AdminApplication
 		{
-			return Application.instance;
-		}
-		
-		protected function get appData():ApplicationData
-		{
-			return Application.instance.appData;
-		}
-		
-		protected function get mainWindow():MainWindow
-		{
-			return Application.instance.mainWindow;
-		}
-		
-		protected function get appConfig():ApplicationConfig
-		{
-			return Application.instance.appConfig;
-		}
-		
-		protected function get game():Game
-		{
-			return Application.instance.game;
+			return AdminApplication.instance;
 		}
 		
 		protected function registerEvent(event:EventSender, handler:Function):void 

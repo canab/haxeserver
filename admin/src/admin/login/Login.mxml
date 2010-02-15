@@ -16,6 +16,7 @@
 		<mx:Label text="password"/>
 		<mx:TextInput
 			id="passwordInput"
+			displayAsPassword="true"
 			enter="doLogin()"
 			change="refresh()"
 			enabled="{inputEnabled}"
