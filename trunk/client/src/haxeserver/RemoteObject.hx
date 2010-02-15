@@ -6,7 +6,7 @@
 package haxeserver;
 import flash.Error;
 import haxelib.common.commands.ICommand;
-import haxelib.utils.ReflectUtil;
+import haxelib.common.utils.ReflectUtil;
 
 class RemoteObject 
 {

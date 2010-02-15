@@ -1,5 +1,6 @@
 ﻿
 import haxeserver.core.Application;
+import haxeserver.services.AdminService;
 import haxeserver.services.LoginService;
 import haxeserver.services.SOService;
 
@@ -9,6 +10,7 @@ class Main
 	{
 		SOService;
 		LoginService;
+		AdminService;
 		
 		Application.createInstance();
 	}

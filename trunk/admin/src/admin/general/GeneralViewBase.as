@@ -1,7 +1,7 @@
 package admin.general 
 {
+	import haxeserver.services.AdminService;
 	import mx.containers.Canvas;
-	import mx.controls.Button;
 	
 	/**
 	 * ...
@@ -9,15 +9,24 @@ package admin.general
 	 */
 	public class GeneralViewBase extends Canvas
 	{
-		[Bindable] public var refreshButton:Button;
+		[Bindable] public var usersCount:int;
+		[Bindable] public var soCount:int;
 		
 		public function GeneralViewBase() 
 		{
 		}
 		
-		protected function onRefresh():void 
+		protected function refresh():void 
 		{
 			enabled = false;
+			new AdminService(onResult).getGeneral();
+		}
+		
+		private function onResult(result:Object):void
+		{
+			usersCount = result.usersCount;
+			soCount = result.soCount;
+			enabled = true;
 		}
 	}
 

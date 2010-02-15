@@ -2,21 +2,22 @@
 <GeneralViewBase
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns="admin.general.*"
+	creationComplete="refresh()"
 	>
 	
 	<mx:VBox>
 		<mx:Button
 			id="refreshButton"
 			label="Refresh"
-			click="onRefresh()" />
+			click="refresh()" />
 		<mx:HBox>
 			<mx:Label text="Users:"/>
-			<mx:Label id="usersLabel"/>
+			<mx:Label text="{usersCount}" />
 		</mx:HBox>
 		
 		<mx:HBox>
 			<mx:Label text="SharedObjects:"/>
-			<mx:Label id="soLabel"/>
+			<mx:Label text="{soCount}" />
 		</mx:HBox>
 	</mx:VBox>
 	

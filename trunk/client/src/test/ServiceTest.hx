@@ -8,6 +8,7 @@ import haxe.Md5;
 import haxeserver.RemoteClient;
 import haxeserver.RemoteConnection;
 import haxeserver.RemoteObject;
+import haxeserver.services.AdminService;
 import haxeserver.services.LoginService;
 import haxeserver.services.ServiceBase;
 import haxeserver.services.SOService;
@@ -35,6 +36,12 @@ class ServiceTest extends RemoteClient
 		
 		new SOService(onGetRemoteId).connectToFreeSO('FS', 2);
 		new LoginService(onLogin).doLogin('admin', Md5.encode('123'));
+		new AdminService(onGeneral).getGeneral();
+	}
+	
+	private function onGeneral(result:Dynamic):Void
+	{
+		trace(result);
 	}
 	
 	private function onLogin(result:Bool):Void 

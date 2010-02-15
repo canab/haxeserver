@@ -3,7 +3,7 @@
  * @author Canab
  */
 
-package haxelib.utils;
+package haxelib.common.utils;
 
 class ReflectUtil 
 {
