@@ -1,7 +1,7 @@
 package admin.login 
 {
 	import admin.abstract.CommandBase;
-	import admin.Navigator;
+	import admin.NavigatorView;
 	import haxe.Md5;
 	import haxeserver.RemoteConnection;
 	import haxeserver.services.LoginService;
@@ -45,7 +45,7 @@ package admin.login
 			}
 			else
 			{
-				app.changeScreen(new Navigator());
+				app.changeScreen(new NavigatorView());
 			}
 			dispose();
 			dispathComplete();
