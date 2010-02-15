@@ -22,7 +22,7 @@ package admin.commands
 			app.connection.host = CONFIG::host;
 			app.connection.port = CONFIG::port;
 			
-			app.root.addChild(new Login());			
+			app.changeScreen(new Login());
 		}
 	}
 

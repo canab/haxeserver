@@ -1,6 +1,7 @@
 package admin.login 
 {
 	import admin.abstract.CommandBase;
+	import admin.Navigator;
 	import haxe.Md5;
 	import haxeserver.RemoteConnection;
 	import haxeserver.services.LoginService;
@@ -41,6 +42,10 @@ package admin.login
 			{
 				app.connection.disconnect();
 				Alert.show('Login error.');
+			}
+			else
+			{
+				app.changeScreen(new Navigator());
 			}
 			dispose();
 			dispathComplete();
