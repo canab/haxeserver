@@ -2,7 +2,7 @@
 	
 	<property name="output.server.dir" value="output/server"/>
 	<property name="output.admin.dir" value="output/admin"/>
-	<property name="output.client.dir" value="../client/bin"/>
+	<property name="output.client.dir" value="output/client"/>
 	
 	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"/>
 	<taskdef name="if" classname="ise.antelope.tasks.IfTask"/>
@@ -86,6 +86,9 @@
 		
 		<exec executable="${flex.compiler}" failonerror="true">
 			<arg line="../admin/src/Main.mxml"/>
+			<arg line="-define+=CONFIG::host,&quot;'${server.config.host}'&quot;"/>
+			<arg line="-define+=CONFIG::port,${server.config.port}"/>
+			<arg line="-define+=CONFIG::autologin,false"/>
 			<arg line="-library-path+=${output.client.dir}"/>
 			<arg line="-output=${output.admin.dir}/admin.swf"/>
 			<arg line="-debug=${admin.build.debug}"/>
