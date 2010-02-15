@@ -1,5 +1,7 @@
 ﻿package admin.login
 {
+	import admin.AdminApplication;
+	import common.utils.GraphUtil;
 	import common.utils.StringUtil;
 	import mx.containers.Canvas;
 	import mx.controls.Label;
@@ -28,11 +30,23 @@
 		
 		protected function doLogin():void 
 		{
-			if (loginEnabled)
-			{
-				loginEnabled = false;
-				inputEnabled = false;
-			}
+			if (!loginEnabled)
+				return;
+			
+			loginEnabled = false;
+			inputEnabled = false;
+			
+			var command:LoginCommand = new LoginCommand(login, password);
+			command.completeEvent.addListener(onLoginResult);
+			command.execute();
+		}
+		
+		private function onLoginResult(command:LoginCommand):void
+		{
+			loginEnabled = !command.success;
+			inputEnabled = !command.success;
+			if (command.success)
+				GraphUtil.detachFromDisplay(this);
 		}
 		
 		protected function refresh():void

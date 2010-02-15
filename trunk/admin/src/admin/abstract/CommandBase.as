@@ -36,4 +36,4 @@ package admin.abstract
 		}
 	}
 
-}਍
+}

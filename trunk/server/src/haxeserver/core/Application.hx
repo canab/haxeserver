@@ -5,6 +5,7 @@
 package haxeserver.core;
 import haxe.remoting.Context;
 import haxe.remoting.SocketConnection;
+import neko.net.ThreadRemotingServer;
  
 class Application 
 {
@@ -15,24 +16,43 @@ class Application
 		if (instance == null)
 		{
 			instance = new Application();
+			instance.initialize();
+			instance.createServer();
 		}
 	}
 	
 	public var logger(default, null):Logger;
 	public var users(default, null):IntHash<UserAdapter>;
 	public var sharedObjects(default, null):Hash<SharedObject>;
+	public var config(default, null):ApplicationConfig;
 	
 	private var idCounter:Int;
+	private var server:ThreadRemotingServer;
 	
 	public function new() 
 	{
+		idCounter = 0;
 		logger = new Logger();
 		users = new IntHash<UserAdapter>();
 		sharedObjects = new Hash<SharedObject>();
-		idCounter = 0;
 	}
 	
-	public function addConnection(connection:SocketConnection, context:Context)
+	public function initialize():Void
+	{
+		config = new ApplicationConfig("server-config.xml");
+	}
+	
+	public function createServer():Void
+	{
+		server = new ThreadRemotingServer();
+		server.initClientApi = initClientAPI;
+		server.clientDisconnected = clientDisconnected;
+		logger.trace("Start NekoServer");
+		logger.trace(config.host + ':' + config.port);
+		server.run(config.host, config.port);
+	}
+	
+	private function initClientAPI(connection:SocketConnection, context:Context)
 	{
 		var userId:Int = idCounter++;
 		logger.trace("user connected: id=" + userId);
@@ -43,7 +63,7 @@ class Application
 		(cast connection).__user = adapter;
 	}
 	
-	public function removeConnection(cannection:SocketConnection) 
+	private function clientDisconnected(cannection:SocketConnection) 
 	{
 		var user:UserAdapter = (cast cannection).__user;
 		for (so in user.sharedObjects)

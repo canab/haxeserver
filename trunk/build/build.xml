@@ -2,12 +2,11 @@
 	
 	<property name="output.server.dir" value="output/server"/>
 	<property name="output.admin.dir" value="output/admin"/>
-	<property name="output.client.dir" value="output/client"/>
+	<property name="output.client.dir" value="../client/bin"/>
 	
 	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"/>
 	<taskdef name="if" classname="ise.antelope.tasks.IfTask"/>
     <taskdef name="var" classname="ise.antelope.tasks.Variable"/>
-	
 	
 	<target name="svn-update">
 		<if name="svn.update" value="true">
@@ -57,7 +56,7 @@
 		<exec executable="${haxe.compiler}" failonerror="true">
 			<arg line="-cp ../server/src"/>
 			<arg line="-cp ../library"/>
-			<arg line="-main NekoServer"/>
+			<arg line="-main Main"/>
 			<arg line="-neko ${output.server.dir}/server.n"/>
 			<arg line="${compiler.debug}"/>
 		</exec>

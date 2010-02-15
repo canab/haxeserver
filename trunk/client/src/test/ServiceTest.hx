@@ -4,9 +4,11 @@
  */
 
 package test;
+import haxe.Md5;
 import haxeserver.RemoteClient;
 import haxeserver.RemoteConnection;
 import haxeserver.RemoteObject;
+import haxeserver.services.LoginService;
 import haxeserver.services.ServiceBase;
 import haxeserver.services.SOService;
 
@@ -32,6 +34,12 @@ class ServiceTest extends RemoteClient
 		//new SOService(onResult).getSharedObjects("qww");
 		
 		new SOService(onGetRemoteId).connectToFreeSO('FS', 2);
+		new LoginService(onLogin).doLogin('admin', Md5.encode('123'));
+	}
+	
+	private function onLogin(result:Bool):Void 
+	{
+		trace('LoginService:' + result);
 	}
 	
 	private function onGetRemoteId(remoteId:String):Void

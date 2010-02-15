@@ -2,7 +2,6 @@
 
 import haxeserver.interfaces.IServerAPI;
 import haxeserver.services.ServiceBase;
-import haxeserver.services.SOService;
 
 import haxe.remoting.AsyncProxy;
 import haxe.remoting.SocketConnection;
@@ -14,6 +13,7 @@ class ClientApi extends AsyncProxy<haxeserver.interfaces.IClientAPI>
 class UserAdapter implements IServerAPI
 {
 	public var id(default, null):Int;
+	public var login:String;
 	public var clientAPI(default, null):ClientApi;
 	
 	public var sharedObjects(default, null):Hash<SharedObject>;
@@ -23,6 +23,7 @@ class UserAdapter implements IServerAPI
 	public function new(connection:SocketConnection, userId:Int)
 	{
 		id = userId;
+		login = null;
 		clientAPI = new ClientApi(connection.C);
 		clientAPI.setId(id);
 		sharedObjects = new Hash<SharedObject>();

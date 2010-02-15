@@ -1,6 +1,6 @@
 ﻿package admin
 {
-	import admin.login.Login;
+	import admin.commands.StartAppCommand;
 	import flash.Boot;
 	import flash.display.MovieClip;
 	import haxeserver.RemoteConnection;
@@ -31,7 +31,7 @@
 		{
 			new Boot(_haxeRoot); // initialize haxe swc
 			_root = main;
-			_root.addChild(new Login());
+			new StartAppCommand().execute();
 		}
 		
 		public function get root():Main { return _root; }
