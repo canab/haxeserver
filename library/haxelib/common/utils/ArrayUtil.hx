@@ -25,4 +25,17 @@ class ArrayUtil
 	{
 		return indexOf(array, item) >= 0;
 	}
+	
+	static public function getLength(iterable:Iterable<Dynamic>):Int
+	{
+		var length:Int = 0;
+		var iterator = iterable.iterator();
+		while (iterator.hasNext())
+		{
+			length++;
+			iterator.next();
+		}
+		return length;
+	}
+	
 }

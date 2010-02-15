@@ -5,6 +5,7 @@
 
 package haxeserver;
 import haxe.Md5;
+import haxeserver.services.AdminService;
 import haxeserver.services.LoginService;
 import haxeserver.services.ServiceBase;
 import haxeserver.services.SOService;
@@ -20,6 +21,7 @@ class Library
 		ServiceBase;
 		SOService;
 		LoginService;
+		AdminService;
 		Md5;
 	}
 	
