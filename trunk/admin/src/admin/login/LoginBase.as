@@ -1,7 +1,5 @@
 ﻿package admin.login
 {
-	import admin.AdminApplication;
-	import common.utils.GraphUtil;
 	import common.utils.StringUtil;
 	import mx.containers.Canvas;
 	import mx.controls.Label;
@@ -54,8 +52,6 @@
 		{
 			loginEnabled = !command.success;
 			inputEnabled = !command.success;
-			if (command.success)
-				GraphUtil.detachFromDisplay(this);
 		}
 		
 		protected function refresh():void
