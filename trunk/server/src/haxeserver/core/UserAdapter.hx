@@ -78,7 +78,7 @@ class UserAdapter implements IServerAPI
 	
 	public function callService(className:String, func:String, args:Array<Dynamic>):Dynamic
 	{
-		application.logger.trace('SERVICE: ' + className + '|' + func + '|' + args);
+		application.logger.info('SERVICE: ' + className + '|' + func + '|' + args);
 		var service:ServiceBase = Type.createInstance(Type.resolveClass(className), []);
 		service.currentUser = this;
 		var method:Dynamic = Reflect.field(service, func);

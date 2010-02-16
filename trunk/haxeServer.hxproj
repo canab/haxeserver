@@ -45,6 +45,6 @@
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="Custom" />
-    <option testMovieCommand="run-server.bat" />
+    <option testMovieCommand="run-server.cmd" />
   </options>
 </project>

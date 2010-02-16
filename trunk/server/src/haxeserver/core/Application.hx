@@ -29,10 +29,11 @@ class Application
 	private var idCounter:Int;
 	private var server:ThreadRemotingServer;
 	
-	public function new() 
+	public function new()
 	{
 		idCounter = 0;
-		logger = new Logger();
+		logger = new Logger("log/server.log", 1024 * 1024);
+		
 		users = new IntHash<UserAdapter>();
 		sharedObjects = new Hash<SharedObject>();
 	}
@@ -47,15 +48,14 @@ class Application
 		server = new ThreadRemotingServer();
 		server.initClientApi = initClientAPI;
 		server.clientDisconnected = clientDisconnected;
-		logger.trace("Start NekoServer");
-		logger.trace(config.host + ':' + config.port);
+		logger.info("Starting NekoServer at " + config.host + ':' + config.port);
 		server.run(config.host, config.port);
 	}
 	
 	private function initClientAPI(connection:SocketConnection, context:Context)
 	{
 		var userId:Int = idCounter++;
-		logger.trace("user connected: id=" + userId);
+		logger.info("user connected, id=" + userId);
 		
 		var adapter:UserAdapter = new UserAdapter(connection, userId);
 		context.addObject("S", adapter);
@@ -70,7 +70,7 @@ class Application
 		{
 			removeUserFromSO(user, so.id);
 		}
-		logger.trace("user disconnected: id=" + user.id);
+		logger.info("user disconnected, id=" + user.id);
 		users.remove(user.id);
 	}
 	
