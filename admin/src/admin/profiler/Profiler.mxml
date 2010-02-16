@@ -2,6 +2,49 @@
 <ProfilerBase
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns="admin.profiler.*"
+	creationComplete="refresh()"
 	>
+	
+	<mx:VBox
+		width="100%"
+		height="100%">
+		<mx:Button
+			label="Refresh"
+			click="refresh()"
+		/>
+		<mx:DataGrid
+			width="100%"
+			height="100%"
+			dataProvider="{items}"
+			>
+			<mx:columns>
+				<mx:DataGridColumn
+					dataField="id"
+					headerText="id"
+					width="200"
+				/>
+				<mx:DataGridColumn
+					dataField="callCount"
+					headerText="callCount"
+				/>
+				<mx:DataGridColumn
+					dataField="totalTime"
+					headerText="totalTime"
+				/>
+				<mx:DataGridColumn
+					dataField="minTime"
+					headerText="minTime"
+				/>
+				<mx:DataGridColumn
+					dataField="maxTime"
+					headerText="maxTime"
+				/>
+				<mx:DataGridColumn
+					dataField="averageTime"
+					headerText="averageTime"
+				/>
+			</mx:columns>
+		</mx:DataGrid>
+	</mx:VBox>
 	
 </ProfilerBase>

@@ -37,10 +37,18 @@ class ServiceTest extends RemoteClient
 		new SOService(onGetRemoteId).connectToFreeSO('FS', 2);
 		new LoginService(onLogin).doLogin('admin', Md5.encode('123'));
 		new AdminService(onGeneral).getGeneral();
+		new AdminService(onProfiler).getProfilerData();
+	}
+	
+	private function onProfiler(result:Dynamic):Void
+	{
+		trace('profiler:');
+		trace(result);
 	}
 	
 	private function onGeneral(result:Dynamic):Void
 	{
+		trace('general:');
 		trace(result);
 	}
 	
