@@ -5,6 +5,7 @@
 package haxeserver.core;
 import haxe.remoting.Context;
 import haxe.remoting.SocketConnection;
+import haxeserver.core.profiler.Profiler;
 import neko.net.ThreadRemotingServer;
  
 class Application 
@@ -25,6 +26,7 @@ class Application
 	public var users(default, null):IntHash<UserAdapter>;
 	public var sharedObjects(default, null):Hash<SharedObject>;
 	public var config(default, null):ApplicationConfig;
+	public var profiler(default, null):Profiler;
 	
 	private var idCounter:Int;
 	private var server:ThreadRemotingServer;
@@ -35,6 +37,7 @@ class Application
 		logger = new Logger("log/server.log", 1024 * 1024);
 		users = new IntHash<UserAdapter>();
 		sharedObjects = new Hash<SharedObject>();
+		profiler = new Profiler();
 	}
 	
 	public function initialize():Void

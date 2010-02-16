@@ -18,4 +18,9 @@ class AdminService extends ServiceBase
 		doCall("getGeneral", []);
 	}
 	
+	public function getProfilerData():Void
+	{
+		doCall("getProfilerData", []);
+	}
+	
 }

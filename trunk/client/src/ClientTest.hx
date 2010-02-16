@@ -50,7 +50,7 @@ class ClientTest extends flash.display.MovieClip
 	private function onConnect(sender:RemoteConnection):Void
 	{
 		trace("connected: id=" + connection.userId);
-		//new VisualTest(connection, this);
-		new ServiceTest(connection);
+		new VisualTest(connection, this);
+		//new ServiceTest(connection);
 	}
 }
