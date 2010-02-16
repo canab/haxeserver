@@ -41,6 +41,7 @@
 	<target name="build-server" depends="svn-update">
 		<delete dir="${output.server.dir}"/>
 		<mkdir dir="${output.server.dir}"/>
+		<mkdir dir="${output.server.dir}/log"/>
 		
 	 	<copy file="../server/server-config.xml" todir="${output.server.dir}"/>
 		<replace file="${output.server.dir}/server-config.xml" token="{host}" value="${server.config.host}"/>
