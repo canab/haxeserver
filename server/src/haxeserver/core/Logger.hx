@@ -5,10 +5,12 @@
 
 package haxeserver.core;
 import haxe.PosInfos;
+import haxe.Stack;
 import neko.FileSystem;
 import neko.io.File;
 import neko.io.FileOutput;
 import neko.io.Path;
+import neko.vm.Mutex;
 
 class Logger 
 {
@@ -16,11 +18,13 @@ class Logger
 	private var fileName:String;
 	private var maxSize:Int;
 	private var currentSize:Int;
+	private var mutex:Mutex;
 
 	public function new(fileName:String, maxSize:Int)
 	{
 		this.fileName = fileName;
 		this.maxSize = maxSize;
+		mutex = new Mutex();
 		openOutput();
 	}
 	
@@ -32,19 +36,30 @@ class Logger
 	
 	public function info(text:String, ?posInfos:PosInfos):Void 
 	{
-		writeMessage('INFO', text, posInfos);
+		var sender:String = posInfos.className.substr(posInfos.className.lastIndexOf(".") + 1);
+		var message:String = "[" + sender + "]\t" + text;
+		writeMessage(message);
 	}
 	
-	public function error(text:String, ?posInfos:PosInfos):Void 
+	public function exception(e:Dynamic, ?posInfos:PosInfos):Void 
 	{
-		writeMessage('ERROR', text, posInfos);
+		var message:String = "\n[EXCEPTION]\t" + e + "\n";
+		message += "\tcallstack:\n";
+		for (stackItem in Stack.exceptionStack())
+		{
+			message += "\t";
+			message += stackItem;
+			message += "\n";
+		}
+		writeMessage(message);
 	}
 	
-	private function writeMessage(type:String, message:String, info:PosInfos):Void 
+	private function writeMessage(message:String):Void
 	{
+		mutex.acquire();
+		
 		var date:String = Date.now().toString();
-		var sender:String = info.className.substr(info.className.lastIndexOf(".") + 1);
-		var fullMessage:String = date + "\t[" + sender + "]\t" + type + "\t" + message; 
+		var fullMessage:String = date + "\t" + message; 
 		
 		currentSize += fullMessage.length;
 		if (currentSize >= maxSize)
@@ -52,7 +67,9 @@ class Logger
 		
 		foutput.writeString(fullMessage + "\n");
 		foutput.flush();
-		neko.Lib.println("[" + sender + "]\t" + message);
+		neko.Lib.println(message);
+		
+		mutex.release();
 	}
 	
 	private function createArchive():Void
