@@ -33,7 +33,6 @@ class Application
 	{
 		idCounter = 0;
 		logger = new Logger("log/server.log", 1024 * 1024);
-		
 		users = new IntHash<UserAdapter>();
 		sharedObjects = new Hash<SharedObject>();
 	}
@@ -45,33 +44,54 @@ class Application
 	
 	public function createServer():Void
 	{
-		server = new ThreadRemotingServer();
-		server.initClientApi = initClientAPI;
-		server.clientDisconnected = clientDisconnected;
-		logger.info("Starting NekoServer at " + config.host + ':' + config.port);
-		server.run(config.host, config.port);
+		try
+		{
+			server = new ThreadRemotingServer();
+			server.initClientApi = initClientAPI;
+			server.clientDisconnected = clientDisconnected;
+			logger.info("Starting NekoServer at " + config.host + ':' + config.port);
+			server.run(config.host, config.port);
+		}
+		catch (e:Dynamic)
+		{
+			logger.exception(e);
+		}
 	}
 	
 	private function initClientAPI(connection:SocketConnection, context:Context)
 	{
-		var userId:Int = idCounter++;
-		logger.info("user connected, id=" + userId);
-		
-		var adapter:UserAdapter = new UserAdapter(connection, userId);
-		context.addObject("S", adapter);
-		users.set(userId, adapter);
-		(cast connection).__user = adapter;
+		try
+		{
+			var userId:Int = idCounter++;
+			logger.info("user connected, id=" + userId);
+			
+			var adapter:UserAdapter = new UserAdapter(connection, userId);
+			context.addObject("S", adapter);
+			users.set(userId, adapter);
+			(cast connection).__user = adapter;
+		}
+		catch (e:Dynamic)
+		{
+			logger.exception(e);
+		}
 	}
 	
 	private function clientDisconnected(cannection:SocketConnection) 
 	{
-		var user:UserAdapter = (cast cannection).__user;
-		for (so in user.sharedObjects)
+		try
 		{
-			removeUserFromSO(user, so.id);
+			var user:UserAdapter = (cast cannection).__user;
+			for (so in user.sharedObjects)
+			{
+				removeUserFromSO(user, so.id);
+			}
+			logger.info("user disconnected, id=" + user.id);
+			users.remove(user.id);
 		}
-		logger.info("user disconnected, id=" + user.id);
-		users.remove(user.id);
+		catch (e:Dynamic)
+		{
+			logger.exception(e);
+		}
 	}
 	
 	public function hasSharedObject(remoteId:String):Bool

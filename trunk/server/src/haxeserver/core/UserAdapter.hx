@@ -32,57 +32,128 @@ class UserAdapter implements IServerAPI
 	
 	public function soConnect(remoteId:String, maxUsers:Int)
 	{
-		application.addUserToSO(this, remoteId, maxUsers, true);
+		try
+		{
+			application.addUserToSO(this, remoteId, maxUsers, true);
+		}
+		catch (e:Dynamic)
+		{
+			application.logger.exception(e);
+		}
 	}
 	
 	public function soDisconnect(remoteId:String)
 	{
-		application.removeUserFromSO(this, remoteId);
+		try
+		{
+			application.removeUserFromSO(this, remoteId);
+		}
+		catch (e:Dynamic)
+		{
+			application.logger.exception(e);
+		}
 	}
 	
 	public function soCreate(autoRemove:Bool, typeId:Int, remoteId:String, stateId:String, stateData:Dynamic):Void
 	{
-		var ownerId:Int = (autoRemove) ? this.id : -1;
-		sharedObjects.get(remoteId).createState(ownerId, typeId, stateId, stateData);
+		try
+		{
+			var ownerId:Int = (autoRemove) ? this.id : -1;
+			sharedObjects.get(remoteId).createState(ownerId, typeId, stateId, stateData);
+		}
+		catch (e:Dynamic)
+		{
+			application.logger.exception(e);
+		}
 	}
 	
 	public function soSend(remoteId:String, func:String, stateId:String, stateData:Dynamic):Void
 	{
-		sharedObjects.get(remoteId).sendState(func, stateId, stateData);
+		try
+		{
+			sharedObjects.get(remoteId).sendState(func, stateId, stateData);
+		}
+		catch (e:Dynamic)
+		{
+			application.logger.exception(e);
+		}
 	}
 	
 	public function soLock(remoteId:String, func:String, stateId:String, stateData:Dynamic):Void
 	{
-		sharedObjects.get(remoteId).lockState(this, func, stateId, stateData);
+		try
+		{
+			sharedObjects.get(remoteId).lockState(this, func, stateId, stateData);
+		}
+		catch (e:Dynamic)
+		{
+			application.logger.exception(e);
+		}
 	}
 	
 	public function soUnLock(remoteId:String, func:String, stateId:String, stateData:Dynamic):Void
 	{
-		sharedObjects.get(remoteId).unLockState(this, func, stateId, stateData);
+		try
+		{
+			sharedObjects.get(remoteId).unLockState(this, func, stateId, stateData);
+		}
+		catch (e:Dynamic)
+		{
+			application.logger.exception(e);
+		}
 	}
 	
 	public function soCall(remoteId:String, func:String, arguments:Array<Dynamic>):Void
 	{
-		sharedObjects.get(remoteId).call(func, arguments);
+		try
+		{
+			sharedObjects.get(remoteId).call(func, arguments);
+		}
+		catch (e:Dynamic)
+		{
+			application.logger.exception(e);
+		}
 	}
 	
 	public function soRemove(remoteId:String, stateId:String)
 	{
-		sharedObjects.get(remoteId).removeState(stateId);
+		try
+		{
+			sharedObjects.get(remoteId).removeState(stateId);
+		}
+		catch (e:Dynamic)
+		{
+			application.logger.exception(e);
+		}
 	}
 	
 	public function soCommand(remoteId:String, commandId:Int, parameters:Dynamic)
 	{
-		sharedObjects.get(remoteId).sendCommand(commandId, parameters);
+		try
+		{
+			sharedObjects.get(remoteId).sendCommand(commandId, parameters);
+		}
+		catch (e:Dynamic)
+		{
+			application.logger.exception(e);
+		}
 	}
 	
 	public function callService(className:String, func:String, args:Array<Dynamic>):Dynamic
 	{
-		application.logger.info('SERVICE: ' + className + '|' + func + '|' + args);
-		var service:ServiceBase = Type.createInstance(Type.resolveClass(className), []);
-		service.currentUser = this;
-		var method:Dynamic = Reflect.field(service, func);
-		var result:Dynamic = Reflect.callMethod(service, method, args);
+		var result:Dynamic = null;
+		try
+		{
+			application.logger.info('SERVICE: ' + className + '|' + func + '|' + args);
+			var service:ServiceBase = Type.createInstance(Type.resolveClass(className), []);
+			service.currentUser = this;
+			var method:Dynamic = Reflect.field(service, func);
+			var result:Dynamic = Reflect.callMethod(service, method, args);
+		}
+		catch (e:Dynamic)
+		{
+			application.logger.exception(e);
+		}
 		return result;
 	}
 	
