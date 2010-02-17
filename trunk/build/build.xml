@@ -1,12 +1,23 @@
-<project name="haxeServer" default="deploy-all">
+<project name="haxeServer" basedir="." default="deploy-all">
 	
 	<property name="output.server.dir" value="output/server"/>
 	<property name="output.admin.dir" value="output/admin"/>
 	<property name="output.client.dir" value="output/client"/>
 	
-	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask"/>
-	<taskdef name="if" classname="ise.antelope.tasks.IfTask"/>
-    <taskdef name="var" classname="ise.antelope.tasks.Variable"/>
+	<property file="local.properties"/>
+	
+	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask">
+		<classpath>
+			<pathelement location="lib/svnant.jar"/>
+			<pathelement location="lib/svnClientAdapter.jar"/>
+			<pathelement location="lib/svnjavahl.jar"/>
+			<pathelement location="lib/svnkit.jar"/>
+		</classpath>
+	</taskdef>
+	<taskdef name="if" classname="ise.antelope.tasks.IfTask"
+		classpath="lib/AntelopeTasks_3.5.1.jar" />
+    <taskdef name="var" classname="ise.antelope.tasks.Variable"
+		classpath="lib/AntelopeTasks_3.5.1.jar" />
 	
 	<target name="svn-update">
 		<if name="svn.update" value="true">
@@ -63,7 +74,7 @@
 		</exec>
 	</target>
 	
-	<target name="build-client-lib" depends="svn-update">
+	<target name="build-client-lib" depends="svn-update" description="Build client SWC library">
 		<delete dir="${output.client.dir}"/>
 		<mkdir dir="${output.client.dir}"/>
 		
