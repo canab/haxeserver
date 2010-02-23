@@ -179,7 +179,7 @@ class VisualTest extends RemoteClient
 		return null;
 	}
 	
-	override public function onCommand(command:ICommand):Void
+	override public function onCommand(command:Dynamic):Void
 	{
 		trace("so command " + command);
 	}

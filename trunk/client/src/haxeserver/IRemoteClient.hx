@@ -16,5 +16,5 @@ interface IRemoteClient
 	function onStateChanged(stateId:String, state:Dynamic):Void;
 	function onStateRemoved(stateId:String, state:Dynamic):Void;
 	function onSharedObjectFull():Void;
-	function onCommand(command:ICommand):Void;
+	function onCommand(command:Dynamic):Void;
 }

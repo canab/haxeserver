@@ -134,12 +134,21 @@ class RemoteObject
 		connection.serverAPI.soUnLock(this.id, func, stateId, stateData);
 	}
 	
-	public function sendCommand(command:ICommand)
+	public function sendCommand(command:Dynamic)
 	{
 		var commandId:Int = connection.getClassId(Type.getClass(command));
-		var parameters:Dynamic = { };
-		ReflectUtil.copyFields(command, parameters);
-		connection.serverAPI.soCommand(id, commandId, parameters);
+		if (commandId == -1)
+		{
+			throw Type.getClassName(Type.getClass(command)) +
+				" has not been registered by RemoteConnection.registerClass().";
+		}
+		else
+		{
+			var parameters:Dynamic = { };
+			ReflectUtil.copyFields(command, parameters);
+			connection.serverAPI.soCommand(id, commandId, parameters);
+			//trace(parameters);
+		}
 	}
 	
 	public function applyUserConnect(userId:Int)
@@ -246,7 +255,7 @@ class RemoteObject
 	{
 		try
 		{
-			var command:ICommand = connection.getTypedObject(commandId, parameters);
+			var command:Dynamic = connection.getTypedObject(commandId, parameters);
 			client.onCommand(command);
 		}
 		catch (e:Error)
