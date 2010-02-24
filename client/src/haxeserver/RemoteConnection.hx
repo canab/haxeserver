@@ -34,6 +34,7 @@ class RemoteConnection
 	public var userId(default, null):Int;
 	public var errorMessage(default, null):String;
 	public var connected(default, null):Bool;
+	public var connecting:Bool;
 	
 	private var socket:haxe.remoting.Socket;
 	private var clientAPI:ClientAPI;
@@ -41,6 +42,7 @@ class RemoteConnection
 	public function new() 
 	{
 		connected = false;
+		connecting = false;
 		connectEvent = new EventSender<RemoteConnection>(this);
 		errorEvent = new EventSender<RemoteConnection>(this);
 		remoteObjects = new Hash<RemoteObject>();
@@ -73,7 +75,7 @@ class RemoteConnection
 	
 	public function connect() 
 	{
-		if (connected)
+		if (connecting || connected)
 			throw "Connection is already established";
 		else
 			createConnection();
@@ -87,7 +89,7 @@ class RemoteConnection
 	
 	private function createConnection():Void
 	{
-		connected = true;
+		connecting = true;
 		
 		socket = new haxe.remoting.Socket();
 		socket.addEventListener(Event.CONNECT, onConnect);
@@ -114,7 +116,7 @@ class RemoteConnection
 	
 	private function onSequrityError(e:SecurityErrorEvent):Void 
 	{
-		connected = false;
+		connecting = false;
 		errorMessage = e.text;
 		errorEvent.sendEvent();
 	}
@@ -126,8 +128,10 @@ class RemoteConnection
 		errorEvent.sendEvent();
 	}
 	
-	public static function onConnect(e:Event)
+	public function onConnect(e:Event)
 	{
+		connecting = false;
+		connected = true;
 	}
 	
 	public function getRemoteObject(remoteId:String) :RemoteObject

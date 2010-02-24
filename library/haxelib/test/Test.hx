@@ -24,22 +24,26 @@ class Test
 	
 	private function assertTrue(value:Bool):Void 
 	{
-		success = (value == true);
+		if (!(value == true))
+			success = false;
 	}
 	
 	private function assertFalse(value:Bool):Void 
 	{
-		success = (value == false);
+		if (!(value == false))
+			success = false;
 	}
 	
 	private function assertEquals(value1:Dynamic, value2:Dynamic):Void 
 	{
-		success = (value1 == value2);
+		if (!(value1 == value2))
+			success = false;
 	}
 	
 	private function assertNotEquals(value1:Dynamic, value2:Dynamic):Void 
 	{
-		success = (value1 != value2);
+		if (!(value1 != value2))
+			success = false;
 	}
 	
 }
