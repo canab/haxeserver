@@ -33,10 +33,10 @@ class RemoteConnection
 	
 	public var userId(default, null):Int;
 	public var errorMessage(default, null):String;
+	public var connected(default, null):Bool;
 	
 	private var socket:haxe.remoting.Socket;
 	private var clientAPI:ClientAPI;
-	private var connected:Bool;
 	
 	public function new() 
 	{
