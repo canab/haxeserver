@@ -5,7 +5,10 @@ import flash.Lib;
 import haxelib.test.Test;
 import haxelib.test.TestSuite;
 import haxeserver.RemoteConnection;
+import haxeserver.test.data.ItemData;
+import haxeserver.test.data.PlayerData;
 import haxeserver.test.SOTest;
+
 
 /**
  * ...
@@ -21,6 +24,7 @@ class Main
 	
 	public var connection1(default, null):RemoteConnection;
 	public var connection2(default, null):RemoteConnection;
+	public var remoteId(default, null):String;
 	
 	private var suite:TestSuite;
 	
@@ -36,6 +40,7 @@ class Main
 	
 	private function initialize():Void
 	{
+		remoteId = Std.string(Std.int(Math.random() * 1e9));
 		connection1 = createConnection();
 		connection2 = createConnection();
 	}
@@ -48,6 +53,8 @@ class Main
 		connection.connectEvent.addListener(onConnect);
 		connection.errorEvent.addListener(onError);
 		connection.connect();
+		connection.registerClass(PlayerData);
+		connection.registerClass(ItemData);
 		return connection;
 	}
 	
@@ -86,6 +93,8 @@ class Main
 			trace('SUCCESSFUL');
 		else
 			trace('FAILED');
+			
+		createTests();
 	}
 	
 }

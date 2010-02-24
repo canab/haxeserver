@@ -34,9 +34,12 @@ class TestSuite
 	
 	private function nextTest():Void
 	{
+		trace(index);
 		while (index < tests.length)
 		{
 			var test:Test = tests[index];
+			trace(Type.getClass(test));
+			
 			if (Std.is(test, AsincTest))
 			{
 				var asincTest:AsincTest = cast(test, AsincTest);
