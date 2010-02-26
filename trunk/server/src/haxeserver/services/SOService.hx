@@ -4,7 +4,8 @@
  */
 
 package haxeserver.services;
-import haxeserver.core.SharedObject;
+
+import haxeserver.core.so.SharedObject;
 import neko.vm.Mutex;
 
 class SOService extends ServiceBase

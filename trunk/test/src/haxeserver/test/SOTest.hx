@@ -6,10 +6,10 @@
 package haxeserver.test;
 
 import haxelib.test.AsincTest;
-import haxeserver.IRemoteClient;
-import haxeserver.RemoteClient;
-import haxeserver.RemoteObject;
+import haxeserver.so.IRemoteClient;
+import haxeserver.so.RemoteObject;
 import haxeserver.test.data.PlayerData;
+import haxeserver.test.data.SampleCommand;
 
 class SOTest extends AsincTest, implements IRemoteClient
 {
@@ -45,7 +45,6 @@ class SOTest extends AsincTest, implements IRemoteClient
 		assertEquals(player.array, playerData.array);
 		
 		remote.changeState(playerStateId, { health: player.health - 10 } );
-		
 	}
 	
 	public function onStateChanged(stateId:String, state:Dynamic):Void
@@ -64,12 +63,31 @@ class SOTest extends AsincTest, implements IRemoteClient
 		assertTrue(stateId == playerStateId);
 		assertTrue(cast(state, PlayerData).name == player.name);
 		
-		dispatchComplete();
+		remote.call('rTestCall');
+	}
+	
+	public function rTestCall():Void 
+	{
+		remote.call("rTestCallWithParams", [1, "string", false, ["array1", "array2"]]);
+	}
+	
+	public function rTestCallWithParams(intValue:Int, stringValue:String, boolValue:Bool,
+		arrValue:Array<Dynamic>):Void 
+	{
+		assertTrue(intValue == 1);
+		assertTrue(stringValue == "string");
+		assertTrue(boolValue == false);
+		assertEquals(arrValue, ["array1", "array2"]);
+		
+		var command:SampleCommand = new SampleCommand();
+		command.text = "commandText";
+		remote.sendCommand(command);
 	}
 	
 	public function onCommand(command:Dynamic):Void
 	{
-		
+		assertTrue(cast(command, SampleCommand).text == "commandText");
+		dispatchComplete();
 	}
 	
 	public function onUserConnect(userId:Int):Void {}

@@ -3,7 +3,7 @@
  * @author Canab
  */
 
-package haxeserver.core;
+package haxeserver.core.so;
 
 class State 
 {

@@ -6,6 +6,7 @@ package haxeserver.core;
 import haxe.remoting.Context;
 import haxe.remoting.SocketConnection;
 import haxeserver.core.profiler.Profiler;
+import haxeserver.core.so.SharedObject;
 import neko.net.ThreadRemotingServer;
  
 class Application 

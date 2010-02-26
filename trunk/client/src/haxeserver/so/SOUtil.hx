@@ -3,7 +3,8 @@
  * @author canab
  */
 
-package haxeserver;
+package haxeserver.so;
+
 import haxelib.common.utils.ArrayUtil;
 import haxelib.common.utils.ReflectUtil;
 
@@ -16,27 +17,23 @@ class SOUtil
 	// TODO cache fields
 	static public function getObjectData(object:Dynamic):Array<Dynamic>
 	{
-		var objectClass:Class<Dynamic> = Type.getClass(object);
-		var fields:Array<String> = Type.getInstanceFields(objectClass);
+		var fields:Array<String> = ReflectUtil.getFieldsAndProperties(object);
 		ArrayUtil.sortStrings(fields);
 		
 		var values:Array<Dynamic> = [];
-		for (i in 0...fields.length-1)
+		for (i in 0...fields.length)
 		{
 			values.push(Reflect.field(object, fields[i]));
 		}
-		
 		return values;
 	}
 	
-	// TODO cache fields
 	static public function restoreObject(object:Dynamic, objectData:Array<Dynamic>):Void
 	{
-		var objectClass:Class<Dynamic> = Type.getClass(object);
-		var fields:Array<String> = Type.getInstanceFields(objectClass);
+		var fields:Array<String> = ReflectUtil.getFieldsAndProperties(object);
 		ArrayUtil.sortStrings(fields);
 		
-		for (i in 0...objectData.length-1)
+		for (i in 0...objectData.length)
 		{
 			Reflect.setField(object, fields[i], objectData[i]);
 		}
@@ -44,12 +41,11 @@ class SOUtil
 	
 	static public function getUpdateData(object:Dynamic, changeData:Dynamic):Array<Dynamic>
 	{
-		var objectClass:Class<Dynamic> = Type.getClass(object);
-		var fields:Array<String> = Type.getInstanceFields(objectClass);
+		var fields:Array<String> = ReflectUtil.getFieldsAndProperties(object);
 		ArrayUtil.sortStrings(fields);
 		
 		var updateData:Array<Dynamic> = [];
-		for (i in 0...fields.length-1)
+		for (i in 0...fields.length)
 		{
 			if (Reflect.hasField(changeData, fields[i]))
 			{
@@ -62,8 +58,7 @@ class SOUtil
 	
 	static public function updateObject(object:Dynamic, updateData:Array<Dynamic>):Void
 	{
-		var objectClass:Class<Dynamic> = Type.getClass(object);
-		var fields:Array<String> = Type.getInstanceFields(objectClass);
+		var fields:Array<String> = ReflectUtil.getFieldsAndProperties(object);
 		ArrayUtil.sortStrings(fields);
 		
 		for (i in 0...Std.int(updateData.length / 2))

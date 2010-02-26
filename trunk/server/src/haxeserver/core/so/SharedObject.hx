@@ -3,10 +3,12 @@
  * @author Canab
  */
 
-package haxeserver.core;
+package haxeserver.core.so;
+
 import haxelib.common.utils.ArrayUtil;
-import haxelib.common.utils.ReflectUtil;
-import haxeserver.sharedObjects.SOActionTypes;
+import haxeserver.core.Application;
+import haxeserver.core.UserAdapter;
+import haxeserver.so.SOActionTypes;
 import neko.vm.Mutex;
 
 class SharedObject 
@@ -45,7 +47,7 @@ class SharedObject
 			case SOActionTypes.CREATE:
 				createState(actionData[1], actionData[2], actionData[3], actionData[4]);
 			case SOActionTypes.CHANGE:
-				changeState(actionData[1], actionData[1]);
+				changeState(actionData[1], actionData[2]);
 			case SOActionTypes.REMOVE:
 				removeState(actionData[1]);
 		}
@@ -62,28 +64,22 @@ class SharedObject
 	
 	private function createState(typeId:Int, stateId:String, stateData:Dynamic, autoRemove:Bool):Void 
 	{
-		if (!states.exists(stateId))
-		{
-			var state:State = new State();
-			state.ownerId = (autoRemove) ? currentUser.id : -1;
-			state.typeId = typeId;
-			state.data = stateData;
-			state.lockerId = -1;
-			states.set(stateId, state);
-		}
+		var state:State = new State();
+		state.ownerId = (autoRemove) ? currentUser.id : -1;
+		state.typeId = typeId;
+		state.data = stateData;
+		state.lockerId = -1;
+		states.set(stateId, state);
 	}
 	
 	private function changeState(stateId:String, updateData:Array<Dynamic>):Void
 	{
 		var state:State = states.get(stateId);
-		if (state != null)
+		for (i in 0...Std.int(updateData.length / 2))
 		{
-			for (i in 0...Std.int(updateData.length / 2))
-			{
-				var index:Int = updateData[2 * i];
-				var value:Dynamic = updateData[2 * i + 1];
-				state.data[index] = value;
-			}
+			var index:Int = updateData[2 * i];
+			var value:Dynamic = updateData[2 * i + 1];
+			state.data[index] = value;
 		}
 	}
 	
@@ -217,31 +213,6 @@ class SharedObject
 //			adapter.clientAPI.soSend(this.id, func, stateId, null);
 		}
 		
-		mutex.release();
-	}
-	
-	public function call(func:String, arguments:Array<Dynamic>):Void 
-	{
-		mutex.acquire();
-		
-		for (user in users)
-		{
-			user.clientAPI.soCall(this.id, func, arguments);
-		}
-		
-		mutex.release();
-	}
-	
-	public function sendCommand(commandId:Int, parameters:Dynamic) 
-	{
-		mutex.acquire();
-		
-		for (user in users)
-		{
-			user.clientAPI.soCommand(this.id, commandId, parameters);
-		}
-		log("sendCommand " + commandId);
-
 		mutex.release();
 	}
 	

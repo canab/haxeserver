@@ -3,8 +3,7 @@
  * @author Canab
  */
 
-package haxeserver;
-import haxelib.common.commands.ICommand;
+package haxeserver.so;
 
 class RemoteClient implements IRemoteClient
 {

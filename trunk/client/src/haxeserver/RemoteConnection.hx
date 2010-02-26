@@ -14,7 +14,7 @@ import haxe.remoting.SocketConnection;
 import haxelib.common.events.EventSender;
 import haxelib.common.utils.ArrayUtil;
 import haxelib.common.utils.ReflectUtil;
-
+import haxeserver.so.RemoteObject;
 
 class ServerApi extends haxe.remoting.AsyncProxy<haxeserver.interfaces.IServerAPI>
 {

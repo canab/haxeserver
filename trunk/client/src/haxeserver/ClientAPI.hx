@@ -4,7 +4,9 @@
  */
 
 package haxeserver;
+
 import haxeserver.interfaces.IClientAPI;
+import haxeserver.so.RemoteObject;
 
 class ClientAPI implements IClientAPI
 {
@@ -71,13 +73,6 @@ class ClientAPI implements IClientAPI
 		var remote:RemoteObject = getRemote(remoteId);
 		if (remote != null)
 			remote.applyFull();
-	}
-	
-	public function soCommand(remoteId:String, commandId:Int, parameters:Dynamic):Void
-	{
-		var remote:RemoteObject = getRemote(remoteId);
-		if (remote != null)
-			remote.applyCommand(commandId, parameters);
 	}
 	
 }
