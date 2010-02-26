@@ -8,7 +8,7 @@ import flash.Error;
 import haxelib.common.commands.ICommand;
 import haxelib.common.utils.ReflectUtil;
 import haxeserver.sharedObjects.SOActionTypes;
-import haxeserver.sharedObjects.SOUtil;
+
 
 class RemoteObject 
 {
@@ -94,6 +94,24 @@ class RemoteObject
 		}
 	}
 	
+	private function sendAction(actionData:Array<Dynamic>):Void 
+	{
+		connection.serverAPI.A(this.id, actionData);
+	}
+	
+	public function applyAction(actionData:Array<Dynamic>):Void 
+	{
+		var actionType:String = actionData[0];
+		switch (actionType)
+		{
+			case SOActionTypes.CREATE:
+				applyCreateState(actionData[1], actionData[2], actionData[3], actionData[4]);
+			case SOActionTypes.CHANGE:
+				applyChangeState(actionData[1], actionData[2]);
+			case SOActionTypes.REMOVE:
+				applyRemoveState(actionData[1]);
+		}
+	}
 	
 	public function createState(stateId:String, state:Dynamic, autoRemove:Bool = false):Void 
 	{
@@ -111,54 +129,53 @@ class RemoteObject
 		}
 	}
 	
-	private function sendAction(actionData:Array<Dynamic>):Void 
+	private function applyCreateState(typeId:Int, stateId:String, stateData:Array<Dynamic>, autoRemove:Bool):Void 
 	{
-		connection.serverAPI.A(this.id, actionData);
+		var state = connection.getTypedObject(typeId);
+		SOUtil.restoreObject(state, stateData);
+		states.set(stateId, state);
+		client.onStateCreated(stateId, state);
 	}
-	
-	public function applyAction(actionData:Array<Dynamic>):Void 
+
+	public function changeState(stateId:String, changeData:Dynamic):Void 
 	{
-		var actionType:String = actionData[0];
-		if (actionType == SOActionTypes.CREATE)
-			applyCreateState(actionData);
-	}
-	
-	private function applyCreateState(actionData:Array<Dynamic>):Void 
-	{
-		var typeId:Int = actionData[1];
-		var stateId:String = actionData[2];
-		var stateData:Array<Dynamic> = actionData[3];
-		var autoRemove:Bool = actionData[4];
-		
-		try
+		var state:Dynamic = states.get(stateId);
+		if (state == null)
 		{
-			var state = connection.getTypedObject(typeId);
-			SOUtil.restoreObject(state, stateData);
-			states.set(stateId, state);
-			client.onStateCreated(stateId, state);
+			throw "Cannot change state (id=" + stateId + ") if it is not exists.";
 		}
-		catch (e:Error)
+		else
 		{
-			trace(e.message);
-			trace(e.getStackTrace());
+			sendAction([
+				SOActionTypes.CHANGE, stateId, SOUtil.getUpdateData(state, changeData)
+			]);
 		}
 	}
 	
-	/*public function removeState(stateId:String)
+	private function applyChangeState(stateId:String, updateData:Dynamic):Void
 	{
-		connection.serverAPI.soRemove(id, stateId);
+		var state:Dynamic = states.get(stateId);
+		SOUtil.updateObject(state, updateData);
+		client.onStateChanged(stateId, state);
+	}	
+	
+	public function removeState(stateId:String):Void
+	{
+		sendAction([SOActionTypes.REMOVE, stateId]);
 	}
+	
+	private function applyRemoveState(stateId:String):Void
+	{
+		var state:Dynamic = states.get(stateId);
+		states.remove(stateId);
+		client.onStateRemoved(stateId, state);
+	}
+	
+	/*
 	
 	public function call(func:String, arguments:Array<Dynamic> = null):Void 
 	{
 		connection.serverAPI.soCall(this.id, func, arguments);
-	}
-	
-	public function sendState(func:String, stateId:String, state:Dynamic):Void 
-	{
-		var stateData:Dynamic = {};
-		ReflectUtil.copyFields(state, stateData);
-		connection.serverAPI.soSend(this.id, func, stateId, stateData);
 	}
 	
 	public function lockState(func:String, stateId:String, state:Dynamic = null):Void 
@@ -224,44 +241,6 @@ class RemoteObject
 		}
 	}
 	
-	public function applyRemove(stateId:String)
-	{
-		try
-		{
-			var state:Dynamic = states.get(stateId);
-			states.remove(stateId);
-			client.onStateRemoved(stateId, state);
-		}
-		catch (e:Error)
-		{
-			trace(e.message);
-			trace(e.getStackTrace());
-		}
-	}
-	
-	public function applySend(func:String, stateId:String, stateData:Dynamic):Void
-	{
-		try
-		{
-			var state:Dynamic = states.get(stateId);
-			if (stateData != null)
-			{
-				ReflectUtil.copyFields(stateData, state);
-				client.onStateChanged(stateId, state);
-			}
-			else
-			{
-				state = null;
-			}
-			if (func != null)
-				callClient(func, [stateId, state]);
-		}
-		catch (e:Error)
-		{
-			trace(e.message);
-			trace(e.getStackTrace());
-		}
-	}
 	
 	public function applyCall(func:String, arguments:Array<Dynamic>):Void 
 	{

@@ -7,6 +7,7 @@ package haxelib.common.utils;
 
 class ReflectUtil 
 {
+	
 	static public function copyFields(source:Dynamic, target:Dynamic):Void 
 	{
 		var fields:Array<String> = null;

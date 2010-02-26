@@ -38,10 +38,19 @@ class SharedObject
 		mutex.acquire();
 		currentUser = adapter;
 		
+		// process action
 		var actionType:String = actionData[0];
-		if (actionType == SOActionTypes.CREATE)
-			createState(actionData);
+		switch (actionType)
+		{
+			case SOActionTypes.CREATE:
+				createState(actionData[1], actionData[2], actionData[3], actionData[4]);
+			case SOActionTypes.CHANGE:
+				changeState(actionData[1], actionData[1]);
+			case SOActionTypes.REMOVE:
+				removeState(actionData[1]);
+		}
 			
+		// call action on each connected user
 		for (user in users)
 		{
 			user.clientAPI.A(this.id, actionData);
@@ -51,13 +60,8 @@ class SharedObject
 		mutex.release();
 	}
 	
-	private function createState(actionData:Array<Dynamic>):Void 
+	private function createState(typeId:Int, stateId:String, stateData:Dynamic, autoRemove:Bool):Void 
 	{
-		var typeId:Int = actionData[1];
-		var stateId:String = actionData[2];
-		var stateData:Array<Dynamic> = actionData[3];
-		var autoRemove:Bool = actionData[4];
-		
 		if (!states.exists(stateId))
 		{
 			var state:State = new State();
@@ -69,6 +73,24 @@ class SharedObject
 		}
 	}
 	
+	private function changeState(stateId:String, updateData:Array<Dynamic>):Void
+	{
+		var state:State = states.get(stateId);
+		if (state != null)
+		{
+			for (i in 0...Std.int(updateData.length / 2))
+			{
+				var index:Int = updateData[2 * i];
+				var value:Dynamic = updateData[2 * i + 1];
+				state.data[index] = value;
+			}
+		}
+	}
+	
+	private function removeState(stateId:String)
+	{
+		states.remove(stateId);
+	}
 	
 	public function addUser(adapter:UserAdapter, needRestoreState:Bool):Bool
 	{
@@ -162,27 +184,6 @@ class SharedObject
 		}
 	}
 	
-	public function sendState(func:String, stateId:String, stateData:Dynamic) 
-	{
-		mutex.acquire();
-		
-		var state:State = states.get(stateId);
-		if (state != null)
-		{
-			ReflectUtil.copyFields(stateData, state.data);
-			for (user in users)
-			{
-				user.clientAPI.soSend(this.id, func, stateId, stateData);
-			}
-		}
-		else
-		{
-			throw "Send state to null object: " + stateId;
-		}
-		
-		mutex.release();
-	}
-	
 	public function lockState(adapter:UserAdapter, func:String, stateId:String, stateData:Dynamic):Void
 	{
 		mutex.acquire();
@@ -191,11 +192,11 @@ class SharedObject
 		if (state != null && (state.lockerId == -1 || state.lockerId == adapter.id))
 		{
 			state.lockerId = adapter.id;
-			sendState(func, stateId, stateData);
+			changeState(stateId, stateData);
 		}
 		else
 		{
-			adapter.clientAPI.soSend(this.id, func, stateId, null);
+//			adapter.clientAPI.soSend(this.id, func, stateId, null);
 		}
 		
 		mutex.release();
@@ -209,11 +210,11 @@ class SharedObject
 		if (state != null && (state.lockerId == -1 || state.lockerId == adapter.id))
 		{
 			state.lockerId = -1;
-			sendState(func, stateId, stateData);
+			changeState(stateId, stateData);
 		}
 		else
 		{
-			adapter.clientAPI.soSend(this.id, func, stateId, null);
+//			adapter.clientAPI.soSend(this.id, func, stateId, null);
 		}
 		
 		mutex.release();
@@ -228,19 +229,6 @@ class SharedObject
 			user.clientAPI.soCall(this.id, func, arguments);
 		}
 		
-		mutex.release();
-	}
-	
-	public function removeState(stateId:String) 
-	{
-		mutex.acquire();
-		
-		states.remove(stateId);
-		for (user in users)
-		{
-			user.clientAPI.soRemove(this.id, stateId);
-		}
-
 		mutex.release();
 	}
 	
