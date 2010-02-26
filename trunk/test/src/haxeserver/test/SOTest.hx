@@ -44,20 +44,27 @@ class SOTest extends AsincTest, implements IRemoteClient
 		assertTrue(player.active == playerData.active);
 		assertEquals(player.array, playerData.array);
 		
-		trace(stateId);
-		trace(state);
+		remote.changeState(playerStateId, { health: player.health - 10 } );
 		
-		dispatchComplete();
 	}
 	
 	public function onStateChanged(stateId:String, state:Dynamic):Void
 	{
+		var playerData:PlayerData = cast(state, PlayerData);
+		assertTrue(player.name == playerData.name);
+		assertTrue(player.health - 10 == playerData.health);
+		assertTrue(player.active == playerData.active);
+		assertEquals(player.array, playerData.array);
 		
+		remote.removeState(stateId);
 	}
 	
 	public function onStateRemoved(stateId:String, state:Dynamic):Void
 	{
+		assertTrue(stateId == playerStateId);
+		assertTrue(cast(state, PlayerData).name == player.name);
 		
+		dispatchComplete();
 	}
 	
 	public function onCommand(command:Dynamic):Void

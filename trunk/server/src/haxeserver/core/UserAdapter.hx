@@ -106,23 +106,6 @@ class UserAdapter implements IServerAPI
 		}
 	}
 	
-	
-	public function soSend(remoteId:String, func:String, stateId:String, stateData:Dynamic):Void
-	{
-		try
-		{
-			var t = Sys.time();
-			
-			sharedObjects.get(remoteId).sendState(func, stateId, stateData);
-			
-			application.profiler.addCall(here.methodName, Sys.time() - t);
-		}
-		catch (e:Dynamic)
-		{
-			application.logger.exception(e);
-		}
-	}
-	
 	public function soLock(remoteId:String, func:String, stateId:String, stateData:Dynamic):Void
 	{
 		try
@@ -162,22 +145,6 @@ class UserAdapter implements IServerAPI
 			var t = Sys.time();
 			
 			sharedObjects.get(remoteId).call(func, arguments);
-			
-			application.profiler.addCall(here.methodName, Sys.time() - t);
-		}
-		catch (e:Dynamic)
-		{
-			application.logger.exception(e);
-		}
-	}
-	
-	public function soRemove(remoteId:String, stateId:String)
-	{
-		try
-		{
-			var t = Sys.time();
-			
-			sharedObjects.get(remoteId).removeState(stateId);
 			
 			application.profiler.addCall(here.methodName, Sys.time() - t);
 		}

@@ -59,25 +59,11 @@ class ClientAPI implements IClientAPI
 			remote.applyUserDisconnect(userId);
 	}
 	
-	public function soSend(remoteId:String, func:String, stateId:String, state:Dynamic):Void
-	{
-		var remote:RemoteObject = getRemote(remoteId);
-		if (remote != null)
-			remote.applySend(func, stateId, state);
-	}
-	
 	public function soCall(remoteId:String, func:String, arguments:Array<Dynamic>):Void
 	{
 		var remote:RemoteObject = getRemote(remoteId);
 		if (remote != null)
 			remote.applyCall(func, arguments);
-	}
-	
-	public function soRemove(remoteId:String, stateId:String):Void
-	{
-		var remote:RemoteObject = getRemote(remoteId);
-		if (remote != null)
-			remote.applyRemove(stateId);
 	}
 	
 	public function soFull(remoteId:String):Void
