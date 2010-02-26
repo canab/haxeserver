@@ -36,7 +36,7 @@ class VisualTest extends RemoteClient
 	static public var RADIUS:Int = 10;
 	
 	static private var REMOTE_ID:String = '00';
-	static private var MAX_ITEMS:Int = 50;
+	static private var MAX_ITEMS:Int = 5;
 	
 	private var content:Sprite;
 	private var connection:RemoteConnection;

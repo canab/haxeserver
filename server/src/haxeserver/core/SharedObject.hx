@@ -6,6 +6,7 @@
 package haxeserver.core;
 import haxelib.common.utils.ArrayUtil;
 import haxelib.common.utils.ReflectUtil;
+import haxeserver.sharedObjects.SOActionTypes;
 import neko.vm.Mutex;
 
 class SharedObject 
@@ -17,6 +18,7 @@ class SharedObject
 	
 	private var states:Hash<State>;
 	private var mutex:Mutex;
+	private var currentUser:UserAdapter;
 	
 	public function new(remoteId:String) 
 	{
@@ -30,6 +32,43 @@ class SharedObject
 		
 		log("created");
 	}
+	
+	public function doAction(adapter:UserAdapter, actionData:Array<Dynamic>):Void 
+	{
+		mutex.acquire();
+		currentUser = adapter;
+		
+		var actionType:String = actionData[0];
+		if (actionType == SOActionTypes.CREATE)
+			createState(actionData);
+			
+		for (user in users)
+		{
+			user.clientAPI.A(this.id, actionData);
+		}
+		
+		currentUser = null;
+		mutex.release();
+	}
+	
+	private function createState(actionData:Array<Dynamic>):Void 
+	{
+		var typeId:Int = actionData[1];
+		var stateId:String = actionData[2];
+		var stateData:Array<Dynamic> = actionData[3];
+		var autoRemove:Bool = actionData[4];
+		
+		if (!states.exists(stateId))
+		{
+			var state:State = new State();
+			state.ownerId = (autoRemove) ? currentUser.id : -1;
+			state.typeId = typeId;
+			state.data = stateData;
+			state.lockerId = -1;
+			states.set(stateId, state);
+		}
+	}
+	
 	
 	public function addUser(adapter:UserAdapter, needRestoreState:Bool):Bool
 	{
@@ -121,27 +160,6 @@ class SharedObject
 		{
 			removeState(stateId);
 		}
-	}
-	
-	public function createState(ownerId:Int, typeId:Int, stateId:String, stateData:Dynamic):Void 
-	{
-		mutex.acquire();
-
-		if (!states.exists(stateId))
-		{
-			var state:State = new State();
-			state.ownerId = ownerId;
-			state.typeId = typeId;
-			state.data = stateData;
-			state.lockerId = -1;
-			states.set(stateId, state);
-		}
-		for (user in users)
-		{
-			user.clientAPI.soCreate(this.id, stateId, stateData, typeId);
-		}
-		
-		mutex.release();
 	}
 	
 	public function sendState(func:String, stateId:String, stateData:Dynamic) 

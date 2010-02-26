@@ -42,6 +42,5 @@ class RemoteClient implements IRemoteClient
 	
 	public function onCommand(command:Dynamic):Void
 	{
-		command.execute();
 	}
 }

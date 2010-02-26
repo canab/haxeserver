@@ -14,6 +14,7 @@ import haxe.remoting.SocketConnection;
 import haxelib.common.events.EventSender;
 import haxelib.common.utils.ArrayUtil;
 import haxelib.common.utils.ReflectUtil;
+import haxeserver.sharedObjects.SOUtil;
 
 class ServerApi extends haxe.remoting.AsyncProxy<haxeserver.interfaces.IServerAPI>
 {
@@ -36,7 +37,7 @@ class RemoteConnection
 	public var connected(default, null):Bool;
 	public var connecting:Bool;
 	
-	private var socket:haxe.remoting.Socket;
+	private var socket:Socket;
 	private var clientAPI:ClientAPI;
 	
 	public function new() 
@@ -52,6 +53,8 @@ class RemoteConnection
 	public function setUserId(value:Int):Void
 	{
 		userId = value;
+		connecting = false;
+		connected = true;
 		connectEvent.sendEvent();
 	}
 	
@@ -60,12 +63,10 @@ class RemoteConnection
 		classMap.push(classRef);
 	}
 	
-	public function getTypedObject(typeId:Int, instanceData:Dynamic):Dynamic
+	public function getTypedObject(typeId:Int):Dynamic
 	{
 		var classRef:Class<Dynamic> = classMap[typeId];
-		var result:Dynamic = Type.createInstance(classRef, []);
-		ReflectUtil.copyFields(instanceData, result);
-		return result;
+		return Type.createInstance(classRef, []);
 	}
 	
 	public function getClassId(classRef:Class<Dynamic>):Int
@@ -79,12 +80,6 @@ class RemoteConnection
 			throw "Connection is already established";
 		else
 			createConnection();
-	}
-	
-	public function disconnect() 
-	{
-		if (connected)
-			closeConnection();
 	}
 	
 	private function createConnection():Void
@@ -104,19 +99,26 @@ class RemoteConnection
 		serverAPI = new ServerApi(connection.S);
 	}
 	
+	public function disconnect() 
+	{
+		if (connecting || connected)
+			closeConnection();
+	}
+	
 	private function closeConnection():Void 
 	{
+		connected = false;
+		connecting = false;
 		socket.removeEventListener(Event.CONNECT, onConnect);
 		socket.removeEventListener(IOErrorEvent.IO_ERROR, onError);
 		socket.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onSequrityError);
-		connected = false;
 		socket.close();
 		remoteObjects = new Hash<RemoteObject>();
 	}
 	
 	private function onSequrityError(e:SecurityErrorEvent):Void 
 	{
-		connecting = false;
+		disconnect();
 		errorMessage = e.text;
 		errorEvent.sendEvent();
 	}
@@ -130,8 +132,6 @@ class RemoteConnection
 	
 	public function onConnect(e:Event)
 	{
-		connecting = false;
-		connected = true;
 	}
 	
 	public function getRemoteObject(remoteId:String) :RemoteObject
@@ -147,7 +147,14 @@ class RemoteConnection
 	
 	public function disconnectRemoteObject(remoteId:String)
 	{
-		remoteObjects.remove(remoteId);
-		serverAPI.soDisconnect(remoteId);
+		if (remoteObjects.exists(remoteId))
+		{
+			remoteObjects.remove(remoteId);
+			serverAPI.D(remoteId);
+		}
+		else
+		{
+			throw "Romote object (id=" + remoteId + ") does not exists.";
+		}
 	}
 }

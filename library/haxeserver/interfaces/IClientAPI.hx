@@ -3,7 +3,10 @@
 interface IClientAPI
 {
 	function setId(userId:Int):Void;
-	function soCreate(remoteId:String, stateId:String, state:Dynamic, typeId:Int):Void;
+	
+	// action
+	function A(remoteId:String, actionData:Array<Dynamic>):Void;
+	
 	function soSend(remoteId:String, func:String, stateId:String, state:Dynamic):Void;
 	function soCall(remoteId:String, func:String, arguments:Array<Dynamic>):Void;
 	function soRemove(remoteId:String, stateId:String):Void;

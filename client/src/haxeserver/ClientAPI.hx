@@ -31,11 +31,11 @@ class ClientAPI implements IClientAPI
 		connection.setUserId(value);
 	}
 	
-	public function soCreate(remoteId:String, stateId:String, stateData:Dynamic, typeId:Int):Void
+	public function A(remoteId:String, actionData:Array<Dynamic>):Void
 	{
 		var remote:RemoteObject = getRemote(remoteId);
 		if (remote != null)
-			remote.applyCreateState(typeId, stateId, stateData);
+			remote.applyAction(actionData);
 	}
 	
 	public function soRestore(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>):Void

@@ -14,7 +14,7 @@ class PlayerData
 
 	public function new() 
 	{
-		name = "player";
+		name = "chlos";
 		health = 100;
 		active = true;
 		array = [name, health, active];
