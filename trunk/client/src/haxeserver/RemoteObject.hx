@@ -7,12 +7,14 @@ package haxeserver;
 import flash.Error;
 import haxelib.common.commands.ICommand;
 import haxelib.common.utils.ReflectUtil;
+import haxeserver.sharedObjects.SOActionTypes;
+import haxeserver.sharedObjects.SOUtil;
 
 class RemoteObject 
 {
 	public var id(default, null):String;
 	public var states(default, null):Hash<Dynamic>;
-	public var users(default, null):List<Int>;
+	public var users(default, null):Array<Int>;
 	public var client(default, null):IRemoteClient;
 	public var maxUsers:Int;
 	
@@ -36,20 +38,20 @@ class RemoteObject
 		connected = false;
 		
 		states = new Hash<Dynamic>();
-		users = new List<Int>();
+		users = new Array<Int>();
 	}
 	
 	public function connect(client:IRemoteClient) 
 	{
 		if (connected)
 		{
-			throw "RemoteObject (id=" + id + ") already connected";
+			throw "RemoteObject (id=" + id + ") is already connected";
 		}
 		else
 		{
 			this.client = client;
+			connection.serverAPI.C(id, maxUsers);
 			connected = true;
-			connection.serverAPI.soConnect(id, maxUsers);
 		}
 	}
 	
@@ -71,7 +73,7 @@ class RemoteObject
 			var stateId:String = stateArray[0];
 			var typeId:Int = stateArray[1];
 			var stateData:Dynamic = stateArray[2];
-			applyCreateState(typeId, stateId, stateData);
+			//applyCreateState(typeId, stateId, stateData);
 		}
 		
 		ready = true;
@@ -96,12 +98,53 @@ class RemoteObject
 	public function createState(stateId:String, state:Dynamic, autoRemove:Bool = false):Void 
 	{
 		var typeId:Int = connection.getClassId(Type.getClass(state));
-		var stateData:Dynamic = { };
-		ReflectUtil.copyFields(state, stateData);
-		connection.serverAPI.soCreate(autoRemove, typeId, id, stateId, stateData);
+		if (typeId == -1)
+		{
+			throw "Class " + Type.getClassName(Type.getClass(state)) +
+				" is not registered by RemoteConnection.registerClass().";
+		}
+		else
+		{
+			sendAction([
+				SOActionTypes.CREATE, typeId, stateId, SOUtil.getObjectData(state), autoRemove
+			]);
+		}
 	}
 	
-	public function removeState(stateId:String)
+	private function sendAction(actionData:Array<Dynamic>):Void 
+	{
+		connection.serverAPI.A(this.id, actionData);
+	}
+	
+	public function applyAction(actionData:Array<Dynamic>):Void 
+	{
+		var actionType:String = actionData[0];
+		if (actionType == SOActionTypes.CREATE)
+			applyCreateState(actionData);
+	}
+	
+	private function applyCreateState(actionData:Array<Dynamic>):Void 
+	{
+		var typeId:Int = actionData[1];
+		var stateId:String = actionData[2];
+		var stateData:Array<Dynamic> = actionData[3];
+		var autoRemove:Bool = actionData[4];
+		
+		try
+		{
+			var state = connection.getTypedObject(typeId);
+			SOUtil.restoreObject(state, stateData);
+			states.set(stateId, state);
+			client.onStateCreated(stateId, state);
+		}
+		catch (e:Error)
+		{
+			trace(e.message);
+			trace(e.getStackTrace());
+		}
+	}
+	
+	/*public function removeState(stateId:String)
 	{
 		connection.serverAPI.soRemove(id, stateId);
 	}
@@ -151,11 +194,13 @@ class RemoteObject
 		}
 	}
 	
+	*/
+	
 	public function applyUserConnect(userId:Int)
 	{
 		try
 		{
-			users.add(userId);
+			users.push(userId);
 			client.onUserConnect(userId);
 		}
 		catch (e:Error)
@@ -171,26 +216,6 @@ class RemoteObject
 		{
 			users.remove(userId);
 			client.onUserDisconnect(userId);
-		}
-		catch (e:Error)
-		{
-			trace(e.message);
-			trace(e.getStackTrace());
-		}
-	}
-	
-	public function applyCreateState(typeId:Int, stateId:String, stateData:Dynamic):Void 
-	{
-		try
-		{
-			var state:Dynamic;
-			if (typeId == -1)
-				state = stateData;
-			else
-				state = connection.getTypedObject(typeId, stateData);
-			
-			states.set(stateId, state);
-			client.onStateCreated(stateId, state);
 		}
 		catch (e:Error)
 		{
@@ -255,7 +280,7 @@ class RemoteObject
 	{
 		try
 		{
-			var command:Dynamic = connection.getTypedObject(commandId, parameters);
+			var command:Dynamic = connection.getTypedObject(commandId);
 			client.onCommand(command);
 		}
 		catch (e:Error)

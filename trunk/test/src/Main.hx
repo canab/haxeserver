@@ -7,6 +7,7 @@ import haxelib.test.TestSuite;
 import haxeserver.RemoteConnection;
 import haxeserver.test.data.ItemData;
 import haxeserver.test.data.PlayerData;
+import haxeserver.test.data.SampleCommand;
 import haxeserver.test.SOTest;
 
 
@@ -40,7 +41,6 @@ class Main
 	
 	private function initialize():Void
 	{
-		remoteId = Std.string(Std.int(Math.random() * 1e9));
 		connection1 = createConnection();
 		connection2 = createConnection();
 	}
@@ -55,6 +55,7 @@ class Main
 		connection.connect();
 		connection.registerClass(PlayerData);
 		connection.registerClass(ItemData);
+		connection.registerClass(SampleCommand);
 		return connection;
 	}
 	
@@ -68,6 +69,7 @@ class Main
 		trace('Connected to ' + sender.host + ':' + sender.port);
 		if (connection1.connected && connection2.connected)
 		{
+			remoteId = 'SO' + Std.string(connection1.userId);
 			Lib.current.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 	}
@@ -83,6 +85,7 @@ class Main
 		suite = new TestSuite();
 		suite.completeEvent.addListener(onComplete);
 		suite.add(new SOTest());
+		//suite.add(new SOUserOrderTest());
 		suite.run();
 	}
 	
@@ -94,7 +97,16 @@ class Main
 		else
 			trace('FAILED');
 			
-		createTests();
+		Lib.current.addEventListener(Event.ENTER_FRAME, repeat);
+	}
+	
+	private function repeat(e:Event):Void 
+	{
+		Lib.current.removeEventListener(Event.ENTER_FRAME, repeat);
+		connection1.disconnect();
+		connection2.disconnect();
+		//if (suite.succes)
+			//initialize();
 	}
 	
 }

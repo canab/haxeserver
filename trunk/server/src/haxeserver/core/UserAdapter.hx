@@ -31,7 +31,34 @@ class UserAdapter implements IServerAPI
 		application = Application.instance;
 	}
 	
-	public function soConnect(remoteId:String, maxUsers:Int)
+	//callService
+	public function S(className:String, func:String, args:Array<Dynamic>):Dynamic
+	{
+		var result:Dynamic = null;
+		try
+		{
+			var logServiceName:String = className.substr(className.lastIndexOf('.') + 1) + '.' + func;
+			application.logger.info(logServiceName + args);
+			
+			var t = Sys.time();
+			
+			var service:ServiceBase = Type.createInstance(Type.resolveClass(className), []);
+			service.currentUser = this;
+			var method:Dynamic = Reflect.field(service, func);
+			result = Reflect.callMethod(service, method, args);
+			
+			application.profiler.addCall(logServiceName, Sys.time() - t);
+			
+		}
+		catch (e:Dynamic)
+		{
+			application.logger.exception(e);
+		}
+		return result;
+	}
+	
+	// soConnect
+	public function C(remoteId:String, maxUsers:Int)
 	{
 		try
 		{
@@ -39,7 +66,7 @@ class UserAdapter implements IServerAPI
 			
 			application.addUserToSO(this, remoteId, maxUsers, true);
 			
-			application.profiler.addCall(here.methodName, Sys.time() - t);
+			application.profiler.addCall('soConnect', Sys.time() - t);
 		}
 		catch (e:Dynamic)
 		{
@@ -47,7 +74,8 @@ class UserAdapter implements IServerAPI
 		}
 	}
 	
-	public function soDisconnect(remoteId:String)
+	// soDisconnect	
+	public function D(remoteId:String)
 	{
 		try
 		{
@@ -55,7 +83,7 @@ class UserAdapter implements IServerAPI
 			
 			application.removeUserFromSO(this, remoteId);
 			
-			application.profiler.addCall(here.methodName, Sys.time() - t);
+			application.profiler.addCall('soDisconnect', Sys.time() - t);
 		}
 		catch (e:Dynamic)
 		{
@@ -63,22 +91,21 @@ class UserAdapter implements IServerAPI
 		}
 	}
 	
-	public function soCreate(autoRemove:Bool, typeId:Int, remoteId:String, stateId:String, stateData:Dynamic):Void
+	// soAction
+	public function A(remoteId:String, actionData:Array<Dynamic>):Void 
 	{
 		try
 		{
 			var t = Sys.time();
-			
-			var ownerId:Int = (autoRemove) ? this.id : -1;
-			sharedObjects.get(remoteId).createState(ownerId, typeId, stateId, stateData);
-			
-			application.profiler.addCall(here.methodName, Sys.time() - t);
+			sharedObjects.get(remoteId).doAction(this, actionData);
+			application.profiler.addCall('soAction', Sys.time() - t);
 		}
 		catch (e:Dynamic)
 		{
 			application.logger.exception(e);
 		}
 	}
+	
 	
 	public function soSend(remoteId:String, func:String, stateId:String, stateData:Dynamic):Void
 	{
@@ -174,32 +201,6 @@ class UserAdapter implements IServerAPI
 		{
 			application.logger.exception(e);
 		}
-	}
-	
-	public function callService(className:String, func:String, args:Array<Dynamic>):Dynamic
-	{
-		var result:Dynamic = null;
-		try
-		{
-			var logServiceName:String = className.substr(className.lastIndexOf('.') + 1) + '.' + func;
-			application.logger.info(logServiceName + args);
-			
-			var t = Sys.time();
-			
-			var service:ServiceBase = Type.createInstance(Type.resolveClass(className), []);
-			service.currentUser = this;
-			var method:Dynamic = Reflect.field(service, func);
-			result = Reflect.callMethod(service, method, args);
-			
-			t = Sys.time() - t;
-			application.profiler.addCall(logServiceName, t);
-			
-		}
-		catch (e:Dynamic)
-		{
-			application.logger.exception(e);
-		}
-		return result;
 	}
 	
 }

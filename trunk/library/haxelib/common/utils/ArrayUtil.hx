@@ -38,4 +38,19 @@ class ArrayUtil
 		return length;
 	}
 	
+	static public function sortStrings(array:Array<String>):Void
+	{
+		array.sort(
+			function(string1:String, string2:String):Int
+			{
+				if (string1 > string2)
+					return 1;
+				else if (string1 < string2)
+					return - 1;
+				else
+					return 0;
+			}
+		);
+	}
+	
 }
