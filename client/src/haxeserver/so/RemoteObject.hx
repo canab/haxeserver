@@ -3,11 +3,10 @@
  * @author Canab
  */
 
-package haxeserver;
-import flash.Error;
-import haxelib.common.commands.ICommand;
+package haxeserver.so;
+
 import haxelib.common.utils.ReflectUtil;
-import haxeserver.sharedObjects.SOActionTypes;
+import haxeserver.RemoteConnection;
 
 
 class RemoteObject 
@@ -19,10 +18,6 @@ class RemoteObject
 	public var maxUsers:Int;
 	
 	public var userId(getUserId, null):Int;
-	private function getUserId():Int
-	{
-		return connection.userId;
-	}
 	
 	public var connected(default, null):Bool;
 	public var ready(default, null):Bool;
@@ -41,11 +36,12 @@ class RemoteObject
 		users = new Array<Int>();
 	}
 	
+	//{ region connect
 	public function connect(client:IRemoteClient) 
 	{
 		if (connected)
 		{
-			throw "RemoteObject (id=" + id + ") is already connected";
+			throw "RemoteObject (id=" + id + ") is already connected.";
 		}
 		else
 		{
@@ -55,11 +51,27 @@ class RemoteObject
 		}
 	}
 	
+	public function applyUserConnect(userId:Int)
+	{
+		users.push(userId);
+		client.onUserConnect(userId);
+	}
+	//} endregion
+	
+	//{ region disconnect
 	public function disconnect() 
 	{
 		connection.disconnectRemoteObject(id);
 	}
 	
+	public function applyUserDisconnect(userId:Int)
+	{
+		users.remove(userId);
+		client.onUserDisconnect(userId);
+	}
+	//} endregion
+	
+	//{ region restore
 	public function restore(usersList:Array<Dynamic>, statesList:Array<Dynamic>) 
 	{
 		for (userId in usersList)
@@ -82,18 +94,12 @@ class RemoteObject
 	
 	public function applyFull():Void 
 	{
-		try
-		{
-			connection.remoteObjects.remove(this.id);
-			client.onSharedObjectFull();
-		}
-		catch (e:Error)
-		{
-			trace(e.message);
-			trace(e.getStackTrace());
-		}
+		connection.remoteObjects.remove(this.id);
+		client.onSharedObjectFull();
 	}
+	//} endregion
 	
+	//{ region action
 	private function sendAction(actionData:Array<Dynamic>):Void 
 	{
 		connection.serverAPI.A(this.id, actionData);
@@ -110,9 +116,15 @@ class RemoteObject
 				applyChangeState(actionData[1], actionData[2]);
 			case SOActionTypes.REMOVE:
 				applyRemoveState(actionData[1]);
+			case SOActionTypes.CALL:
+				applyCall(actionData[1], actionData[2]);
+			case SOActionTypes.COMMAND:
+				applyCommand(actionData[1], actionData[2]);
 		}
 	}
+	//} endregion
 	
+	//{ region createState
 	public function createState(stateId:String, state:Dynamic, autoRemove:Bool = false):Void 
 	{
 		var typeId:Int = connection.getClassId(Type.getClass(state));
@@ -123,9 +135,7 @@ class RemoteObject
 		}
 		else
 		{
-			sendAction([
-				SOActionTypes.CREATE, typeId, stateId, SOUtil.getObjectData(state), autoRemove
-			]);
+			sendAction([SOActionTypes.CREATE, typeId, stateId, SOUtil.getObjectData(state), autoRemove]);
 		}
 	}
 	
@@ -136,7 +146,9 @@ class RemoteObject
 		states.set(stateId, state);
 		client.onStateCreated(stateId, state);
 	}
+	//} endregion
 
+	//{ region changeState
 	public function changeState(stateId:String, changeData:Dynamic):Void 
 	{
 		var state:Dynamic = states.get(stateId);
@@ -158,7 +170,9 @@ class RemoteObject
 		SOUtil.updateObject(state, updateData);
 		client.onStateChanged(stateId, state);
 	}	
+	//} endregion
 	
+	//{ region removeState
 	public function removeState(stateId:String):Void
 	{
 		sendAction([SOActionTypes.REMOVE, stateId]);
@@ -170,13 +184,47 @@ class RemoteObject
 		states.remove(stateId);
 		client.onStateRemoved(stateId, state);
 	}
+	//} endregion
+	
+	//{ region call
+	public function call(func:String, args:Array<Dynamic> = null):Void 
+	{
+		sendAction([SOActionTypes.CALL, func, args]);
+	}
+	
+	public function applyCall(func:String, args:Array<Dynamic>):Void 
+	{
+		callClient(func, args);
+	}
+	//} endregion
+	
+	//{ region command
+	public function sendCommand(command:Dynamic):Void
+	{
+		var typeId:Int = connection.getClassId(Type.getClass(command));
+		if (typeId == -1)
+		{
+			throw "Class" + Type.getClassName(Type.getClass(command)) +
+				" is not registered by RemoteConnection.registerClass().";
+		}
+		else
+		{
+			sendAction([SOActionTypes.COMMAND, typeId, SOUtil.getObjectData(command)]);
+		}
+	}
+	
+	private function applyCommand(typeId:Int, data:Array<Dynamic>):Void
+	{
+		var command:Dynamic = connection.getTypedObject(typeId);
+		SOUtil.restoreObject(command, data);
+		client.onCommand(command);
+	}
+	//} endregion
+	
+	
 	
 	/*
 	
-	public function call(func:String, arguments:Array<Dynamic> = null):Void 
-	{
-		connection.serverAPI.soCall(this.id, func, arguments);
-	}
 	
 	public function lockState(func:String, stateId:String, state:Dynamic = null):Void 
 	{
@@ -194,91 +242,15 @@ class RemoteObject
 		connection.serverAPI.soUnLock(this.id, func, stateId, stateData);
 	}
 	
-	public function sendCommand(command:Dynamic)
-	{
-		var commandId:Int = connection.getClassId(Type.getClass(command));
-		if (commandId == -1)
-		{
-			throw Type.getClassName(Type.getClass(command)) +
-				" has not been registered by RemoteConnection.registerClass().";
-		}
-		else
-		{
-			var parameters:Dynamic = { };
-			ReflectUtil.copyFields(command, parameters);
-			connection.serverAPI.soCommand(id, commandId, parameters);
-			//trace(parameters);
-		}
-	}
-	
 	*/
 	
-	public function applyUserConnect(userId:Int)
+	private function getUserId():Int
 	{
-		try
-		{
-			users.push(userId);
-			client.onUserConnect(userId);
-		}
-		catch (e:Error)
-		{
-			trace(e.message);
-			trace(e.getStackTrace());
-		}
+		return connection.userId;
 	}
 	
-	public function applyUserDisconnect(userId:Int)
+	private function callClient(func:String, args:Array<Dynamic>):Void 
 	{
-		try
-		{
-			users.remove(userId);
-			client.onUserDisconnect(userId);
-		}
-		catch (e:Error)
-		{
-			trace(e.message);
-			trace(e.getStackTrace());
-		}
-	}
-	
-	
-	public function applyCall(func:String, arguments:Array<Dynamic>):Void 
-	{
-		try
-		{
-			callClient(func, arguments);
-		}
-		catch (e:Error)
-		{
-			trace(e.message);
-			trace(e.getStackTrace());
-		}
-	}
-	
-	public function applyCommand(commandId:Int, parameters:Dynamic)
-	{
-		try
-		{
-			var command:Dynamic = connection.getTypedObject(commandId);
-			client.onCommand(command);
-		}
-		catch (e:Error)
-		{
-			trace(e.message);
-			trace(e.getStackTrace());
-		}
-	}
-	
-	private function callClient(func:String, arguments:Array<Dynamic>):Void 
-	{
-		try
-		{
-			Reflect.callMethod(client, Reflect.field(client, func), arguments);
-		}
-		catch (error:Error)
-		{
-			trace('clientCall Error ' + error.message);
-			trace(error.getStackTrace());
-		}
+		Reflect.callMethod(client, Reflect.field(client, func), args);
 	}
 }

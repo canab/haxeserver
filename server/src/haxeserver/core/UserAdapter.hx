@@ -1,5 +1,6 @@
 ﻿package haxeserver.core;
 
+import haxeserver.core.so.SharedObject;
 import haxeserver.interfaces.IServerAPI;
 import haxeserver.services.ServiceBase;
 import neko.Sys;
@@ -137,37 +138,4 @@ class UserAdapter implements IServerAPI
 			application.logger.exception(e);
 		}
 	}
-	
-	public function soCall(remoteId:String, func:String, arguments:Array<Dynamic>):Void
-	{
-		try
-		{
-			var t = Sys.time();
-			
-			sharedObjects.get(remoteId).call(func, arguments);
-			
-			application.profiler.addCall(here.methodName, Sys.time() - t);
-		}
-		catch (e:Dynamic)
-		{
-			application.logger.exception(e);
-		}
-	}
-	
-	public function soCommand(remoteId:String, commandId:Int, parameters:Dynamic)
-	{
-		try
-		{
-			var t = Sys.time();
-			
-			sharedObjects.get(remoteId).sendCommand(commandId, parameters);
-			
-			application.profiler.addCall(here.methodName, Sys.time() - t);
-		}
-		catch (e:Dynamic)
-		{
-			application.logger.exception(e);
-		}
-	}
-	
 }

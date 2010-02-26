@@ -3,7 +3,7 @@
  * @author Canab
  */
 
-package haxeserver;
+package haxeserver.so;
 
 import haxelib.common.commands.ICommand;
 
