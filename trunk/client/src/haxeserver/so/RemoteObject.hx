@@ -40,7 +40,7 @@ class RemoteObject
 	{
 		if (connected)
 		{
-			throw "RemoteObject (id=" + id + ") is already connected.";
+			throw toString() + " is already connected.";
 		}
 		else
 		{
@@ -68,11 +68,18 @@ class RemoteObject
 	//{ region disconnect
 	public function disconnect() 
 	{
-		connection.serverAPI.D(this.id);
-		connection.removeRemoteObject(this);
-		connected = false;
-		connection = null;
-		ready = false;
+		if (!connected)
+		{
+			throw toString() + " is not connected.";
+		}
+		else
+		{
+			connection.serverAPI.D(this.id);
+			connection.removeRemoteObject(this);
+			connected = false;
+			connection = null;
+			ready = false;
+		}
 	}
 	
 	public function applyUserDisconnect(userId:Int)
@@ -152,6 +159,11 @@ class RemoteObject
 	
 	private function applyCreateState(typeId:Int, stateId:String, stateData:Array<Dynamic>):Void 
 	{
+		/*trace('-------------------');
+		trace(connected);
+		trace(ready);
+		trace(connection);*/
+		
 		var state = connection.getTypedObject(typeId);
 		SOUtil.restoreObject(state, stateData);
 		states.set(stateId, state);
@@ -267,6 +279,8 @@ class RemoteObject
 	
 	public function toString():String
 	{
-		return "RemoteObject(id=" + id + ")";
+		return "RemoteObject(userId="
+			+ ((connection != null) ? Std.string(connection.userId) : "null")
+			+ ",id=" + id + ")";
 	}
 }

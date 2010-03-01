@@ -22,13 +22,15 @@ class SOUserOrderTest extends AsincTest, implements IRemoteClient
 
 	override public function initialize():Void
 	{
-		myRemote = new RemoteObject(Main.instance.remoteId);
+		var remoteId:String = "OrderTest" + Main.instance.connection1.userId + "_" + tryNum;
+		
+		myRemote = new RemoteObject(remoteId);
 		myRemote.connect(Main.instance.connection1, this);
 		
-		otherRemote = new RemoteObject(Main.instance.remoteId);
+		otherRemote = new RemoteObject(remoteId);
 		otherRemote.connect(Main.instance.connection2, this);
 		
-		anotherRemote = new RemoteObject(Main.instance.remoteId);
+		anotherRemote = new RemoteObject(remoteId);
 		anotherRemote.connect(Main.instance.connection3, this);
 	}
 	
@@ -48,8 +50,8 @@ class SOUserOrderTest extends AsincTest, implements IRemoteClient
 			&& otherRemote.users.length == 3
 			&& anotherRemote.users.length == 3)
 		{
-			assertEquals(myRemote.users, otherRemote.users);
-			assertEquals(myRemote.users, anotherRemote.users);
+			assertArrayEquals(myRemote.users, otherRemote.users);
+			assertArrayEquals(myRemote.users, anotherRemote.users);
 			anotherRemote.disconnect();
 		}
 	}
@@ -58,7 +60,7 @@ class SOUserOrderTest extends AsincTest, implements IRemoteClient
 	{
 		if (myRemote.users.length == 2 && otherRemote.users.length == 2)
 		{
-			assertEquals(myRemote.users, otherRemote.users);
+			assertArrayEquals(myRemote.users, otherRemote.users);
 			dispatchComplete();
 		}
 	}

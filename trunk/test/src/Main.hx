@@ -9,6 +9,7 @@ import haxeserver.test.data.ItemData;
 import haxeserver.test.data.PlayerData;
 import haxeserver.test.data.SampleCommand;
 import haxeserver.test.SOBaseTest;
+import haxeserver.test.SOLockTest;
 import haxeserver.test.SORestoreTest;
 import haxeserver.test.SOUserOrderTest;
 
@@ -27,7 +28,7 @@ class Main
 	public var connection1(default, null):RemoteConnection;
 	public var connection2(default, null):RemoteConnection;
 	public var connection3(default, null):RemoteConnection;
-	public var remoteId(default, null):String;
+	public var instanceId(default, null):String;
 	
 	private var suite:TestSuite;
 	
@@ -74,7 +75,6 @@ class Main
 			&& connection2.connected
 			&& connection3.connected)
 		{
-			remoteId = 'SO' + Std.string(connection1.userId);
 			Lib.current.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 	}
@@ -89,9 +89,10 @@ class Main
 	{
 		suite = new TestSuite();
 		suite.completeEvent.addListener(onComplete);
-		suite.add(new SOBaseTest());
-		suite.add(new SORestoreTest());
-		suite.add(new SOUserOrderTest());
+		suite.add(new SOBaseTest(), 1);
+		suite.add(new SORestoreTest(), 1);
+		suite.add(new SOUserOrderTest(), 1);
+		suite.add(new SOLockTest(), 50);
 		suite.run();
 	}
 	
@@ -112,8 +113,8 @@ class Main
 		connection1.disconnect();
 		connection2.disconnect();
 		connection3.disconnect();
-		//if (suite.succes)
-		//	initialize();
+		if (suite.succes)
+			initialize();
 	}
 	
 }
