@@ -35,10 +35,6 @@ class RemoteClient implements IRemoteClient
 	{
 	}
 	
-	public function onSharedObjectFull():Void
-	{
-	}
-	
 	public function onCommand(command:Dynamic):Void
 	{
 	}

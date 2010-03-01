@@ -24,10 +24,10 @@ class RemoteObject
 	
 	private var connection:RemoteConnection;
 	
-	public function new(remoteId:String)
+	public function new(remoteId:String, maxUsers:Int = 0)
 	{
-		id = remoteId;
-		maxUsers = 0;
+		this.id = remoteId;
+		this.maxUsers = maxUsers;
 		ready = false;
 		connected = false;
 		
@@ -55,7 +55,10 @@ class RemoteObject
 	private function onConnect(result:Bool):Void
 	{
 		if (!result)
-			client.onSharedObjectFull();
+		{
+			removeConnection();
+			client.onReady();
+		}
 	}
 	
 	public function applyUserConnect(userId:Int)
@@ -75,11 +78,16 @@ class RemoteObject
 		else
 		{
 			connection.serverAPI.D(this.id);
-			connection.removeRemoteObject(this);
-			connected = false;
-			connection = null;
+			removeConnection();
 			ready = false;
 		}
+	}
+	
+	private function removeConnection():Void 
+	{
+		connection.removeRemoteObject(this);
+		connected = false;
+		connection = null;
 	}
 	
 	public function applyUserDisconnect(userId:Int)
@@ -110,11 +118,6 @@ class RemoteObject
 		client.onReady();
 	}
 	
-	public function applyFull():Void 
-	{
-		connection.remoteObjects.remove(this.id);
-		client.onSharedObjectFull();
-	}
 	//} endregion
 	
 	//{ region action
@@ -159,11 +162,6 @@ class RemoteObject
 	
 	private function applyCreateState(typeId:Int, stateId:String, stateData:Array<Dynamic>):Void 
 	{
-		/*trace('-------------------');
-		trace(connected);
-		trace(ready);
-		trace(connection);*/
-		
 		var state = connection.getTypedObject(typeId);
 		SOUtil.restoreObject(state, stateData);
 		states.set(stateId, state);
@@ -245,27 +243,17 @@ class RemoteObject
 	//} endregion
 	
 	
-	
-	/*
-	
-	
-	public function lockState(func:String, stateId:String, state:Dynamic = null):Void 
+	//{ region lock
+	public function lockState(stateId:String, onResult:Bool->Void = null):Void 
 	{
-		var stateData:Dynamic = {};
-		if (state)
-			ReflectUtil.copyFields(state, stateData);
-		connection.serverAPI.soLock(this.id, func, stateId, stateData);
+		connection.serverAPI.L(this.id, stateId, onResult);
 	}
 	
-	public function unLockState(func:String, stateId:String, state:Dynamic = null):Void 
+	public function unlockState(stateId:String):Void 
 	{
-		var stateData:Dynamic = {};
-		if (state)
-			ReflectUtil.copyFields(state, stateData);
-		connection.serverAPI.soUnLock(this.id, func, stateId, stateData);
+		connection.serverAPI.U(this.id, stateId);
 	}
-	
-	*/
+	//} endregion
 	
 	private function getUserId():Int
 	{

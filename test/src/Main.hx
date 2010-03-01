@@ -10,6 +10,7 @@ import haxeserver.test.data.PlayerData;
 import haxeserver.test.data.SampleCommand;
 import haxeserver.test.SOBaseTest;
 import haxeserver.test.SOLockTest;
+import haxeserver.test.SOMaxUsersTest;
 import haxeserver.test.SORestoreTest;
 import haxeserver.test.SOUserOrderTest;
 
@@ -22,6 +23,9 @@ class Main
 {
 	static public var HOST:String = 'localhost';
 	static public var PORT:Int = 8080;
+	
+	static public var LOOP:Bool = false;
+	static public var TRY_COUNT:Int = 1;
 	
 	static public var instance(default, null):Main;
 	
@@ -89,10 +93,13 @@ class Main
 	{
 		suite = new TestSuite();
 		suite.completeEvent.addListener(onComplete);
-		suite.add(new SOBaseTest(), 1);
-		suite.add(new SORestoreTest(), 1);
-		suite.add(new SOUserOrderTest(), 1);
-		suite.add(new SOLockTest(), 50);
+		
+		suite.add(new SOBaseTest(), TRY_COUNT);
+		suite.add(new SORestoreTest(), TRY_COUNT);
+		suite.add(new SOUserOrderTest(), TRY_COUNT);
+		suite.add(new SOLockTest(), TRY_COUNT);
+		suite.add(new SOMaxUsersTest(), TRY_COUNT);
+		
 		suite.run();
 	}
 	
@@ -113,7 +120,7 @@ class Main
 		connection1.disconnect();
 		connection2.disconnect();
 		connection3.disconnect();
-		if (suite.succes)
+		if (suite.succes && LOOP)
 			initialize();
 	}
 	
