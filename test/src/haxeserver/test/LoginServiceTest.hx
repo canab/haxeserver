@@ -3,8 +3,9 @@
  * @author canab
  */
 
-package haxelib.test;
+package haxeserver.test;
 import haxe.Md5;
+import haxelib.test.AsincTest;
 import haxeserver.services.LoginService;
 
 class LoginServiceTest extends AsincTest
