@@ -21,8 +21,9 @@ class TestSuite
 		succes = true;
 	}
 	
-	public function add(test:Test):Void 
+	public function add(test:Test, tryCount:Int = 1):Void 
 	{
+		test.tryCount = tryCount;
 		tests.push(test);
 	}
 	
@@ -37,21 +38,32 @@ class TestSuite
 		while (index < tests.length)
 		{
 			var test:Test = tests[index];
-			trace(Type.getClass(test));
 			
 			if (Std.is(test, AsincTest))
 			{
 				var asincTest:AsincTest = cast(test, AsincTest);
-				asincTest.completeEvent.addListener(onAsincTestComplete);
+				if (asincTest.tryNum == 0)
+				{
+					trace(Type.getClass(test));
+					asincTest.completeEvent.addListener(onAsincTestComplete);
+				}
 				asincTest.initialize();
 				break;
 			}
 			else
 			{
-				test.initialize();
-				test.dispose();
-				if (!test.success)
-					succes = false;
+				trace(Type.getClass(test));
+				while (test.tryNum < test.tryCount)
+				{
+					test.tryNum++;
+					test.initialize();
+					test.dispose();
+					if (!test.success)
+					{
+						succes = false;
+						break;
+					}
+				}
 				index++;
 			}
 		}
@@ -66,9 +78,12 @@ class TestSuite
 		sender.dispose();
 		if (!sender.success)
 			succes = false;
-		index++;
-		nextTest();
+		
+		sender.tryNum++;
+		if (sender.tryNum == sender.tryCount)
+			index++;
+			
+		if (succes)
+			nextTest();
 	}
-	
-	
 }

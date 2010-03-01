@@ -25,7 +25,8 @@ class SOBaseTest extends AsincTest, implements IRemoteClient
 	
 	override public function initialize():Void
 	{
-		remote = new RemoteObject(Main.instance.remoteId);
+		var remoteId:String = "BaseTest" + Main.instance.connection1.userId;
+		remote = new RemoteObject(remoteId);
 		remote.connect(Main.instance.connection1, this);
 	}
 	
@@ -39,10 +40,10 @@ class SOBaseTest extends AsincTest, implements IRemoteClient
 	public function onStateCreated(stateId:String, state:Dynamic):Void
 	{
 		var playerData:PlayerData = cast(state, PlayerData);
-		assertTrue(player.name == playerData.name);
-		assertTrue(player.health == playerData.health);
-		assertTrue(player.active == playerData.active);
-		assertEquals(player.array, playerData.array);
+		assertEquals(player.name, playerData.name);
+		assertEquals(player.health, playerData.health);
+		assertEquals(player.active, playerData.active);
+		assertArrayEquals(player.array, playerData.array);
 		
 		remote.changeState(playerStateId, { health: player.health - 10 } );
 	}
@@ -50,18 +51,18 @@ class SOBaseTest extends AsincTest, implements IRemoteClient
 	public function onStateChanged(stateId:String, state:Dynamic):Void
 	{
 		var playerData:PlayerData = cast(state, PlayerData);
-		assertTrue(player.name == playerData.name);
-		assertTrue(player.health - 10 == playerData.health);
-		assertTrue(player.active == playerData.active);
-		assertEquals(player.array, playerData.array);
+		assertEquals(player.name, playerData.name);
+		assertEquals(player.health - 10, playerData.health);
+		assertEquals(player.active, playerData.active);
+		assertArrayEquals(player.array, playerData.array);
 		
 		remote.removeState(stateId);
 	}
 	
 	public function onStateRemoved(stateId:String, state:Dynamic):Void
 	{
-		assertTrue(stateId == playerStateId);
-		assertTrue(cast(state, PlayerData).name == player.name);
+		assertEquals(stateId, playerStateId);
+		assertEquals(cast(state, PlayerData).name, player.name);
 		
 		remote.call('rTestCall');
 	}
@@ -74,10 +75,10 @@ class SOBaseTest extends AsincTest, implements IRemoteClient
 	public function rTestCallWithParams(intValue:Int, stringValue:String, boolValue:Bool,
 		arrValue:Array<Dynamic>):Void 
 	{
-		assertTrue(intValue == 1);
-		assertTrue(stringValue == "string");
-		assertTrue(boolValue == false);
-		assertEquals(arrValue, ["array1", "array2"]);
+		assertEquals(intValue, 1);
+		assertEquals(stringValue, "string");
+		assertEquals(boolValue, false);
+		assertArrayEquals(arrValue, ["array1", "array2"]);
 		
 		var command:SampleCommand = new SampleCommand();
 		command.text = "commandText";
@@ -86,7 +87,7 @@ class SOBaseTest extends AsincTest, implements IRemoteClient
 	
 	public function onCommand(command:Dynamic):Void
 	{
-		assertTrue(cast(command, SampleCommand).text == "commandText");
+		assertEquals(cast(command, SampleCommand).text, "commandText");
 		remote.disconnect();
 		dispatchComplete();
 	}

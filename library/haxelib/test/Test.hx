@@ -10,10 +10,14 @@ import haxe.Stack;
 class Test 
 {
 	public var success(default, null):Bool;
+	public var tryNum:Int;
+	public var tryCount:Int;
 
 	public function new() 
 	{
 		success = true;
+		tryNum = 0;
+		tryCount = 1;
 	}
 	
 	public function initialize():Void 
@@ -40,23 +44,23 @@ class Test
 		}
 	}
 	
-	private function assertTrue(value:Bool):Void 
+	private function assertEquals(value1:Dynamic, value2:Dynamic):Void 
 	{
-		if (!(value == true))
+		if (!(value1 == value2))
+		{
+			trace("assertEquals failed");
+			trace("value1=" + value1);
+			trace("value2=" + value2);
 			fail();
+		}
 	}
 	
-	private function assertFalse(value:Bool):Void 
+	private function assertArrayEquals(array1:Array<Dynamic>, array2:Array<Dynamic>):Void 
 	{
-		if (!(value == false))
-			fail();
-	}
-	
-	private function assertEquals(array1:Array<Dynamic>, array2:Array<Dynamic>):Void 
-	{
+		var result:Bool = true;
 		if (array1.length != array2.length)
 		{
-			fail();
+			result = false;
 		}
 		else
 		{
@@ -64,10 +68,17 @@ class Test
 			{
 				if (array1[i] != array2[i])
 				{
-					fail();
+					result = false;
 					break;
 				}
 			}
+		}
+		if (!result)
+		{
+			trace("assertArrayEquals failed");
+			trace("value1=" + array1);
+			trace("value2=" + array2);
+			fail();
 		}
 	}
 }

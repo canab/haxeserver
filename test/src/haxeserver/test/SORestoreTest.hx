@@ -9,7 +9,7 @@ import haxeserver.so.RemoteClient;
 import haxeserver.so.RemoteObject;
 import haxeserver.test.data.ItemData;
 
-class MyClient extends RemoteClient
+private class MyClient extends RemoteClient
 {
 	private var test:SORestoreTest;
 	private var remote:RemoteObject;
@@ -41,7 +41,7 @@ class MyClient extends RemoteClient
 	}
 }
 
-class OtherClient extends RemoteClient
+private class OtherClient extends RemoteClient
 {
 	private var test:SORestoreTest;
 	private var remote:RemoteObject;
@@ -63,6 +63,7 @@ class SORestoreTest extends AsincTest
 {
 	private var myRemote:RemoteObject;
 	private var otherRemote:RemoteObject;
+	private var remoteId:String;
 
 	public function new() 
 	{
@@ -71,7 +72,8 @@ class SORestoreTest extends AsincTest
 	
 	override public function initialize():Void
 	{
-		myRemote = new RemoteObject(Main.instance.remoteId);
+		remoteId = "RestoreTest" + Main.instance.connection1.userId;
+		myRemote = new RemoteObject(remoteId);
 		myRemote.connect(Main.instance.connection1, new MyClient(this, myRemote));
 	}
 	
@@ -83,19 +85,19 @@ class SORestoreTest extends AsincTest
 	
 	public function connectOtherObject():Void 
 	{
-		otherRemote = new RemoteObject(Main.instance.remoteId);
+		otherRemote = new RemoteObject(remoteId);
 		otherRemote.connect(Main.instance.connection2, new OtherClient(this, otherRemote));
 	}
 	
 	public function checkStates():Void 
 	{
-		assertTrue(otherRemote.users.length == 2);
-		assertTrue(otherRemote.states.get('i1') == null);
+		assertEquals(otherRemote.users.length, 2);
+		assertEquals(otherRemote.states.get('i1'), null);
 		
 		var item:ItemData = cast(otherRemote.states.get('i2'), ItemData);
-		assertTrue(item.id == -1);
-		assertTrue(item.x == -50);
-		assertTrue(item.y == -100);
+		assertEquals(item.id, -1);
+		assertEquals(item.x, -50);
+		assertEquals(item.y, -100);
 		
 		dispatchComplete();
 	}
