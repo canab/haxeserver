@@ -9,15 +9,14 @@ import haxeserver.RemoteConnection;
 class ServiceBase 
 {
 	static public var defaultConnection:RemoteConnection;
-	static public var defaultErrorHandler:Dynamic->Void;
+	
+	public var connection:RemoteConnection;
 	
 	private var resultHandler:Dynamic->Void;
-	private var errorHandler:Dynamic->Void;
 
-	public function new(resultHandler:Dynamic->Void = null, errorHandler:Dynamic->Void = null) 
+	public function new(resultHandler:Dynamic->Void = null) 
 	{
 		this.resultHandler = resultHandler;
-		this.errorHandler = errorHandler;
 	}
 	
 	private function doCall(func:String, args:Array<Dynamic>):Void
@@ -26,7 +25,7 @@ class ServiceBase
 		if (connection != null)
 		{
 			var className:String = Type.getClassName(Type.getClass(this));
-			connection.serverAPI.callService(className, func, args, resultHandler);
+			connection.serverAPI.S(className, func, args, resultHandler);
 		}
 		else
 		{
@@ -36,6 +35,6 @@ class ServiceBase
 	
 	private function getConnection():RemoteConnection
 	{
-		return defaultConnection;
+		return (connection != null) ? connection : defaultConnection;
 	}
 }

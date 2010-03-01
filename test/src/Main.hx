@@ -5,13 +5,17 @@ import flash.Lib;
 import haxelib.test.Test;
 import haxelib.test.TestSuite;
 import haxeserver.RemoteConnection;
+import haxeserver.services.ServiceBase;
+import haxeserver.test.AdminServiceTest;
 import haxeserver.test.data.ItemData;
 import haxeserver.test.data.PlayerData;
 import haxeserver.test.data.SampleCommand;
+import haxeserver.test.SOAutoConnectTest;
 import haxeserver.test.SOBaseTest;
 import haxeserver.test.SOLockTest;
 import haxeserver.test.SOMaxUsersTest;
 import haxeserver.test.SORestoreTest;
+import haxeserver.test.SOServiceTest;
 import haxeserver.test.SOUserOrderTest;
 
 /**
@@ -25,7 +29,7 @@ class Main
 	static public var PORT:Int = 8080;
 	
 	static public var LOOP:Bool = false;
-	static public var TRY_COUNT:Int = 1;
+	static public var TRY_COUNT:Int = 10;
 	
 	static public var instance(default, null):Main;
 	
@@ -51,6 +55,8 @@ class Main
 		connection1 = createConnection();
 		connection2 = createConnection();
 		connection3 = createConnection();
+		
+		ServiceBase.defaultConnection = connection1;
 	}
 	
 	private function createConnection():RemoteConnection
@@ -99,6 +105,10 @@ class Main
 		suite.add(new SOUserOrderTest(), TRY_COUNT);
 		suite.add(new SOLockTest(), TRY_COUNT);
 		suite.add(new SOMaxUsersTest(), TRY_COUNT);
+		suite.add(new LoginServiceTest(), TRY_COUNT);
+		suite.add(new SOServiceTest(), TRY_COUNT);
+		suite.add(new SOAutoConnectTest(), TRY_COUNT);
+		suite.add(new AdminServiceTest(), TRY_COUNT);
 		
 		suite.run();
 	}

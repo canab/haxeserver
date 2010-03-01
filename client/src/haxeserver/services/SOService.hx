@@ -7,9 +7,9 @@ package haxeserver.services;
 
 class SOService extends ServiceBase
 {
-	public function new(onResult:Dynamic->Void = null, onError:Dynamic->Void = null) 
+	public function new(onResult:Dynamic->Void = null) 
 	{
-		super(onResult, onError);
+		super(onResult);
 	}
 	
 	public function connectToFreeSO(soPrefix:String, maxUsers:Int):Void 

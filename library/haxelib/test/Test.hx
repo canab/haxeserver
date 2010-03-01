@@ -55,6 +55,24 @@ class Test
 		}
 	}
 	
+	private function assertTrue(value:Bool):Void 
+	{
+		if (!(value))
+		{
+			trace("assertTrue failed");
+			fail();
+		}
+	}
+	
+	private function assertFalse(value:Bool):Void 
+	{
+		if (value)
+		{
+			trace("assertFalse failed");
+			fail();
+		}
+	}
+	
 	private function assertArrayEquals(array1:Array<Dynamic>, array2:Array<Dynamic>):Void 
 	{
 		var result:Bool = true;
