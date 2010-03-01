@@ -110,29 +110,34 @@ class UserAdapter implements IServerAPI
 		}
 	}
 	
-	public function soLock(remoteId:String, func:String, stateId:String, stateData:Dynamic):Void
+	// soLock
+	public function L(remoteId:String, stateId:String):Bool
 	{
+		var result:Bool;
 		try
 		{
 			var t = Sys.time();
 			
-			sharedObjects.get(remoteId).lockState(this, func, stateId, stateData);
+			result = sharedObjects.get(remoteId).lockState(this, stateId);
 			
-			application.profiler.addCall(here.methodName, Sys.time() - t);
+			application.profiler.addCall("lock", Sys.time() - t);
 		}
 		catch (e:Dynamic)
 		{
 			application.logger.exception(e);
+			result = false;
 		}
+		return result;
 	}
 	
-	public function soUnLock(remoteId:String, func:String, stateId:String, stateData:Dynamic):Void
+	// soUnlock
+	public function U(remoteId:String, stateId:String):Void
 	{
 		try
 		{
 			var t = Sys.time();
 			
-			sharedObjects.get(remoteId).unLockState(this, func, stateId, stateData);
+			sharedObjects.get(remoteId).unlockState(this, stateId);
 			
 			application.profiler.addCall(here.methodName, Sys.time() - t);
 		}

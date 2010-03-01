@@ -15,9 +15,8 @@ interface IServerAPI
 	function A(remoteId:String, actionData:Array<Dynamic>):Void;
 	
 	//soLock
-	//function L(remoteId:String, stateId:String):Bool;
+	function L(remoteId:String, stateId:String):Bool;
 	
 	//soUnlock
-	//function U(remoteId:String, stateId:String):Void;
-	//function U(remoteId:String, stateId:String):Void;
+	function U(remoteId:String, stateId:String):Void;
 }
