@@ -24,9 +24,8 @@ class RemoteObject
 	
 	private var connection:RemoteConnection;
 	
-	public function new(remoteConnection:RemoteConnection, remoteId:String)
+	public function new(remoteId:String)
 	{
-		connection = remoteConnection;
 		id = remoteId;
 		maxUsers = 0;
 		ready = false;
@@ -37,7 +36,7 @@ class RemoteObject
 	}
 	
 	//{ region connect
-	public function connect(client:IRemoteClient) 
+	public function connect(connection:RemoteConnection, client:IRemoteClient) 
 	{
 		if (connected)
 		{
@@ -45,10 +44,18 @@ class RemoteObject
 		}
 		else
 		{
+			this.connection = connection;
 			this.client = client;
-			connection.serverAPI.C(id, maxUsers);
+			connection.addRemoteObject(this);
+			connection.serverAPI.C(id, maxUsers, onConnect);
 			connected = true;
 		}
+	}
+	
+	private function onConnect(result:Bool):Void
+	{
+		if (!result)
+			client.onSharedObjectFull();
 	}
 	
 	public function applyUserConnect(userId:Int)
@@ -61,7 +68,11 @@ class RemoteObject
 	//{ region disconnect
 	public function disconnect() 
 	{
-		connection.disconnectRemoteObject(id);
+		connection.serverAPI.D(this.id);
+		connection.removeRemoteObject(this);
+		connected = false;
+		connection = null;
+		ready = false;
 	}
 	
 	public function applyUserDisconnect(userId:Int)
@@ -72,7 +83,7 @@ class RemoteObject
 	//} endregion
 	
 	//{ region restore
-	public function restore(usersList:Array<Dynamic>, statesList:Array<Dynamic>) 
+	public function applyRestore(usersList:Array<Dynamic>, statesList:Array<Dynamic>) 
 	{
 		for (userId in usersList)
 		{
@@ -85,7 +96,7 @@ class RemoteObject
 			var stateId:String = stateArray[0];
 			var typeId:Int = stateArray[1];
 			var stateData:Dynamic = stateArray[2];
-			//applyCreateState(typeId, stateId, stateData);
+			applyCreateState(typeId, stateId, stateData);
 		}
 		
 		ready = true;
@@ -111,7 +122,7 @@ class RemoteObject
 		switch (actionType)
 		{
 			case SOActionTypes.CREATE:
-				applyCreateState(actionData[1], actionData[2], actionData[3], actionData[4]);
+				applyCreateState(actionData[1], actionData[2], actionData[3]);
 			case SOActionTypes.CHANGE:
 				applyChangeState(actionData[1], actionData[2]);
 			case SOActionTypes.REMOVE:
@@ -139,7 +150,7 @@ class RemoteObject
 		}
 	}
 	
-	private function applyCreateState(typeId:Int, stateId:String, stateData:Array<Dynamic>, autoRemove:Bool):Void 
+	private function applyCreateState(typeId:Int, stateId:String, stateData:Array<Dynamic>):Void 
 	{
 		var state = connection.getTypedObject(typeId);
 		SOUtil.restoreObject(state, stateData);
@@ -252,5 +263,10 @@ class RemoteObject
 	private function callClient(func:String, args:Array<Dynamic>):Void 
 	{
 		Reflect.callMethod(client, Reflect.field(client, func), args);
+	}
+	
+	public function toString():String
+	{
+		return "RemoteObject(id=" + id + ")";
 	}
 }

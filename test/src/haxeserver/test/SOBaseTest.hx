@@ -11,7 +11,7 @@ import haxeserver.so.RemoteObject;
 import haxeserver.test.data.PlayerData;
 import haxeserver.test.data.SampleCommand;
 
-class SOTest extends AsincTest, implements IRemoteClient
+class SOBaseTest extends AsincTest, implements IRemoteClient
 {
 	static private var playerStateId:String = 'P';
 	static private var player:PlayerData = new PlayerData();
@@ -25,8 +25,8 @@ class SOTest extends AsincTest, implements IRemoteClient
 	
 	override public function initialize():Void
 	{
-		remote = Main.instance.connection1.getRemoteObject(Main.instance.remoteId);
-		remote.connect(this);
+		remote = new RemoteObject(Main.instance.remoteId);
+		remote.connect(Main.instance.connection1, this);
 	}
 	
 	/* INTERFACE haxeserver.IRemoteClient */
@@ -87,6 +87,7 @@ class SOTest extends AsincTest, implements IRemoteClient
 	public function onCommand(command:Dynamic):Void
 	{
 		assertTrue(cast(command, SampleCommand).text == "commandText");
+		remote.disconnect();
 		dispatchComplete();
 	}
 	

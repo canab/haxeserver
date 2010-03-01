@@ -112,7 +112,7 @@ class SharedObject
 			for (user in users)
 			{
 				if (user.id != adapter.id)
-					user.clientAPI.soUserConnect(this.id, adapter.id);
+					user.clientAPI.C(this.id, adapter.id);
 			}
 			log("user connected: " + adapter.id);
 			result = true;
@@ -145,7 +145,7 @@ class SharedObject
 			stateData.push(state.data);
 			statesList.push(stateData);
 		}
-		adapter.clientAPI.soRestore(this.id, usersList, statesList);
+		adapter.clientAPI.R(this.id, usersList, statesList);
 	}
 
 	public function removeUser(adapter:UserAdapter) 
@@ -156,7 +156,7 @@ class SharedObject
 		users.remove(adapter);
 		for (user in users)
 		{
-			user.clientAPI.soUserDisconnect(this.id, adapter.id);
+			user.clientAPI.D(this.id, adapter.id);
 		}
 		log("user disconnected: " + adapter.id);
 		

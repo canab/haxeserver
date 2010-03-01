@@ -63,6 +63,7 @@ class TestSuite
 	
 	private function onAsincTestComplete(sender:AsincTest):Void
 	{
+		sender.dispose();
 		if (!sender.success)
 			succes = false;
 		index++;

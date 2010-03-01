@@ -6,11 +6,18 @@ interface IServerAPI
 	function S(className:String, func:String, args:Array<Dynamic>):Dynamic;
 	
 	//soConnect
-	function C(remoteId:String, maxUsers:Int):Void;
+	function C(remoteId:String, maxUsers:Int):Bool;
 	
 	//soDisconnet
 	function D(remoteId:String):Void;
 	
 	//soAction
 	function A(remoteId:String, actionData:Array<Dynamic>):Void;
+	
+	//soLock
+	//function L(remoteId:String, stateId:String):Bool;
+	
+	//soUnlock
+	//function U(remoteId:String, stateId:String):Void;
+	//function U(remoteId:String, stateId:String):Void;
 }

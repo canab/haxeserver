@@ -3,12 +3,16 @@
 interface IClientAPI
 {
 	function setId(userId:Int):Void;
-	function soUserConnect(remoteId:String, userId:Int):Void;
-	function soUserDisconnect(remoteId:String, userId:Int):Void;
 	
-	// action
+	//soConnect
+	function C(remoteId:String, userId:Int):Void;
+	
+	//soDisconnet
+	function D(remoteId:String, userId:Int):Void;
+	
+	// soRestore
+	function R(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>):Void;
+	
+	// soAction
 	function A(remoteId:String, actionData:Array<Dynamic>):Void;
-	
-	function soRestore(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>):Void;
-	function soFull(remoteId:String):Void;
 }
