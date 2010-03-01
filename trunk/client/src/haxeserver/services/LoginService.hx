@@ -9,7 +9,7 @@ class LoginService extends ServiceBase
 {
 	public function new(onResult:Dynamic->Void = null, onError:Dynamic->Void = null) 
 	{
-		super(onResult, onError);
+		super(onResult);
 	}
 	
 	public function doLogin(login:String, md5Password:String):Void
