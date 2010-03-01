@@ -134,27 +134,19 @@ class RemoteConnection
 	{
 	}
 	
-	public function getRemoteObject(remoteId:String) :RemoteObject
+	public function addRemoteObject(object:RemoteObject):Void
 	{
-		var remote:RemoteObject = remoteObjects.get(remoteId);
-		if (remote == null)
-		{
-			remote = new RemoteObject(this, remoteId);
-			remoteObjects.set(remoteId, remote);
-		}
-		return remote;
+		if (remoteObjects.exists(object.id))
+			throw object + " has been already added.";
+		else
+			remoteObjects.set(object.id, object);
 	}
 	
-	public function disconnectRemoteObject(remoteId:String)
+	public function removeRemoteObject(object:RemoteObject):Void
 	{
-		if (remoteObjects.exists(remoteId))
-		{
-			remoteObjects.remove(remoteId);
-			serverAPI.D(remoteId);
-		}
+		if (!remoteObjects.exists(object.id))
+			throw object + " has not been added.";
 		else
-		{
-			throw "Romote object (id=" + remoteId + ") does not exists.";
-		}
+			remoteObjects.remove(object.id);
 	}
 }

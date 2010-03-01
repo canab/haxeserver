@@ -118,16 +118,10 @@ class Application
 	public function addUserToSO(user:UserAdapter, remoteId:String, maxUsers:Int, needRestoreState:Bool):Bool
 	{
 		var so:SharedObject = getSharedObject(remoteId, maxUsers);
-		if (so.addUser(user, needRestoreState))
-		{
+		var result:Bool = so.addUser(user, needRestoreState);
+		if (result)
 			user.sharedObjects.set(so.id, so);
-			return true;
-		}
-		else
-		{
-			user.clientAPI.soFull(so.id);
-			return false;
-		}
+		return result;
 	}
 	
 	public function removeUserFromSO(user:UserAdapter, remoteId:String) 

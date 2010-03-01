@@ -33,46 +33,31 @@ class ClientAPI implements IClientAPI
 		connection.setUserId(value);
 	}
 	
-	public function A(remoteId:String, actionData:Array<Dynamic>):Void
+	public function C(remoteId:String, userId:Int):Void
 	{
 		var remote:RemoteObject = getRemote(remoteId);
-		if (remote != null)
-			remote.applyAction(actionData);
-	}
-	
-	public function soRestore(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>):Void
-	{
-		var remote:RemoteObject = getRemote(remoteId);
-		if (remote != null)
-			remote.restore(usersList, statesList);
-	}
-	
-	public function soUserConnect(remoteId:String, userId:Int):Void
-	{
-		var remote:RemoteObject = getRemote(remoteId);
-		if (remote != null)
+		if (remote != null && remote.ready)
 			remote.applyUserConnect(userId);
 	}
 	
-	public function soUserDisconnect(remoteId:String, userId:Int):Void
+	public function D(remoteId:String, userId:Int):Void
 	{
 		var remote:RemoteObject = getRemote(remoteId);
-		if (remote != null)
+		if (remote != null && remote.ready)
 			remote.applyUserDisconnect(userId);
 	}
 	
-	public function soCall(remoteId:String, func:String, arguments:Array<Dynamic>):Void
+	public function R(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>):Void
 	{
 		var remote:RemoteObject = getRemote(remoteId);
-		if (remote != null)
-			remote.applyCall(func, arguments);
+		if (remote != null && !remote.ready)
+			remote.applyRestore(usersList, statesList);
 	}
 	
-	public function soFull(remoteId:String):Void
+	public function A(remoteId:String, actionData:Array<Dynamic>):Void
 	{
 		var remote:RemoteObject = getRemote(remoteId);
-		if (remote != null)
-			remote.applyFull();
+		if (remote != null && remote.ready)
+			remote.applyAction(actionData);
 	}
-	
 }

@@ -1,65 +1,66 @@
+package haxeserver.test;
+
+import haxelib.test.AsincTest;
+import haxeserver.so.IRemoteClient;
+import haxeserver.so.RemoteClient;
+import haxeserver.so.RemoteObject;
 /**
  * ...
  * @author canab
  */
 
-package haxeserver.test;
-import haxelib.test.AsincTest;
-import haxeserver.IRemoteClient;
-import haxeserver.RemoteClient;
-import haxeserver.RemoteObject;
-import haxeserver.test.data.SampleCommand;
-
 class SOUserOrderTest extends AsincTest, implements IRemoteClient
 {
 	private var myRemote:RemoteObject;
 	private var otherRemote:RemoteObject;
-	private var tryCount:Int;
-	private var tryNum:Int;
+	private var anotherRemote:RemoteObject;
 
 	public function new() 
 	{
-		tryCount = 10;
-		tryNum = 0;
 		super();
 	}
 
 	override public function initialize():Void
 	{
-		runTest();
+		myRemote = new RemoteObject(Main.instance.remoteId);
+		myRemote.connect(Main.instance.connection1, this);
+		
+		otherRemote = new RemoteObject(Main.instance.remoteId);
+		otherRemote.connect(Main.instance.connection2, this);
+		
+		anotherRemote = new RemoteObject(Main.instance.remoteId);
+		anotherRemote.connect(Main.instance.connection3, this);
 	}
 	
-	private function runTest():Void
+	override public function dispose():Void 
 	{
-		trace("==========================================");
-		
-		myRemote = Main.instance.connection1.getRemoteObject(Main.instance.remoteId);
-		myRemote.connect(this);
-		
-		otherRemote = Main.instance.connection2.getRemoteObject(Main.instance.remoteId);
-		otherRemote.connect(new RemoteClient());
-	}
-	
-	
-	override public function dispose():Void
-	{
+		myRemote.disconnect();
+		otherRemote.disconnect();
 	}
 	
 	public function onReady():Void
 	{
-		trace('ready:' + Main.instance.connection1.userId);
 	}
 	
 	public function onUserConnect(userId:Int):Void
 	{
-		if (myRemote.users.length == 2)
+		if (myRemote.users.length == 3
+			&& otherRemote.users.length == 3
+			&& anotherRemote.users.length == 3)
 		{
-			myRemote.sendCommand(new SampleCommand());
+			assertEquals(myRemote.users, otherRemote.users);
+			assertEquals(myRemote.users, anotherRemote.users);
+			anotherRemote.disconnect();
 		}
 	}
 	
 	public function onUserDisconnect(userId:Int):Void
 	{
+		if (myRemote.users.length == 2 && otherRemote.users.length == 2)
+		{
+			assertEquals(myRemote.users, otherRemote.users);
+			dispatchComplete();
+		}
 	}
 	
 	public function onStateCreated(stateId:String, state:Dynamic):Void
@@ -80,24 +81,6 @@ class SOUserOrderTest extends AsincTest, implements IRemoteClient
 	
 	public function onCommand(command:Dynamic):Void
 	{
-		assertEquals(myRemote.users, otherRemote.users);
-			
-		myRemote.disconnect();
-		otherRemote.disconnect();
-		
-		if (success)
-		{
-			if (++tryNum < tryCount)
-				runTest();
-			else
-				dispatchComplete();
-		}
-		else
-		{
-			trace('attempt:' + tryNum);
-			trace(myRemote.users);
-			trace(otherRemote.users);
-			dispatchComplete();
-		}
 	}
+	
 }
