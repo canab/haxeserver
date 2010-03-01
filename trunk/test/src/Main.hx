@@ -10,6 +10,7 @@ import haxeserver.test.AdminServiceTest;
 import haxeserver.test.data.ItemData;
 import haxeserver.test.data.PlayerData;
 import haxeserver.test.data.SampleCommand;
+import haxeserver.test.LoginServiceTest;
 import haxeserver.test.SOAutoConnectTest;
 import haxeserver.test.SOBaseTest;
 import haxeserver.test.SOLockTest;
@@ -28,8 +29,8 @@ class Main
 	static public var HOST:String = 'localhost';
 	static public var PORT:Int = 8080;
 	
-	static public var LOOP:Bool = false;
-	static public var TRY_COUNT:Int = 10;
+	static public var LOOP:Bool = true;
+	static public var TRY_COUNT:Int = 5;
 	
 	static public var instance(default, null):Main;
 	
@@ -57,6 +58,24 @@ class Main
 		connection3 = createConnection();
 		
 		ServiceBase.defaultConnection = connection1;
+	}
+	
+	private function createTests():Void
+	{
+		suite = new TestSuite();
+		suite.completeEvent.addListener(onComplete);
+		
+		suite.add(new SOBaseTest(), TRY_COUNT);
+		suite.add(new SORestoreTest(), TRY_COUNT);
+		suite.add(new SOUserOrderTest(), TRY_COUNT);
+		suite.add(new SOLockTest(), TRY_COUNT);
+		suite.add(new SOMaxUsersTest(), TRY_COUNT);
+		suite.add(new LoginServiceTest(), TRY_COUNT);
+		suite.add(new SOServiceTest(), TRY_COUNT);
+		suite.add(new SOAutoConnectTest(), TRY_COUNT);
+		suite.add(new AdminServiceTest(), TRY_COUNT);
+		
+		suite.run();
 	}
 	
 	private function createConnection():RemoteConnection
@@ -93,24 +112,6 @@ class Main
 	{
 		Lib.current.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		createTests();
-	}
-	
-	private function createTests():Void
-	{
-		suite = new TestSuite();
-		suite.completeEvent.addListener(onComplete);
-		
-		suite.add(new SOBaseTest(), TRY_COUNT);
-		suite.add(new SORestoreTest(), TRY_COUNT);
-		suite.add(new SOUserOrderTest(), TRY_COUNT);
-		suite.add(new SOLockTest(), TRY_COUNT);
-		suite.add(new SOMaxUsersTest(), TRY_COUNT);
-		suite.add(new LoginServiceTest(), TRY_COUNT);
-		suite.add(new SOServiceTest(), TRY_COUNT);
-		suite.add(new SOAutoConnectTest(), TRY_COUNT);
-		suite.add(new AdminServiceTest(), TRY_COUNT);
-		
-		suite.run();
 	}
 	
 	private function onComplete(sender:TestSuite):Void
