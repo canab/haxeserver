@@ -120,7 +120,7 @@ class UserAdapter implements IServerAPI
 			
 			result = sharedObjects.get(remoteId).lockState(this, stateId);
 			
-			application.profiler.addCall("lock", Sys.time() - t);
+			application.profiler.addCall("soLock", Sys.time() - t);
 		}
 		catch (e:Dynamic)
 		{
@@ -139,7 +139,7 @@ class UserAdapter implements IServerAPI
 			
 			sharedObjects.get(remoteId).unlockState(this, stateId);
 			
-			application.profiler.addCall(here.methodName, Sys.time() - t);
+			application.profiler.addCall("soUnlock", Sys.time() - t);
 		}
 		catch (e:Dynamic)
 		{
