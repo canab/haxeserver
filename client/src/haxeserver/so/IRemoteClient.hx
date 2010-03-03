@@ -5,8 +5,6 @@
 
 package haxeserver.so;
 
-import haxelib.common.commands.ICommand;
-
 interface IRemoteClient 
 {
 	function onReady():Void;
