@@ -213,7 +213,7 @@ class SharedObject
 	
 	private function log(value:Dynamic) 
 	{
-		Application.instance.logger.info("SO:" + id + " " + value);
+		Application.instance.logger.info("(" + id + ") " + value);
 	}
 	
 }
