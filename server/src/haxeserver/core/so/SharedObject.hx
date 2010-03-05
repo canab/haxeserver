@@ -100,6 +100,9 @@ class SharedObject
 		mutex.acquire();
 		currentUser = adapter;
 		
+		if (Application.instance.config.verboseLog)
+			log(actionData);
+		
 		// process action
 		var actionType:String = actionData[0];
 		switch (actionType)

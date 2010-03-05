@@ -59,6 +59,7 @@
 		<replace file="${output.server.dir}/server-config.xml" token="{port}" value="${server.config.port}"/>
 		<replace file="${output.server.dir}/server-config.xml" token="{login}" value="${server.config.login}"/>
 		<replace file="${output.server.dir}/server-config.xml" token="{password}" value="${server.config.password}"/>
+		<replace file="${output.server.dir}/server-config.xml" token="{verboseLog}" value="${server.config.verboseLog}"/>
 		
 		<var name="compiler.debug" value=""/>
 		<if name="server.build.debug" value="true">
