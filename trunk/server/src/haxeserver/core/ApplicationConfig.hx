@@ -13,6 +13,7 @@ class ApplicationConfig
 	public var port(default, null):Int;
 	public var login(default, null):String;
 	public var password(default, null):String;
+	public var verboseLog(default, null):Bool;
 	
 	private var fileName:String;
 
@@ -32,6 +33,7 @@ class ApplicationConfig
 		port = Std.parseInt(config.node.port.innerData);
 		login = config.node.login.innerData;
 		password = config.node.password.innerData;
+		verboseLog = config.node.verboseLog.innerData == "true";
 	}
 	
 }

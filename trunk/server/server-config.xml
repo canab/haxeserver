@@ -3,4 +3,5 @@
 	<port>{port}</port>
 	<login>{login}</login>
 	<password>{password}</password>
+	<verboseLog>{verboseLog}</verboseLog>
 </config>
