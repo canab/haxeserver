@@ -1,6 +1,5 @@
-####################
 # general
-####################
+#
 apt-get update
 apt-get install mc -y
 apt-get install sun-java6-jre sun-java6-jdk sun-java6-bin -y
@@ -8,12 +7,13 @@ apt-get install unzip -y
 apt-get install subversion -y
 apt-get install ant -y
 
-####################
+mkdir /downloads
+
 # flex sdk
-####################
-cd /opt
+#
+cd /downloads
 wget http://download.macromedia.com/pub/flex/sdk/flex_sdk_3.5.zip
-unzip flex_sdk_3.5.zip -d flex-sdk-3.5
+unzip flex_sdk_3.5.zip -d /usr/lib/flex_sdk_3.5
 
 ####################
 # haxe
