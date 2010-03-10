@@ -23,11 +23,17 @@ wget wget http://haxe.org/file/hxinst-linux.tgz
 tar -xf hxinst-linux.tgz
 sudo ./hxinst-linux
 
+# somewhere in your ~/.bashrc
+# ...
+export HAXE_LIBRARY_PATH=/usr/lib/haxe/std:. # the ':.' part is importan
+
 ####################
 # haxeserver
 ####################
 mkdir /opt/haxeserver
-chmod -R 777 haxeserver
+chmod -R 777 /opt/haxeserver
+chmod -R 777 /opt/flex-sdk-3.5
+
 cd /opt/haxeserver
 svn co https://haxeserver.googlecode.com/svn/trunk --username canab.ua --password gM9by4kJ5MB2
 cd /opt/haxeserver/trunk/build
