@@ -1,17 +1,45 @@
+####################
+# general
+####################
 apt-get update
 apt-get install mc -y
-apt-get install sun-java5-jre sun-java5-jdk sun-java5-bin -y
 apt-get install sun-java6-jre sun-java6-jdk sun-java6-bin -y
 apt-get install unzip -y
 apt-get install subversion -y
 apt-get install ant -y
 
+####################
+# flex sdk
+####################
+cd /opt
+wget http://download.macromedia.com/pub/flex/sdk/flex_sdk_3.5.zip
+unzip flex_sdk_3.5.zip -d flex-sdk-3.5
+
+####################
+# haxe (from http://haxe.org/doc/build/haxe_ubuntu_build)
+####################
+apt-get install ocaml camlp4 ocaml-findlib cvs zlib1g-dev make wget tar subversion
+mkdir /opt/haxe-src
+cd /opt/haxe-src
+wget http://haxe.org/_media/install.ml
+ocaml install.ml
+
+sudo mkdir /opt/haxe
+sudo mkdir /opt/haxe/bin
+sudo cp bin/* /opt/haxe/bin	
+sudo cp -r haxe/std /opt/haxe
+
+####################
+# haxeserver
+####################
+mkdir /opt/haxeserver
+cd /opt/haxeserver
+svn co https://haxeserver.googlecode.com/svn/trunk --username canab.ua --password gM9by4kJ5MB2 --no-auth-cache
+
+
+
+####################
+# mysql
+####################
 apt-get install mysql-server -y
 mysqladmin -u root password root
-
-mkdir /downloads cd /downloads
-wget http://download.macromedia.com/pub/flex/sdk/flex_sdk_3.zip
-unzip flex_sdk_3.zip -d /usr/lib/flex_sdk_3
-
-install haxe:
-http://haxe.org/doc/build/haxe_ubuntu_build
