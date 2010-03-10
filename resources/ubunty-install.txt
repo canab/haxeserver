@@ -7,12 +7,8 @@ sudo apt-get install unzip -y
 sudo apt-get install subversion -y
 sudo apt-get install ant -y
 
-sudo groupadd deploy
-sudo usermod -G deploy canab
 sudo mkdir /home/downloads
 sudo mkdir /home/projects
-sudo chown -R :deploy /home/projects/
-sudo chmod -R ugo+rwx /home/projects/
 
 # flex sdk
 #
@@ -30,11 +26,10 @@ sudo ./hxinst-linux
 # haxeserver
 #
 cd /home/projects
-svn co https://haxeserver.googlecode.com/svn/trunk hxserver --username canab.ua --password gM9by4kJ5MB2
-sudo chmod -R ugo+rwx hxserver
-cd /home/projects/hxserver/build
-chmod ugo+x build-server.sh
-
+svn co https://haxeserver.googlecode.com/svn/trunk haxeserver --username canab.ua --password gM9by4kJ5MB2
+cd /home/projects/haxeserver/build
+chmod ug+x build-server.sh
+sudo ./build-server.sh
 
 ####################
 # mysql
