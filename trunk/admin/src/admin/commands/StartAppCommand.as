@@ -2,7 +2,6 @@ package admin.commands
 {
 	import admin.abstract.CommandBase;
 	import admin.login.Login;
-	import common.utils.URLUtil;
 	import haxeserver.services.ServiceBase;
 	import mx.core.Application;
 	
