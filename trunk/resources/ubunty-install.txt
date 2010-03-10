@@ -1,43 +1,39 @@
 # general
 #
-apt-get update
-apt-get install mc -y
-apt-get install sun-java6-jre sun-java6-jdk sun-java6-bin -y
-apt-get install unzip -y
-apt-get install subversion -y
-apt-get install ant -y
+sudo apt-get update
+sudo apt-get install mc -y
+sudo apt-get install sun-java6-jre sun-java6-jdk sun-java6-bin -y
+sudo apt-get install unzip -y
+sudo apt-get install subversion -y
+sudo apt-get install ant -y
 
-mkdir /downloads
+sudo groupadd deploy
+sudo usermod -G deploy canab
+sudo mkdir /home/downloads
+sudo mkdir /home/projects
+sudo chown -R :deploy /home/projects/
+sudo chmod -R ugo+rwx /home/projects/
 
 # flex sdk
 #
-cd /downloads
-wget http://download.macromedia.com/pub/flex/sdk/flex_sdk_3.5.zip
-unzip flex_sdk_3.5.zip -d /usr/lib/flex_sdk_3.5
+cd /home/downloads
+sudo wget http://download.macromedia.com/pub/flex/sdk/flex_sdk_3.5.zip
+sudo unzip flex_sdk_3.5.zip -d /usr/lib/flex_sdk_3.5
 
-####################
 # haxe
-####################
-cd /home/canab
-wget wget http://haxe.org/file/hxinst-linux.tgz
-tar -xf hxinst-linux.tgz
+#
+cd /home/downloads
+sudo wget http://haxe.org/file/hxinst-linux.tgz
+sudo tar -xf hxinst-linux.tgz
 sudo ./hxinst-linux
 
-# somewhere in your ~/.bashrc
-# ...
-export HAXE_LIBRARY_PATH=/usr/lib/haxe/std:. # the ':.' part is importan
-
-####################
 # haxeserver
-####################
-mkdir /opt/haxeserver
-chmod -R 777 /opt/haxeserver
-chmod -R 777 /opt/flex-sdk-3.5
-
-cd /opt/haxeserver
-svn co https://haxeserver.googlecode.com/svn/trunk --username canab.ua --password gM9by4kJ5MB2
-cd /opt/haxeserver/trunk/build
-ant -propertyfile server.properties
+#
+cd /home/projects
+svn co https://haxeserver.googlecode.com/svn/trunk hxserver --username canab.ua --password gM9by4kJ5MB2
+sudo chmod -R ugo+rwx hxserver
+cd /home/projects/hxserver/build
+chmod ugo+x build-server.sh
 
 
 ####################
@@ -45,3 +41,8 @@ ant -propertyfile server.properties
 ####################
 apt-get install mysql-server -y
 mysqladmin -u root password root
+
+
+# somewhere in your ~/.bashrc
+# ...
+export HAXE_LIBRARY_PATH=/usr/lib/haxe/std:. # the ':.' part is importan
