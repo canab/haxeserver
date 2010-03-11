@@ -42,6 +42,7 @@ cd /home/projects
 svn co https://haxeserver.googlecode.com/svn/trunk haxeserver --username canab.ua --password gM9by4kJ5MB2
 cd /home/projects/haxeserver/build
 chmod ug+x build-server.sh
+sudo cp crossdomain.xml /var/www
 ./build-server.sh
 
 start-stop-daemon --start -b --chdir /home/projects/haxeserver/server/bin/ --exec /usr/bin/neko /home/projects/haxeserver/server/bin/server.n
