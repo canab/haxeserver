@@ -21,7 +21,7 @@
 	
 	<target name="svn-update">
 		<if name="svn.update" value="true">
-			<svn javahl="false" svnkit="false" username="canab.ua" password="gM9by4kJ5MB2">
+			<svn javahl="false" svnkit="true" username="canab.ua" password="gM9by4kJ5MB2">
 				<update dir=".."/>
 			</svn>
 			<else>

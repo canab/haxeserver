@@ -7,12 +7,16 @@ sudo apt-get install unzip -y
 sudo apt-get install subversion -y
 sudo apt-get install ant -y
 
-sudo mkdir /home/downloads
-sudo mkdir /home/projects
-
 usermod -a -G deploy canab
+sudo mkdir /home/downloads
+
+sudo mkdir /var/projects
+sudo chown :deploy /var/projects/
+sudo chmod ug+rwx /var/projects/
+
+sudo mkdir /home/projects
 sudo chown :deploy /home/projects
-sudo chmod ug+rwx projects
+sudo chmod ug+rwx /home/projects
 
 # flex sdk
 #
@@ -36,6 +40,8 @@ svn co https://haxeserver.googlecode.com/svn/trunk haxeserver --username canab.u
 cd /home/projects/haxeserver/build
 chmod ug+x build-server.sh
 ./build-server.sh
+
+start-stop-daemon --start -b --chdir /home/projects/haxeserver/server/bin/ --exec /usr/bin/neko /home/projects/haxeserver/server/bin/server.n
 
 
 

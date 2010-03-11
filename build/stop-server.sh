@@ -1,0 +1,1 @@
+start-stop-daemon --stop --exec /usr/bin/neko server.n
