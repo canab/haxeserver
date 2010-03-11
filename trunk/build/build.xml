@@ -10,8 +10,8 @@
 		<classpath>
 			<pathelement location="lib/svnant.jar"/>
 			<pathelement location="lib/svnClientAdapter.jar"/>
-			<pathelement location="lib/svnjavahl.jar"/>
-			<pathelement location="lib/svnkit.jar"/>
+			<!--pathelement location="lib/svnjavahl.jar"/-->
+			<!--pathelement location="lib/svnkit.jar"/-->
 		</classpath>
 	</taskdef>
 	<taskdef name="if" classname="ise.antelope.tasks.IfTask"
@@ -21,7 +21,7 @@
 	
 	<target name="svn-update">
 		<if name="svn.update" value="true">
-			<svn javahl="false" svnkit="true" username="canab.ua" password="gM9by4kJ5MB2">
+			<svn javahl="false" svnkit="false" username="canab.ua" password="gM9by4kJ5MB2">
 				<update dir=".."/>
 			</svn>
 			<else>
