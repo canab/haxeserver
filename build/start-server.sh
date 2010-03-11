@@ -1,1 +1,1 @@
-start-stop-daemon --start -b --chdir /home/projects/haxeserver/server/bin/ --exec /usr/bin/neko server.n
+start-stop-daemon --start -b --chdir /var/projects/server/bin/ --exec /usr/bin/neko server.n
