@@ -2,7 +2,7 @@
 #
 sudo apt-get update
 sudo apt-get install mc -y
-sudo apt-get install sun-java6-jre sun-java6-jdk sun-java6-bin -y
+sudo apt-get install sun-java6-jdk sun-java6-jre sun-java6-bin -y
 sudo apt-get install unzip -y
 sudo apt-get install subversion -y
 sudo apt-get install ant -y
@@ -10,11 +10,17 @@ sudo apt-get install ant -y
 sudo mkdir /home/downloads
 sudo mkdir /home/projects
 
+usermod -a -G deploy canab
+sudo chown :deploy /home/projects
+sudo chmod ug+rwx projects
+
 # flex sdk
 #
 cd /home/downloads
 sudo wget http://download.macromedia.com/pub/flex/sdk/flex_sdk_3.5.zip
+sudo rm -rf /usr/lib/flex_sdk_3.5
 sudo unzip flex_sdk_3.5.zip -d /usr/lib/flex_sdk_3.5
+sudo chmod -R a+rx /usr/lib/flex_sdk_3.5
 
 # haxe
 #
@@ -29,15 +35,14 @@ cd /home/projects
 svn co https://haxeserver.googlecode.com/svn/trunk haxeserver --username canab.ua --password gM9by4kJ5MB2
 cd /home/projects/haxeserver/build
 chmod ug+x build-server.sh
-sudo ./build-server.sh
+./build-server.sh
+
+
+
+
 
 ####################
 # mysql
 ####################
 apt-get install mysql-server -y
 mysqladmin -u root password root
-
-
-# somewhere in your ~/.bashrc
-# ...
-export HAXE_LIBRARY_PATH=/usr/lib/haxe/std:. # the ':.' part is importan
