@@ -6,6 +6,7 @@ sudo apt-get install sun-java6-jdk sun-java6-jre sun-java6-bin -y
 sudo apt-get install unzip -y
 sudo apt-get install subversion -y
 sudo apt-get install ant -y
+sudo apt-get install apache2 -y
 
 usermod -a -G deploy canab
 sudo mkdir /home/downloads
@@ -17,6 +18,8 @@ sudo chmod ug+rwx /var/projects/
 sudo mkdir /home/projects
 sudo chown :deploy /home/projects
 sudo chmod ug+rwx /home/projects
+
+sudo ln -s /var/projects/admin /var/www
 
 # flex sdk
 #
