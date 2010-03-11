@@ -75,6 +75,16 @@
 		</exec>
 	</target>
 	
+	<target name="build-policy-server">
+		<delete file="../policyserver/fpserver.n"/>
+		
+		<exec executable="${haxe.compiler}" failonerror="true">
+			<arg line="-cp ../policyserver"/>
+			<arg line="-main PolicyServer"/>
+			<arg line="-neko ../policyserver/fpserver.n"/>
+		</exec>
+	</target>
+	
 	<target name="build-client-lib" depends="svn-update" description="Build client SWC library">
 		<delete dir="${output.client.dir}"/>
 		<mkdir dir="${output.client.dir}"/>
