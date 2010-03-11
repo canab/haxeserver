@@ -1,4 +1,6 @@
-echo starting haxe server
-echo ...
+echo
+echo starting server...
 start-stop-daemon --start -b --chdir /var/projects/server --exec /usr/bin/neko server.n
 ps aux | grep server.n
+echo
+
