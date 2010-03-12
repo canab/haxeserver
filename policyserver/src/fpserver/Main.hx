@@ -20,7 +20,7 @@ class Main extends neko.net.ThreadServer<Client,String> {
 		
 		var args = neko.Sys.args();
 		if( args[0] == null || args[1]== null ) {
-			neko.Lib.println( "Usage: neko flashpolicyd.n [host] [port] [file]" );
+			neko.Lib.println( "Usage: neko fpserver.n [host] [port] [file]" );
 			neko.Lib.println( "Aborted." );
 			return;
 		}
