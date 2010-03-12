@@ -45,11 +45,18 @@ chmod ug+x build-server.sh
 sudo cp crossdomain.xml /var/www
 ./build-server.sh
 
-start-stop-daemon --start -b --chdir /home/projects/haxeserver/server/bin/ --exec /usr/bin/neko /home/projects/haxeserver/server/bin/server.n
+# start haxeserver
+#
+cd /var/projects/server/
+sudo neko server.n 1>/dev/null 2>/tmp/haxeserver.log &
+ps auxwww | grep neko
 
+# start policyserver
+#
+cd /home/projects/haxeserver/policyserver/
+sudo neko fpserver.n 192.168.0.101 843 crossdomain.xml >/tmp/fpserver.log &
 
-
-
+ps auxwww | grep neko
 
 ####################
 # mysql
