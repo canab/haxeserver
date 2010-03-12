@@ -20,6 +20,7 @@ sudo chown :deploy /home/projects
 sudo chmod ug+rwx /home/projects
 
 sudo ln -s /var/projects/admin /var/www
+sudo ln -s /var/projects/paperGame /var/www
 
 # flex sdk
 #
@@ -41,8 +42,13 @@ sudo ./hxinst-linux
 cd /home/projects
 svn co https://haxeserver.googlecode.com/svn/trunk haxeserver --username canab.ua --password gM9by4kJ5MB2
 cd /home/projects/haxeserver/build
-chmod ug+x build-server.sh
+chmod +x ./*.sh
 sudo cp crossdomain.xml /var/www
+
+# build haxeserver
+#
+cd /home/projects/haxeserver/build
+svn up ..
 ./build-server.sh
 
 # start haxeserver
@@ -55,8 +61,21 @@ ps auxwww | grep neko
 #
 cd /home/projects/haxeserver/policyserver/
 sudo neko fpserver.n 192.168.0.101 843 crossdomain.xml >/tmp/fpserver.log &
-
 ps auxwww | grep neko
+
+# paperGame
+#
+cd /home/projects
+svn co http://svn.garbuz-studio.com:8080/svn/game_papergame papergame
+cd /home/projects/papergame/build/
+chmod +x ./*.sh
+
+# build paperGame
+#
+cd /home/projects/papergame/build/
+svn up ..
+chmod +x ./*.sh
+
 
 ####################
 # mysql
