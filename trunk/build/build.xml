@@ -76,12 +76,14 @@
 	</target>
 	
 	<target name="build-policy-server">
-		<delete file="../policyserver/fpserver.n"/>
+		<property name="fpserver.output.file" value="../policyserver/fpserver.n" />
+		
+		<delete file="${fpserver.output.file}"/>
 		
 		<exec executable="${haxe.compiler}" failonerror="true">
-			<arg line="-cp ../policyserver"/>
-			<arg line="-main PolicyServer"/>
-			<arg line="-neko ../policyserver/fpserver.n"/>
+			<arg line="-cp ../policyserver/src"/>
+			<arg line="-main fpserver.Main"/>
+			<arg line="-neko ${fpserver.output.file}"/>
 		</exec>
 	</target>
 	
