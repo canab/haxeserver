@@ -43,7 +43,7 @@ class Main extends neko.net.ThreadServer<Client,String> {
 		}
 		
 		var server = new Main();
-		neko.Lib.println( "Starting flash-policy server ..." );
+		neko.Lib.println( "Starting flash-policy server at " + host + ":" + port + "..." );
 		server.run( host, port );
 	}
 	
