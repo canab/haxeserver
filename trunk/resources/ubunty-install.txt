@@ -2,7 +2,7 @@
 #
 sudo apt-get update
 sudo apt-get install mc -y
-sudo apt-get install sun-java6-jdk sun-java6-jre sun-java6-bin -y
+sudo apt-get install sun-java6-jdk -y
 sudo apt-get install unzip -y
 sudo apt-get install subversion -y
 sudo apt-get install ant -y
@@ -30,12 +30,21 @@ sudo rm -rf /usr/lib/flex_sdk_3.5
 sudo unzip flex_sdk_3.5.zip -d /usr/lib/flex_sdk_3.5
 sudo chmod -R a+rx /usr/lib/flex_sdk_3.5
 
-# haxe
+# haxe+neko
 #
 cd /home/downloads
 sudo wget http://haxe.org/file/hxinst-linux.tgz
 sudo tar -xf hxinst-linux.tgz
 sudo ./hxinst-linux
+
+# or
+#
+# haxe
+http://haxe.org/doc/build/haxe_ubuntu_build
+#
+# neko
+#
+http://haxe.org/doc/build/neko_linux
 
 # haxeserver
 #
@@ -60,7 +69,7 @@ ps auxwww | grep neko
 # start policyserver
 #
 cd /home/projects/haxeserver/policyserver/
-sudo neko fpserver.n 192.168.0.101 843 crossdomain.xml >/tmp/fpserver.log &
+sudo neko fpserver.n 173.203.115.146 843 crossdomain.xml >/tmp/fpserver.log &
 ps auxwww | grep neko
 
 # paperGame
