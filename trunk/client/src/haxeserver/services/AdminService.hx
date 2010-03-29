@@ -23,4 +23,8 @@ class AdminService extends ServiceBase
 		doCall("getProfilerData", []);
 	}
 	
+	public function resetProfilerData():Void
+	{
+		doCall("resetProfilerData", []);
+	}
 }

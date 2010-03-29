@@ -35,4 +35,9 @@ class AdminService extends ServiceBase
 		return result;
 	}
 	
+	public function resetProfilerData():Dynamic
+	{
+		application.profiler.clear();
+		return getProfilerData();
+	}
 }

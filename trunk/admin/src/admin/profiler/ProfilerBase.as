@@ -22,6 +22,12 @@ package admin.profiler
 			new AdminService(onResult).getProfilerData();
 		}
 		
+		protected function reset():void 
+		{
+			enabled = false;
+			new AdminService(onResult).resetProfilerData();
+		}
+		
 		private function onResult(result:Object):void
 		{
 			enabled = true;

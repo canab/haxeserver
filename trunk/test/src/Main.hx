@@ -27,10 +27,11 @@ import haxeserver.test.SOUserOrderTest;
 class Main 
 {
 	static public var HOST:String = 'localhost';
-	static public var PORT:Int = 8080;
+	//static public var HOST:String = '173.203.115.146';
+	static public var PORT:Int = 8081;
 	
-	static public var LOOP:Bool = true;
-	static public var TRY_COUNT:Int = 5;
+	static public var LOOP:Bool = false;
+	static public var TRY_COUNT:Int = 1;
 	
 	static public var instance(default, null):Main;
 	
