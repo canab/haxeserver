@@ -30,6 +30,11 @@ class AdminServiceTest extends AsincTest
 	
 	private function onProfiledData(result:Dynamic):Void
 	{
+		new AdminService(onProfilerReset).resetProfilerData();
+	}
+	
+	private function onProfilerReset(result:Dynamic):Void
+	{
 		dispatchComplete();
 	}
 	
