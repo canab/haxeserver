@@ -7,13 +7,14 @@ COMMAND="/usr/local/bin/neko $HOMEDIR/server.n"
 
 d_start() {
 	echo "Starting $NAME:"
-	start-stop-daemon --start --quiet --background --make-pidfile --pidfile $PIDFILE --chdir $HOMEDIR --exec $COMMAND
+	echo $COMMAND
+	start-stop-daemon --start --background --make-pidfile --pidfile $PIDFILE --chdir $HOMEDIR --exec $COMMAND
 	echo "."
 }
 
 d_stop() {
 	echo "Stopping $NAME:"
-	start-stop-daemon --stop --quiet --pidfile $PIDFILE
+	start-stop-daemon --stop --pidfile $PIDFILE
 	if [ -e $PIDFILE ]
 		then rm $PIDFILE
 	fi
