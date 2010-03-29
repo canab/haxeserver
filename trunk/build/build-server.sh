@@ -1,1 +1,0 @@
-ant -propertyfile server.properties

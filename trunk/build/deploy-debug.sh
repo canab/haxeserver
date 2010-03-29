@@ -1,0 +1,1 @@
+ant -propertyfile debug.properties
