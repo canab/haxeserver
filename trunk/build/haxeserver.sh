@@ -4,11 +4,12 @@ NAME=haxeserver
 PIDFILE=/var/run/$NAME.pid
 HOMEDIR=/var/projects/server
 COMMAND="/usr/local/bin/neko $HOMEDIR/server.n"
+BUILD_ID=dontKillMe #for hudson
 
 d_start() {
 	echo "Starting $NAME:"
-	echo $COMMAND
 	start-stop-daemon --start --background --make-pidfile --pidfile $PIDFILE --chdir $HOMEDIR --exec $COMMAND
+	#start-stop-daemon --start --make-pidfile --pidfile $PIDFILE --chdir $HOMEDIR --exec $COMMAND
 	echo "."
 }
 
