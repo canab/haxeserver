@@ -21,5 +21,9 @@
 			<name>CONFIG::password</name>
 			<value>"123"</value>
 		</define>
+		<define>
+			<name>CONFIG::revision</name>
+			<value>0</value>
+		</define>
 	</compiler>
 </flex-config>
