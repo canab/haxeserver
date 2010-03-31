@@ -10,8 +10,8 @@
 		<classpath>
 			<pathelement location="lib/svnant.jar"/>
 			<pathelement location="lib/svnClientAdapter.jar"/>
-			<!--pathelement location="lib/svnjavahl.jar"/-->
-			<!--pathelement location="lib/svnkit.jar"/-->
+			<pathelement location="lib/svnjavahl.jar"/>
+			<pathelement location="lib/svnkit.jar"/>
 		</classpath>
 	</taskdef>
 	<taskdef name="if" classname="ise.antelope.tasks.IfTask"
@@ -108,6 +108,16 @@
 	<target name="build-admin" depends="svn-update, build-client-lib">
 		<delete dir="${output.admin.dir}"/>
 		<mkdir dir="${output.admin.dir}"/>
+		
+		<svn>
+			<status path="" revisionProperty="svn.revision"/>
+		</svn>
+		
+	 	<copy todir="${output.admin.dir}">
+	 		<fileset dir="html-template"/>
+	 	</copy>
+		
+		<replace file="${output.admin.dir}/index.html" token="{svn.revision}" value="${svn.revision}"/>
 		
 		<exec executable="${flex.compiler}" failonerror="true">
 			<arg line="../admin/src/Main.mxml"/>
