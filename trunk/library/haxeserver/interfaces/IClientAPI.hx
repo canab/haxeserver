@@ -2,7 +2,8 @@
 
 interface IClientAPI
 {
-	function setId(userId:Int):Void;
+	//setId
+	function I(userId:Int):Void;
 	
 	//soConnect
 	function C(remoteId:String, userId:Int):Void;

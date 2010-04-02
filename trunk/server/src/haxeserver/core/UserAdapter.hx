@@ -27,7 +27,7 @@ class UserAdapter implements IServerAPI
 		id = userId;
 		login = null;
 		clientAPI = new ClientApi(connection.C);
-		clientAPI.setId(id);
+		clientAPI.I(id);
 		sharedObjects = new Hash<SharedObject>();
 		application = Application.instance;
 	}

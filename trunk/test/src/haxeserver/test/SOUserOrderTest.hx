@@ -47,8 +47,8 @@ class SOUserOrderTest extends AsincTest, implements IRemoteClient
 	public function onUserConnect(userId:Int):Void
 	{
 		if (myRemote.users.length == 3
-			&& otherRemote.users.length == 3
-			&& anotherRemote.users.length == 3)
+		 && otherRemote.users.length == 3
+		 && anotherRemote.users.length == 3)
 		{
 			assertArrayEquals(myRemote.users, otherRemote.users);
 			assertArrayEquals(myRemote.users, anotherRemote.users);
