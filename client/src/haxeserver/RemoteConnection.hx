@@ -8,6 +8,7 @@ package haxeserver;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
 import flash.events.SecurityErrorEvent;
+import flash.Lib;
 import haxe.remoting.SocketProtocol;
 import haxe.remoting.Context;
 import haxe.remoting.SocketConnection;
@@ -22,6 +23,8 @@ class ServerApi extends haxe.remoting.AsyncProxy<haxeserver.interfaces.IServerAP
 
 class RemoteConnection
 {
+	static private var idCounter:Int = 0;
+	
 	public var connectEvent(default, null):EventSender<RemoteConnection>;
 	public var errorEvent(default, null):EventSender<RemoteConnection>;
 	public var serverAPI(default, null):ServerApi;
@@ -32,6 +35,7 @@ class RemoteConnection
 	public var host:String;
 	public var port:Int;
 	
+	public var id(default, null):Int;
 	public var userId(default, null):Int;
 	public var errorMessage(default, null):String;
 	public var connected(default, null):Bool;
@@ -42,6 +46,7 @@ class RemoteConnection
 	
 	public function new() 
 	{
+		id = idCounter++;
 		connected = false;
 		connecting = false;
 		connectEvent = new EventSender<RemoteConnection>(this);
@@ -97,6 +102,13 @@ class RemoteConnection
 		context.addObject("C", clientAPI);
 		var connection:SocketConnection = SocketConnection.create(socket, context);
 		serverAPI = new ServerApi(connection.S);
+		
+		Lib.current.addEventListener(Event.ENTER_FRAME, processClienAPICalls);
+	}
+	
+	private function processClienAPICalls(e:Event):Void 
+	{
+		clientAPI.processCallQueue();
 	}
 	
 	public function disconnect() 
@@ -114,6 +126,8 @@ class RemoteConnection
 		socket.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onSequrityError);
 		socket.close();
 		remoteObjects = new Hash<RemoteObject>();
+		
+		Lib.current.removeEventListener(Event.ENTER_FRAME, processClienAPICalls);
 	}
 	
 	private function onSequrityError(e:SecurityErrorEvent):Void 

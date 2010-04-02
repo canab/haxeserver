@@ -63,6 +63,11 @@ class RemoteObject
 	
 	public function applyUserConnect(userId:Int)
 	{
+		addUser(userId);
+	}
+	
+	private function addUser(userId:Int):Void 
+	{
 		users.push(userId);
 		client.onUserConnect(userId);
 	}
@@ -102,7 +107,7 @@ class RemoteObject
 	{
 		for (userId in usersList)
 		{
-			applyUserConnect(userId);
+			addUser(userId);
 		}
 		
 		for (state in statesList)
