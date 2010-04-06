@@ -65,7 +65,7 @@ class SOService extends ServiceBase
 			soIds.set(prefix, 0);
 		
 		var nextNum:Int = soIds.get(prefix) + 1;
-		var remoteId:String = prefix + Std.string(nextNum);
+		var remoteId:String = prefix + '|' + Std.string(nextNum);
 		while (application.hasSharedObject(remoteId))
 		{
 			nextNum++;

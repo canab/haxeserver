@@ -32,7 +32,7 @@ class SOAutoConnectTest extends AsincTest
 	
 	private function onConnect1(result:String):Void
 	{
-		assertEquals(result, remoteId + "1");
+		assertEquals(result, remoteId + "|1");
 		
 		var service:SOService = new SOService(onConnect2);
 		service.connection = Main.instance.connection2;
@@ -41,7 +41,7 @@ class SOAutoConnectTest extends AsincTest
 	
 	private function onConnect2(result:String):Void
 	{
-		assertEquals(result, remoteId + "1");
+		assertEquals(result, remoteId + "|1");
 		
 		var service:SOService = new SOService(onConnect3);
 		service.connection = Main.instance.connection3;
@@ -50,7 +50,7 @@ class SOAutoConnectTest extends AsincTest
 	
 	private function onConnect3(result:String):Void
 	{
-		assertEquals(result, remoteId + "2");
+		assertEquals(result, remoteId + "|2");
 		dispatchComplete();
 	}
 }
