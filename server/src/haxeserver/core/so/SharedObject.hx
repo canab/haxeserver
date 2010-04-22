@@ -180,6 +180,16 @@ class SharedObject
 		for (stateId in removedStates)
 		{
 			removeState(stateId);
+			for (user in users)
+			{
+				if (user != adapter)
+				{
+					var actionData:Array<Dynamic> = [SOActionTypes.REMOVE, stateId];
+					if (Application.instance.config.verboseLog)
+						log(actionData);
+					user.clientAPI.A(this.id, actionData);
+				}
+			}
 		}
 	}
 	

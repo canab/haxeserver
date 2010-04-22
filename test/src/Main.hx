@@ -12,6 +12,7 @@ import haxeserver.test.data.PlayerData;
 import haxeserver.test.data.SampleCommand;
 import haxeserver.test.LoginServiceTest;
 import haxeserver.test.SOAutoConnectTest;
+import haxeserver.test.SOAutoRemoveStateTest;
 import haxeserver.test.SOBaseTest;
 import haxeserver.test.SOLockTest;
 import haxeserver.test.SOMaxUsersTest;
@@ -31,7 +32,7 @@ class Main
 	static public var PORT:Int = 8081;
 	
 	static public var LOOP:Bool = false;
-	static public var TRY_COUNT:Int = 50;
+	static public var TRY_COUNT:Int = 10;
 	
 	static public var instance(default, null):Main;
 	
@@ -67,6 +68,7 @@ class Main
 		suite.completeEvent.addListener(onComplete);
 		
 		suite.add(new SOBaseTest(), TRY_COUNT);
+		suite.add(new SOAutoRemoveStateTest(), TRY_COUNT);
 		suite.add(new SORestoreTest(), TRY_COUNT);
 		suite.add(new SOUserOrderTest(), TRY_COUNT);
 		suite.add(new SOLockTest(), TRY_COUNT);
