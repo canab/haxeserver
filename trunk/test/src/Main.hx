@@ -31,8 +31,8 @@ class Main
 	//static public var HOST:String = '173.203.115.146';
 	static public var PORT:Int = 8081;
 	
-	static public var LOOP:Bool = false;
-	static public var TRY_COUNT:Int = 10;
+	static public var LOOP:Bool = true;
+	static public var TRY_COUNT:Int = 2;
 	
 	static public var instance(default, null):Main;
 	
