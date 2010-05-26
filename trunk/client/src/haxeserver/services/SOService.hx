@@ -22,4 +22,8 @@ class SOService extends ServiceBase
 		doCall("getSharedObjects", [prefix]);
 	}
 	
+	public function createSharedObject(prefix:String, maxUsers:Int):Void
+	{
+		doCall("createSharedObject", [prefix, maxUsers]);
+	}
 }

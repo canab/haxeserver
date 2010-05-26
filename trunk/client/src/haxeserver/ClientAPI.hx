@@ -88,15 +88,15 @@ class ClientAPI implements IClientAPI
 			remote.applyUserDisconnect(userId);
 	}
 	
-	public function R(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>):Void
+	public function R(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>, maxUsers:Int):Void
 	{
-		addCall(doR, [remoteId, usersList, statesList]);
+		addCall(doR, [remoteId, usersList, statesList, maxUsers]);
 	}
-	private function doR(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>):Void
+	private function doR(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>, maxUsers:Int):Void
 	{
 		var remote:RemoteObject = getRemote(remoteId);
 		if (remote != null && !remote.ready)
-			remote.applyRestore(usersList, statesList);
+			remote.applyRestore(usersList, statesList, maxUsers);
 	}
 	
 	

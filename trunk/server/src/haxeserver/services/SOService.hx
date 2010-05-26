@@ -23,6 +23,20 @@ class SOService extends ServiceBase
 		}
 	}
 	
+	public function createSharedObject(soPrefix:String, maxUsers:Int):String
+	{
+		trace(maxUsers);
+		
+		soMutex.acquire();
+		
+		var remoteId:String = getNextRemoteId(soPrefix);
+		application.addUserToSO(currentUser, remoteId, maxUsers, false);
+		
+		soMutex.release();
+		
+		return remoteId;
+	}
+	
 	public function connectToFreeSO(soPrefix:String, maxUsers:Int):String
 	{
 		soMutex.acquire();
