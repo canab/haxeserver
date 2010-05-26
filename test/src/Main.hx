@@ -14,6 +14,7 @@ import haxeserver.test.LoginServiceTest;
 import haxeserver.test.SOAutoConnectTest;
 import haxeserver.test.SOAutoRemoveStateTest;
 import haxeserver.test.SOBaseTest;
+import haxeserver.test.SOCreateTest;
 import haxeserver.test.SOLockTest;
 import haxeserver.test.SOMaxUsersTest;
 import haxeserver.test.SORestoreTest;
@@ -67,7 +68,7 @@ class Main
 		suite = new TestSuite();
 		suite.completeEvent.addListener(onComplete);
 		
-		suite.add(new SOBaseTest(), TRY_COUNT);
+/*		suite.add(new SOBaseTest(), TRY_COUNT);
 		suite.add(new SOAutoRemoveStateTest(), TRY_COUNT);
 		suite.add(new SORestoreTest(), TRY_COUNT);
 		suite.add(new SOUserOrderTest(), TRY_COUNT);
@@ -77,6 +78,8 @@ class Main
 		suite.add(new SOServiceTest(), TRY_COUNT);
 		suite.add(new SOAutoConnectTest(), TRY_COUNT);
 		suite.add(new AdminServiceTest(), TRY_COUNT);
+*/		
+		suite.add(new SOCreateTest(), TRY_COUNT);
 		
 		suite.run();
 	}

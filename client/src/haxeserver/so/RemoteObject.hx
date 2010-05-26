@@ -5,7 +5,6 @@
 
 package haxeserver.so;
 
-import haxelib.common.utils.ReflectUtil;
 import haxeserver.RemoteConnection;
 
 
@@ -103,7 +102,7 @@ class RemoteObject
 	//} endregion
 	
 	//{ region restore
-	public function applyRestore(usersList:Array<Dynamic>, statesList:Array<Dynamic>) 
+	public function applyRestore(usersList:Array<Dynamic>, statesList:Array<Dynamic>, maxUsers:Int) 
 	{
 		for (userId in usersList)
 		{
@@ -119,6 +118,7 @@ class RemoteObject
 			applyCreateState(typeId, stateId, stateData);
 		}
 		
+		this.maxUsers = maxUsers;
 		ready = true;
 		client.onReady();
 	}
