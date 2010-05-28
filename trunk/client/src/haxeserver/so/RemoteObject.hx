@@ -128,6 +128,9 @@ class RemoteObject
 	//{ region action
 	private function sendAction(actionData:Array<Dynamic>):Void 
 	{
+		if (!connected)
+			throw(this + " not connected.");
+		
 		connection.serverAPI.A(this.id, actionData);
 	}
 	
@@ -153,6 +156,9 @@ class RemoteObject
 	//{ region createState
 	public function createState(stateId:String, state:Dynamic, autoRemove:Bool = false):Void 
 	{
+		if (!connected)
+			throw(this + " not connected.");
+		
 		var typeId:Int = connection.getClassId(Type.getClass(state));
 		if (typeId == -1)
 		{
@@ -227,6 +233,9 @@ class RemoteObject
 	//{ region command
 	public function sendCommand(command:Dynamic):Void
 	{
+		if (!connected)
+			throw(this + " not connected.");
+		
 		var typeId:Int = connection.getClassId(Type.getClass(command));
 		if (typeId == -1)
 		{
@@ -251,17 +260,26 @@ class RemoteObject
 	//{ region lock
 	public function lockState(stateId:String, onResult:Bool->Void = null):Void 
 	{
+		if (!connected)
+			throw(this + " not connected.");
+		
 		connection.serverAPI.L(this.id, stateId, onResult);
 	}
 	
 	public function unlockState(stateId:String):Void 
 	{
+		if (!connected)
+			throw(this + " not connected.");
+		
 		connection.serverAPI.U(this.id, stateId);
 	}
 	//} endregion
 	
 	private function getUserId():Int
 	{
+		if (!connected)
+			throw(this + " not connected.");
+		
 		return connection.userId;
 	}
 	

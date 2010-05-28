@@ -68,7 +68,7 @@ class Main
 		suite = new TestSuite();
 		suite.completeEvent.addListener(onComplete);
 		
-/*		suite.add(new SOBaseTest(), TRY_COUNT);
+		suite.add(new SOBaseTest(), TRY_COUNT);
 		suite.add(new SOAutoRemoveStateTest(), TRY_COUNT);
 		suite.add(new SORestoreTest(), TRY_COUNT);
 		suite.add(new SOUserOrderTest(), TRY_COUNT);
@@ -78,7 +78,6 @@ class Main
 		suite.add(new SOServiceTest(), TRY_COUNT);
 		suite.add(new SOAutoConnectTest(), TRY_COUNT);
 		suite.add(new AdminServiceTest(), TRY_COUNT);
-*/		
 		suite.add(new SOCreateTest(), TRY_COUNT);
 		
 		suite.run();
