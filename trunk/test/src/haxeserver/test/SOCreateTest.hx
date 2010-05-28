@@ -12,9 +12,11 @@ import haxeserver.so.RemoteObject;
 
 class SOCreateTest extends AsincTest, implements IRemoteClient
 {
-	private var remoteId:String;
+	private var remotePrefix:String;
 	private var maxUsers:Int;
+	private var name:String;
 	private var remote:RemoteObject;
+	private var remoteId:String;
 
 	public function new() 
 	{
@@ -23,18 +25,32 @@ class SOCreateTest extends AsincTest, implements IRemoteClient
 	
 	override public function initialize():Void 
 	{
-		remoteId = "SOCreateTest" + Main.instance.connection1.userId + "_" + tryNum;
+		remotePrefix = "SOCreateTest" + Main.instance.connection1.userId + "_" + tryNum;
 		maxUsers = 2;
+		name = "QWEQWE";
 		
-		var service:SOService = new SOService(onResult);
+		var service:SOService = new SOService(onCreate);
 		service.connection = Main.instance.connection1;
-		service.createSharedObject(remoteId, maxUsers);
+		service.createSharedObject(remotePrefix, maxUsers, name);
 	}
 	
-	private function onResult(result:String):Void
+	private function onCreate(result:String):Void
 	{
-		remote = new RemoteObject(result);
-		remote.connect(Main.instance.connection1, this);
+		remoteId = result;
+		var service:SOService = new SOService(onGet);
+		service.connection = Main.instance.connection1;
+		service.getSharedObjects(remotePrefix, true);
+	}
+	
+	private function onGet(result:Array<Dynamic>):Void
+	{
+		var soInfo:Array<Dynamic> = result[0];
+		assertEquals(soInfo[0], remoteId);
+		assertEquals(soInfo[1], maxUsers);
+		assertEquals(soInfo[2], 1);
+		assertEquals(soInfo[3], name);
+		
+		dispatchComplete();
 	}
 	
 	/* INTERFACE haxeserver.so.IRemoteClient */

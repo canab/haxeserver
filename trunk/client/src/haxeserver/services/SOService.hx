@@ -17,13 +17,13 @@ class SOService extends ServiceBase
 		doCall("connectToFreeSO", [soPrefix, maxUsers]);
 	}
 	
-	public function getSharedObjects(prefix:String = null):Void
+	public function getSharedObjects(prefix:String = null, haveFreeSlots:Bool = false):Void
 	{
-		doCall("getSharedObjects", [prefix]);
+		doCall("getSharedObjects", [prefix, haveFreeSlots]);
 	}
 	
-	public function createSharedObject(prefix:String, maxUsers:Int):Void
+	public function createSharedObject(prefix:String, maxUsers:Int = 0, name:String = null):Void
 	{
-		doCall("createSharedObject", [prefix, maxUsers]);
+		doCall("createSharedObject", [prefix, maxUsers, name]);
 	}
 }
