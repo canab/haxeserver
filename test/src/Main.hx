@@ -18,7 +18,6 @@ import haxeserver.test.SOCreateTest;
 import haxeserver.test.SOLockTest;
 import haxeserver.test.SOMaxUsersTest;
 import haxeserver.test.SORestoreTest;
-import haxeserver.test.SOServiceTest;
 import haxeserver.test.SOUserOrderTest;
 
 /**
@@ -75,7 +74,6 @@ class Main
 		suite.add(new SOLockTest(), TRY_COUNT);
 		suite.add(new SOMaxUsersTest(), TRY_COUNT);
 		suite.add(new LoginServiceTest(), TRY_COUNT);
-		suite.add(new SOServiceTest(), TRY_COUNT);
 		suite.add(new SOAutoConnectTest(), TRY_COUNT);
 		suite.add(new AdminServiceTest(), TRY_COUNT);
 		suite.add(new SOCreateTest(), TRY_COUNT);

@@ -16,6 +16,7 @@ class SharedObject
 	public var id(default, null):String;
 	public var users(default, null):Array<UserAdapter>;
 	public var maxUsers:Int;
+	public var name:String;
 	public var isWaiting(default, null):Bool;
 	
 	private var states:Hash<State>;

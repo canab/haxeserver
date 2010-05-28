@@ -23,7 +23,7 @@ class SOService extends ServiceBase
 		}
 	}
 	
-	public function createSharedObject(soPrefix:String, maxUsers:Int):String
+	public function createSharedObject(soPrefix:String, maxUsers:Int = 0, name:String = null):String
 	{
 		trace(maxUsers);
 		
@@ -31,6 +31,7 @@ class SOService extends ServiceBase
 		
 		var remoteId:String = getNextRemoteId(soPrefix);
 		application.addUserToSO(currentUser, remoteId, maxUsers, false);
+		application.sharedObjects.get(remoteId).name = name;
 		
 		soMutex.release();
 		
@@ -89,13 +90,19 @@ class SOService extends ServiceBase
 		return remoteId;
 	}
 	
-	public function getSharedObjects(namePrefix:String):Array<Dynamic>
+	public function getSharedObjects(namePrefix:String, haveFreeSlots:Bool):Array<Dynamic>
 	{
 		var result:Array<Dynamic> = [];
+		
 		for (so in application.sharedObjects)
 		{
-			if (namePrefix == null || so.id.indexOf(namePrefix) == 0)
-				result.push(so.id);
+			if (namePrefix != null && so.id.indexOf(namePrefix) != 0)
+				continue;
+				
+			if (haveFreeSlots && !so.isWaiting)
+				continue;
+				
+			result.push([so.id, so.maxUsers, so.users.length, so.name]);
 		}
 		return result;
 	}
