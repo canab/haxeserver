@@ -288,6 +288,18 @@ class RemoteObject
 		Reflect.callMethod(client, Reflect.field(client, func), args);
 	}
 	
+	public function getStates(stateClass:Class<Dynamic> = null):Dynamic
+	{
+		var result:Dynamic = { };
+		for (key in states.keys())
+		{
+			var state:Dynamic = states.get(key);
+			if (stateClass == null || Type.getClass(state) == stateClass )
+				untyped { result[key] = state; };
+		}
+		return result;
+	}
+	
 	public function toString():String
 	{
 		return "RemoteObject(userId="
