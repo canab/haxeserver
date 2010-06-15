@@ -26,4 +26,9 @@ class SOService extends ServiceBase
 	{
 		doCall("createSharedObject", [prefix, maxUsers, name]);
 	}
+	
+	public function setUnconnectable(soId:String):Void 
+	{
+		doCall("setUnconnectable", [soId]);
+	}
 }

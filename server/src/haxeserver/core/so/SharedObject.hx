@@ -18,6 +18,7 @@ class SharedObject
 	public var maxUsers:Int;
 	public var name:String;
 	public var isWaiting(default, null):Bool;
+	public var isConnectable:Bool;
 	
 	private var states:Hash<State>;
 	private var mutex:Mutex;
@@ -32,6 +33,7 @@ class SharedObject
 		states = new Hash<State>();
 		maxUsers = 0;
 		isWaiting = true;
+		isConnectable = true;
 		
 		log("created");
 	}
@@ -46,6 +48,10 @@ class SharedObject
 			if (needRestoreState)
 				restoreState(adapter);
 			result = true;
+		}
+		else if (!isConnectable)
+		{
+			result = false;
 		}
 		else if (maxUsers == 0 || users.length < maxUsers)
 		{
