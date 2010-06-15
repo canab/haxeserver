@@ -99,12 +99,20 @@ class SOService extends ServiceBase
 			if (namePrefix != null && so.id.indexOf(namePrefix) != 0)
 				continue;
 				
-			if (haveFreeSlots && !so.isWaiting)
-				continue;
+			if (haveFreeSlots)
+			{
+				if (so.users.length == so.maxUsers || !so.isConnectable)
+					continue;
+			}
 				
 			result.push([so.id, so.maxUsers, so.users.length, so.name]);
 		}
 		return result;
+	}
+	
+	public function setUnconnectable(soId:String):Void 
+	{
+		application.sharedObjects.get(soId).isConnectable = false;
 	}
 	
 }
