@@ -12,7 +12,8 @@ interface IClientAPI
 	function D(remoteId:String, userId:Int):Void;
 	
 	// soRestore
-	function R(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>, maxUsers:Int):Void;
+	function R(remoteId:String, usersList:Array<Dynamic>, statesList:Array<Dynamic>,
+		maxUsers:Int, name:String):Void;
 	
 	// soAction
 	function A(remoteId:String, actionData:Array<Dynamic>):Void;

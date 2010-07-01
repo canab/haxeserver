@@ -99,7 +99,7 @@ class SharedObject
 			stateData.push(state.data);
 			statesList.push(stateData);
 		}
-		adapter.clientAPI.R(this.id, usersList, statesList, maxUsers);
+		adapter.clientAPI.R(this.id, usersList, statesList, maxUsers, name);
 	}
 	
 	public function doAction(adapter:UserAdapter, actionData:Array<Dynamic>):Void 

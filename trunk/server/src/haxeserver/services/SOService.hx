@@ -30,8 +30,7 @@ class SOService extends ServiceBase
 		soMutex.acquire();
 		
 		var remoteId:String = getNextRemoteId(soPrefix);
-		application.addUserToSO(currentUser, remoteId, maxUsers, false);
-		application.sharedObjects.get(remoteId).name = name;
+		application.addUserToSO(currentUser, remoteId, maxUsers, name, false);
 		
 		soMutex.release();
 		
@@ -46,7 +45,7 @@ class SOService extends ServiceBase
 		var waitingObjects:Array<SharedObject> = getWaitingObjects(soPrefix, maxUsers);
 		for (so in waitingObjects)
 		{
-			if (application.addUserToSO(currentUser, so.id, maxUsers, false))
+			if (application.addUserToSO(currentUser, so.id, maxUsers, null, false))
 			{
 				remoteId = so.id;
 				break;
@@ -56,7 +55,7 @@ class SOService extends ServiceBase
 		if (remoteId == null)
 		{
 			remoteId = getNextRemoteId(soPrefix);
-			application.addUserToSO(currentUser, remoteId, maxUsers, false);
+			application.addUserToSO(currentUser, remoteId, maxUsers, null, false);
 		}
 		
 		soMutex.release();
