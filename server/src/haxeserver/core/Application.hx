@@ -103,21 +103,23 @@ class Application
 		return (sharedObjects.get(remoteId) != null);
 	}
 	
-	public function getSharedObject(remoteId:String, maxUsers:Int):SharedObject
+	public function getSharedObject(remoteId:String, maxUsers:Int, name:String):SharedObject
 	{
 		var so:SharedObject = sharedObjects.get(remoteId);
 		if (so == null)
 		{
 			so = new SharedObject(remoteId);
 			so.maxUsers = maxUsers;
+			so.name = name;
 			sharedObjects.set(remoteId, so);
 		}
 		return so;
 	}
 	
-	public function addUserToSO(user:UserAdapter, remoteId:String, maxUsers:Int, needRestoreState:Bool):Bool
+	public function addUserToSO(user:UserAdapter, remoteId:String,
+		maxUsers:Int, name:String, needRestoreState:Bool):Bool
 	{
-		var so:SharedObject = getSharedObject(remoteId, maxUsers);
+		var so:SharedObject = getSharedObject(remoteId, maxUsers, name);
 		var result:Bool = so.addUser(user, needRestoreState);
 		if (result)
 			user.sharedObjects.set(so.id, so);

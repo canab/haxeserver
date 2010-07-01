@@ -14,7 +14,8 @@ class RemoteObject
 	public var states(default, null):Hash<Dynamic>;
 	public var users(default, null):Array<Int>;
 	public var client(default, null):IRemoteClient;
-	public var maxUsers:Int;
+	public var maxUsers(default, null):Int;
+	public var name(default, null):String;
 	
 	public var userId(getUserId, null):Int;
 	
@@ -23,10 +24,12 @@ class RemoteObject
 	
 	private var connection:RemoteConnection;
 	
-	public function new(remoteId:String, maxUsers:Int = 0)
+	public function new(remoteId:String, maxUsers:Int = 0, name:String = null)
 	{
 		this.id = remoteId;
 		this.maxUsers = maxUsers;
+		this.name = name;
+		
 		ready = false;
 		connected = false;
 		
@@ -46,7 +49,7 @@ class RemoteObject
 			this.connection = connection;
 			this.client = client;
 			connection.addRemoteObject(this);
-			connection.serverAPI.C(id, maxUsers, onConnect);
+			connection.serverAPI.C(id, maxUsers, name, onConnect);
 			connected = true;
 		}
 	}
@@ -102,7 +105,8 @@ class RemoteObject
 	//} endregion
 	
 	//{ region restore
-	public function applyRestore(usersList:Array<Dynamic>, statesList:Array<Dynamic>, maxUsers:Int) 
+	public function applyRestore(usersList:Array<Dynamic>,
+		statesList:Array<Dynamic>, maxUsers:Int, name:String) 
 	{
 		for (userId in usersList)
 		{
@@ -119,6 +123,7 @@ class RemoteObject
 		}
 		
 		this.maxUsers = maxUsers;
+		this.name = name;
 		ready = true;
 		client.onReady();
 	}

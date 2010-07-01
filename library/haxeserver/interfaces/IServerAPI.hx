@@ -6,7 +6,7 @@ interface IServerAPI
 	function S(className:String, func:String, args:Array<Dynamic>):Dynamic;
 	
 	//soConnect
-	function C(remoteId:String, maxUsers:Int):Bool;
+	function C(remoteId:String, maxUsers:Int, name:String):Bool;
 	
 	//soDisconnet
 	function D(remoteId:String):Void;

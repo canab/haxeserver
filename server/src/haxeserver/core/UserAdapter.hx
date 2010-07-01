@@ -59,14 +59,14 @@ class UserAdapter implements IServerAPI
 	}
 	
 	// soConnect
-	public function C(remoteId:String, maxUsers:Int):Bool
+	public function C(remoteId:String, maxUsers:Int, name:String):Bool
 	{
 		var result:Bool;
 		try
 		{
 			var t = Sys.time();
 			
-			result = application.addUserToSO(this, remoteId, maxUsers, true);
+			result = application.addUserToSO(this, remoteId, maxUsers, name, true);
 			
 			application.profiler.addCall('soConnect', Sys.time() - t);
 		}
