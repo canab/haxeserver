@@ -3,7 +3,7 @@
 NAME=policyserver
 PIDFILE=/var/projects/haxeserver/$NAME.pid
 HOMEDIR=/projects/haxeserver/policyserver
-COMMAND="/usr/local/bin/neko $HOMEDIR/fpserver.n 173.203.115.146 843 crossdomain.xml"
+COMMAND="/usr/local/bin/neko $HOMEDIR/fpserver.n 109.74.195.118 843 crossdomain.xml"
 
 d_start() {
 	echo "Starting $NAME:"
