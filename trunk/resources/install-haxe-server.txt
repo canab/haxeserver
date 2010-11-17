@@ -28,7 +28,7 @@ sudo ln -s /var/projects/paperGame /var/www
 cd /downloads
 sudo wget http://download.macromedia.com/pub/flex/sdk/flex_sdk_3.5.zip
 sudo unzip flex_sdk_3.5.zip -d /projects/flex_sdk_3
-sudo chmod -R a+rx /usr/lib/flex_sdk_3
+sudo chmod -R a+rx /projects/flex_sdk_3
 
 #
 # haxe
