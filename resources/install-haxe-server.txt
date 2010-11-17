@@ -1,56 +1,48 @@
+#
 # general
 #
 sudo apt-get update
 sudo apt-get install mc -y
 sudo apt-get install sun-java6-jdk -y
-sudo apt-get install unzip -y
+sudo apt-get install zip -y
 sudo apt-get install subversion -y
 sudo apt-get install ant -y
 sudo apt-get install apache2 -y
 
 usermod -a -G deploy canab
-sudo mkdir /home/downloads
+sudo mkdir /downloads
+
+sudo mkdir /projects
+sudo chgrp deploy /projects
+sudo chmod ug+rwx /projects
 
 sudo mkdir /var/projects
-sudo chown :deploy /var/projects/
+sudo chgrp deploy /var/projects/
 sudo chmod ug+rwx /var/projects/
 
-sudo mkdir /home/projects
-sudo chown :deploy /home/projects
-sudo chmod ug+rwx /home/projects
-
-sudo ln -s /var/projects/admin /var/www
+sudo ln -s /var/projects/haxeAdmin /var/www
 sudo ln -s /var/projects/paperGame /var/www
 
 # flex sdk
 #
-cd /home/downloads
+cd /downloads
 sudo wget http://download.macromedia.com/pub/flex/sdk/flex_sdk_3.5.zip
-sudo rm -rf /usr/lib/flex_sdk_3.5
-sudo unzip flex_sdk_3.5.zip -d /usr/lib/flex_sdk_3.5
-sudo chmod -R a+rx /usr/lib/flex_sdk_3.5
+sudo unzip flex_sdk_3.5.zip -d /projects/flex_sdk_3
+sudo chmod -R a+rx /usr/lib/flex_sdk_3
 
-# haxe+neko
-#
-cd /home/downloads
-sudo wget http://haxe.org/file/hxinst-linux.tgz
-sudo tar -xf hxinst-linux.tgz
-sudo ./hxinst-linux
-
-# or
 #
 # haxe
 http://haxe.org/doc/build/haxe_ubuntu_build
-#
+
 # neko
 #
 http://haxe.org/doc/build/neko_linux
 
 # haxeserver
 #
-cd /home/projects
-svn co https://haxeserver.googlecode.com/svn/trunk haxeserver --username canab.ua --password gM9by4kJ5MB2
-cd /home/projects/haxeserver/build
+cd /projects
+svn co http://haxeserver.googlecode.com/svn/trunk haxeserver
+cd /projects/haxeserver/build
 chmod +x ./*.sh
 sudo cp crossdomain.xml /var/www
 
