@@ -1,8 +1,8 @@
 #!/bin/sh
 
 NAME=haxeserver
-PIDFILE=/var/run/$NAME.pid
-HOMEDIR=/var/projects/server
+PIDFILE=/var/projects/haxeServer/$NAME.pid
+HOMEDIR=/var/projects/haxeServer
 COMMAND="/usr/local/bin/neko $HOMEDIR/server.n"
 BUILD_ID=dontKillMe #for hudson
 
