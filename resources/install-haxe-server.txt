@@ -81,7 +81,7 @@ ps auxwww | grep neko
 # paperGame
 #
 cd /home/projects
-svn co http://svn.garbuz-studio.com:8080/svn/game_papergame papergame
+svn co http://svn.garbuz-studio.com/svn/game_papergame papergame
 cd /home/projects/papergame/build/
 chmod +x ./*.sh
 
