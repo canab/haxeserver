@@ -20,8 +20,8 @@ sudo mkdir /var/projects
 sudo chgrp deploy /var/projects/
 sudo chmod ug+rwx /var/projects/
 
-sudo ln -s /var/projects/haxeAdmin /var/www
-sudo ln -s /var/projects/paperGame /var/www
+sudo ln -s /var/projects/haxeadmin /var/www
+sudo ln -s /var/projects/papergame /var/www
 
 # flex sdk
 #

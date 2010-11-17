@@ -1,8 +1,8 @@
 #!/bin/sh
 
 NAME=policyserver
-PIDFILE=/var/run/$NAME.pid
-HOMEDIR=/home/projects/haxeserver/policyserver
+PIDFILE=/var/projects/haxeserver/$NAME.pid
+HOMEDIR=/projects/haxeserver/policyserver
 COMMAND="/usr/local/bin/neko $HOMEDIR/fpserver.n 173.203.115.146 843 crossdomain.xml"
 
 d_start() {
