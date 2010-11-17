@@ -37,6 +37,10 @@ http://haxe.org/doc/build/haxe_ubuntu_build
 # neko
 #
 http://haxe.org/doc/build/neko_linux
+#set permission to neko for open low ports
+#sudo chmod +s /usr/local/neko/neko
+#or
+#setcap 'cap_net_bind_service=+ep' /usr/local/neko/neko
 
 # haxeserver
 #
