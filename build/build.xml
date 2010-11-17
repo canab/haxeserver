@@ -30,7 +30,27 @@
 		</if>
 	</target>
 	
-	<target name="deploy-all" depends="build-all, deploy-server, deploy-admin"/>
+	<target name="deploy-all">
+		<antcall target="build-all"/>
+		<antcall target="stop-server"/>
+		<antcall target="deploy-server"/>
+		<antcall target="deploy-admin"/>
+		<antcall target="start-server"/>
+	</target>
+	
+	<target name="stop-server">
+		<exec executable="/etc/init.d/haxeserver" osfamily="unix" failonerror="true">
+			<arg line="stop"/>
+		</exec>
+	</target>
+
+	<target name="start-server">
+		<exec executable="/etc/init.d/haxeserver" osfamily="unix" failonerror="true">
+			<arg line="start"/>
+		</exec>
+	</target>
+	
+	
 	<target name="build-all" depends="build-server, build-admin"/>
 	
 	<target name="deploy-server" depends="build-server">

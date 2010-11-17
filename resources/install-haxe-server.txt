@@ -18,7 +18,7 @@ sudo chmod ug+rwx /projects
 
 sudo mkdir /var/projects
 sudo chgrp deploy /var/projects/
-sudo chmod ug+rwx /var/projects/
+sudo chmod ug+rwxs /var/projects/
 
 sudo ln -s /var/projects/haxeadmin /var/www
 sudo ln -s /var/projects/papergame /var/www
@@ -49,6 +49,16 @@ svn co http://haxeserver.googlecode.com/svn/trunk haxeserver
 cd /projects/haxeserver/build
 chmod +x ./*.sh
 sudo cp crossdomain.xml /var/www
+
+cp /projects/haxeserver/build/haxeserver /etc/init.d/haxeserver
+chgrp deploy /etc/init.d/haxeserver
+chmod ug+rwx /etc/init.d/haxeserver
+update-rc.d haxeserver defaults
+
+cp /projects/haxeserver/build/policyserver /etc/init.d/policyserver
+chgrp deploy /etc/init.d/policyserver
+chmod ug+rwx /etc/init.d/policyserver
+update-rc.d policyserver defaults
 
 # build haxeserver
 #
