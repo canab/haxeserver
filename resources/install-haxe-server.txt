@@ -17,8 +17,8 @@ sudo chgrp deploy /projects
 sudo chmod ug+rwx /projects
 
 sudo mkdir /var/projects
-sudo chgrp deploy /var/projects/
-sudo chmod ug+rwxs /var/projects/
+sudo chgrp -R deploy /var/projects/
+sudo chmod -R ug+rwxs /var/projects/
 
 sudo ln -s /var/projects/haxeadmin /var/www
 sudo ln -s /var/projects/papergame /var/www

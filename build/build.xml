@@ -53,7 +53,7 @@
 	
 	<target name="build-all" depends="build-server, build-admin"/>
 	
-	<target name="deploy-server" depends="build-server">
+	<target name="deploy-server">
 		<delete dir="${server.deploy.dir}"/>
 		<mkdir dir="${server.deploy.dir}"/>
 	 	<copy todir="${server.deploy.dir}">
@@ -61,7 +61,7 @@
 	 	</copy>
 	</target>
 	
-	<target name="deploy-admin" depends="build-admin">
+	<target name="deploy-admin">
 		<delete dir="${admin.deploy.dir}"/>
 		<mkdir dir="${admin.deploy.dir}"/>
 	 	<copy todir="${admin.deploy.dir}">
