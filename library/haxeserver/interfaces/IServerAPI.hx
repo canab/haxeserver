@@ -2,6 +2,9 @@
 
 interface IServerAPI
 {
+	//ping
+	function P():Void;
+	
 	//callService
 	function S(className:String, func:String, args:Array<Dynamic>):Dynamic;
 	

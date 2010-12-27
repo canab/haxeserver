@@ -5,6 +5,7 @@
 
 package haxeserver;
 
+import flash.errors.Error;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
 import flash.events.SecurityErrorEvent;
@@ -54,6 +55,24 @@ class RemoteConnection
 		remoteObjects = new Hash<RemoteObject>();
 		classMap = new Array<Class<Dynamic>>();
 	}
+	
+	public function ping():Void 
+	{
+		var success:Bool = true;
+		
+		try
+		{
+			serverAPI.P();
+		}
+		catch (e:Error)
+		{
+			errorMessage = e.message;
+			success = false;
+		}
+		
+		if (!success)
+			errorEvent.sendEvent();
+	}	
 	
 	public function setUserId(value:Int):Void
 	{
@@ -124,7 +143,15 @@ class RemoteConnection
 		socket.removeEventListener(Event.CONNECT, onConnect);
 		socket.removeEventListener(IOErrorEvent.IO_ERROR, onError);
 		socket.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onSequrityError);
-		socket.close();
+		
+		try
+		{
+			socket.close();
+		}
+		catch (e:Dynamic)
+		{
+		}
+			
 		remoteObjects = new Hash<RemoteObject>();
 		
 		Lib.current.removeEventListener(Event.ENTER_FRAME, processClienAPICalls);
