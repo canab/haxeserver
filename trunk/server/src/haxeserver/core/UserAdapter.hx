@@ -32,6 +32,11 @@ class UserAdapter implements IServerAPI
 		application = Application.instance;
 	}
 	
+	//ping
+	public function P():Void
+	{
+	}
+	
 	//callService
 	public function S(className:String, func:String, args:Array<Dynamic>):Dynamic
 	{
