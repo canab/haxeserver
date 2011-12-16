@@ -64,7 +64,7 @@ update-rc.d policyserver defaults
 #
 cd /home/projects/haxeserver/build
 svn up ..
-./build-server.sh
+./build-test-server.sh
 
 # start haxeserver
 #
