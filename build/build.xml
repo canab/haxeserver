@@ -6,29 +6,11 @@
 	
 	<property file="local.properties"/>
 	
-	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask">
-		<classpath>
-			<pathelement location="lib/svnant.jar"/>
-			<pathelement location="lib/svnClientAdapter.jar"/>
-			<pathelement location="lib/svnjavahl.jar"/>
-			<pathelement location="lib/svnkit.jar"/>
-		</classpath>
-	</taskdef>
 	<taskdef name="if" classname="ise.antelope.tasks.IfTask"
 		classpath="lib/AntelopeTasks_3.5.1.jar" />
-    <taskdef name="var" classname="ise.antelope.tasks.Variable"
+    
+	<taskdef name="var" classname="ise.antelope.tasks.Variable"
 		classpath="lib/AntelopeTasks_3.5.1.jar" />
-	
-	<target name="svn-update">
-		<if name="svn.update" value="true">
-			<svn javahl="false" svnkit="true" username="canab.ua" password="gM9by4kJ5MB2">
-				<update dir=".."/>
-			</svn>
-			<else>
-				<echo>disabled</echo>
-			</else>
-		</if>
-	</target>
 	
 	<target name="deploy-all">
 		<antcall target="build-all"/>
@@ -69,7 +51,7 @@
 	 	</copy>
 	</target>
 	
-	<target name="build-server" depends="svn-update">
+	<target name="build-server">
 		<delete dir="${output.server.dir}"/>
 		<mkdir dir="${output.server.dir}"/>
 		<mkdir dir="${output.server.dir}/log"/>
@@ -107,7 +89,7 @@
 		</exec>
 	</target>
 	
-	<target name="build-client-lib" depends="svn-update" description="Build client SWC library">
+	<target name="build-client-lib" description="Build client SWC library">
 		<delete dir="${output.client.dir}"/>
 		<mkdir dir="${output.client.dir}"/>
 		
@@ -125,26 +107,26 @@
 		</exec>
 	</target>
 	
-	<target name="build-admin" depends="svn-update, build-client-lib">
+	<target name="build-admin" depends="build-client-lib">
 		<delete dir="${output.admin.dir}"/>
 		<mkdir dir="${output.admin.dir}"/>
 		
-		<svn>
-			<status path="" revisionProperty="svn.revision"/>
-		</svn>
+		<tstamp>
+			<format property="build.number" pattern="ddMMyy-HH:mm"/>
+		</tstamp>
 		
 	 	<copy todir="${output.admin.dir}">
 	 		<fileset dir="html-template"/>
 	 	</copy>
 		
-		<replace file="${output.admin.dir}/index.html" token="{svn.revision}" value="${svn.revision}"/>
+		<replace file="${output.admin.dir}/index.html" token="{build.number}" value="${build.number}"/>
 		
 		<exec executable="${flex.compiler}" failonerror="true">
 			<arg line="../admin/src/Main.mxml"/>
 			<arg line="-define+=CONFIG::host,&quot;'${server.config.host}'&quot;"/>
 			<arg line="-define+=CONFIG::port,${server.config.port}"/>
 			<arg line="-define+=CONFIG::autologin,false"/>
-			<arg line="-define+=CONFIG::revision,${svn.revision}"/>
+			<arg line="-define+=CONFIG::revision,${build.number}"/>
 			<arg line="-library-path+=${output.client.dir}"/>
 			<arg line="-output=${output.admin.dir}/admin.swf"/>
 			<arg line="-debug=${admin.build.debug}"/>

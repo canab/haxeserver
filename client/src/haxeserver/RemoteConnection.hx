@@ -16,6 +16,7 @@ import haxe.remoting.SocketConnection;
 import haxelib.common.events.EventSender;
 import haxelib.common.utils.ArrayUtil;
 import haxelib.common.utils.ReflectUtil;
+import haxeserver.customprotocol.UnsizedSocketConnection;
 import haxeserver.so.RemoteObject;
 
 class ServerApi extends haxe.remoting.AsyncProxy<haxeserver.interfaces.IServerAPI>
@@ -119,7 +120,10 @@ class RemoteConnection
 		var context:Context = new Context();
 		clientAPI = new ClientAPI(this);
 		context.addObject("C", clientAPI);
-		var connection:SocketConnection = SocketConnection.create(socket, context);
+		
+		//var connection:SocketConnection = SocketConnection.create(socket, context);
+		var connection:SocketConnection = UnsizedSocketConnection.create(socket, context);
+		
 		serverAPI = new ServerApi(connection.S);
 		
 		Lib.current.addEventListener(Event.ENTER_FRAME, processClienAPICalls);

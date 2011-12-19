@@ -3,10 +3,10 @@
 	<compiler>
 		<define>
 			<name>CONFIG::host</name>
-<!--			<value>"localhost"</value>
-			<value>"test.garbuz-studio.com"</value>
--->			<value>"173.203.115.146"</value>
-		</define>
+			<value>"localhost"</value>
+<!--			<value>"test.garbuz-studio.com"</value>
+			<value>"173.203.115.146"</value>
+-->		</define>
 		<define>
 			<name>CONFIG::port</name>
 			<value>8081</value>

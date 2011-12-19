@@ -4,12 +4,13 @@
  */
 
 package haxeserver.test;
+import flash.Boot;
+import flash.Lib;
 import haxelib.test.AsincTest;
 import haxeserver.services.AdminService;
 
 class AdminServiceTest extends AsincTest
 {
-
 	public function new() 
 	{
 		super();

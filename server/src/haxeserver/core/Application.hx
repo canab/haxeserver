@@ -5,6 +5,7 @@
 package haxeserver.core;
 import haxe.remoting.Context;
 import haxe.remoting.SocketConnection;
+import haxeserver.customprotocol.UnsizedRemotingServer;
 import haxeserver.core.profiler.Profiler;
 import haxeserver.core.so.SharedObject;
 import neko.net.ThreadRemotingServer;
@@ -30,7 +31,8 @@ class Application
 	public var profiler(default, null):Profiler;
 	
 	private var idCounter:Int;
-	private var server:ThreadRemotingServer;
+	//private var server:ThreadRemotingServer;
+	private var server:UnsizedRemotingServer;
 	
 	public function new()
 	{
@@ -50,7 +52,8 @@ class Application
 	{
 		try
 		{
-			server = new ThreadRemotingServer();
+			//server = new ThreadRemotingServer();
+			server = new UnsizedRemotingServer();
 			server.initClientApi = initClientAPI;
 			server.clientDisconnected = clientDisconnected;
 			logger.info("Starting NekoServer at " + config.host + ':' + config.port);

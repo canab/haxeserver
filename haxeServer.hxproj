@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<project>
+<project version="2">
   <!-- Output SWF options -->
   <output>
-    <movie disabled="False" />
+    <movie outputType="Application" />
     <movie input="" />
     <movie path="server\bin\server.n" />
     <movie fps="0" />
     <movie width="0" />
     <movie height="0" />
-    <movie version="12" />
+    <movie version="0" />
+    <movie minorVersion="0" />
+    <movie platform="Neko" />
     <movie background="#FFFFFF" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
@@ -21,8 +23,7 @@
     <option directives="" />
     <option flashStrict="False" />
     <option mainClass="Main" />
-    <option override="False" />
-    <option verbose="False" />
+    <option enabledebug="False" />
     <option additional="" />
   </build>
   <!-- haxelib libraries -->
@@ -47,4 +48,6 @@
     <option testMovie="Custom" />
     <option testMovieCommand="run-server.cmd" />
   </options>
+  <!-- Plugin storage -->
+  <storage />
 </project>
