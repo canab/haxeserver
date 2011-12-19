@@ -7,6 +7,7 @@
 	<mx:Script>
 		<![CDATA[
 			import admin.AdminApplication;
+			
 			private function onCreationComplete():void 
 			{
 				AdminApplication.instance.initialize(this);

@@ -4,6 +4,7 @@
 	import flash.Boot;
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
+	import flash.Lib;
 	import haxeserver.RemoteConnection;
 	import mx.core.Application;
 
@@ -14,6 +15,7 @@
 	public class AdminApplication
 	{
 		static private var _instance:AdminApplication
+		
 		static public function get instance():AdminApplication
 		{ 
 			if (!_instance)
@@ -22,18 +24,16 @@
 			return _instance;
 		}
 		
-		public function get connection():RemoteConnection { return _connection; }
-		
 		private var _root:Main;
-		private var _haxeRoot:MovieClip = new MovieClip();
-		private var _connection:RemoteConnection = new RemoteConnection();
-		
+		private var _connection:RemoteConnection;
 		private var _currentScreen:DisplayObject;
 		
 		public function initialize(main:Main):void 
 		{
-			new Boot(_haxeRoot); // initialize haxe swc
 			_root = main;
+			_connection = new RemoteConnection();
+			new Boot();
+			Lib.current = new MovieClip();
 			new StartAppCommand().execute();
 		}
 		
@@ -48,6 +48,7 @@
 				_root.addChild(_currentScreen);
 		}
 		
+		public function get connection():RemoteConnection { return _connection; }
 	}
 
 }
