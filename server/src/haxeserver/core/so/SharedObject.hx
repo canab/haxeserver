@@ -15,6 +15,7 @@ class SharedObject
 {
 	public var id(default, null):String;
 	public var users(default, null):Array<UserAdapter>;
+	public var restoredUsers(default, null):Array<UserAdapter>;
 	public var maxUsers:Int;
 	public var name:String;
 	public var isWaiting(default, null):Bool;
@@ -30,6 +31,7 @@ class SharedObject
 		
 		id = remoteId;
 		users = new Array<UserAdapter>();
+		restoredUsers = new Array<UserAdapter>();
 		states = new Hash<State>();
 		maxUsers = 0;
 		isWaiting = true;
@@ -63,7 +65,7 @@ class SharedObject
 			if (users.length == maxUsers)
 				isWaiting = false;
 			
-			for (user in users)
+			for (user in restoredUsers)
 			{
 				if (user.id != adapter.id)
 					user.clientAPI.C(this.id, adapter.id);
@@ -82,6 +84,8 @@ class SharedObject
 	
 	private function restoreState(adapter:UserAdapter):Void
 	{
+		restoredUsers.push(adapter);
+		
 		var usersList:Array<Dynamic> = [];
 		for (user in users)
 		{
@@ -108,7 +112,7 @@ class SharedObject
 		currentUser = adapter;
 		
 		if (Application.instance.config.verboseLog)
-			log(actionData);
+			log(actionData.toString().substr(0, 255));
 		
 		// process action
 		var actionType:String = actionData[0];
@@ -123,7 +127,7 @@ class SharedObject
 		}
 			
 		// call action on each connected user
-		for (user in users)
+		for (user in restoredUsers)
 		{
 			user.clientAPI.A(this.id, actionData);
 		}
@@ -164,7 +168,8 @@ class SharedObject
 		
 		removeUserStates(adapter);
 		users.remove(adapter);
-		for (user in users)
+		restoredUsers.remove(adapter);
+		for (user in restoredUsers)
 		{
 			user.clientAPI.D(this.id, adapter.id);
 		}
@@ -187,7 +192,7 @@ class SharedObject
 		for (stateId in removedStates)
 		{
 			removeState(stateId);
-			for (user in users)
+			for (user in restoredUsers)
 			{
 				if (user != adapter)
 				{

@@ -4,6 +4,7 @@ import haxe.remoting.Context;
 import haxe.remoting.SocketConnection;
 import haxe.remoting.SocketProtocol;
 import haxe.remoting.SocketProtocol.Socket;
+import haxe.Stack;
 
 class UnsizedSocketConnection extends SocketConnection
 {
@@ -79,6 +80,10 @@ class UnsizedSocketConnection extends SocketConnection
 	#if (flash || js || neko)
 	public static function create( s : Socket, ?ctx : Context )
 	{
+		#if (neko)
+		s.setBlocking(true);
+		#end
+		
 		var data = {
 			protocol : new SocketProtocol(s,ctx),
 			results : new List(),
@@ -99,8 +104,7 @@ class UnsizedSocketConnection extends SocketConnection
 			function(e : flash.events.DataEvent)
 			{
 				var data = e.data;
-				var msgLen =
-				sc.__data.protocol.messageLength(data.charCodeAt(0),data.charCodeAt(1));
+				var msgLen = sc.__data.protocol.messageLength(data.charCodeAt(0),data.charCodeAt(1));
 				if ( msgLen == null || data.length != msgLen - 1 )
 				{
 					sc.__data.error("Invalid message header");
