@@ -76,11 +76,18 @@ class Application
 			context.addObject("S", adapter);
 			users.set(userId, adapter);
 			(cast connection).__user = adapter;
+			
+			connection.setErrorHandler(onConnectionError);
 		}
 		catch (e:Dynamic)
 		{
 			logger.exception(e);
 		}
+	}
+	
+	private function onConnectionError(e:Dynamic):Void
+	{
+		logger.exception(e);
 	}
 	
 	private function clientDisconnected(cannection:SocketConnection) 

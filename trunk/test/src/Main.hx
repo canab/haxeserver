@@ -33,7 +33,7 @@ class Main
 	static public var PORT:Int = 8081;
 	
 	static public var LOOP:Bool = true;
-	static public var TRY_COUNT:Int = 2;
+	static public var TRY_COUNT:Int = 3;
 	
 	static public var instance(default, null):Main;
 	
@@ -104,7 +104,8 @@ class Main
 	
 	private function onConnect(sender:RemoteConnection):Void
 	{
-		trace('Connected to ' + sender.host + ':' + sender.port);
+		trace('Connected to ' + sender.host + ':' + sender.port
+			+ " userId=" + sender.userId);
 		if (connection1.connected
 			&& connection2.connected
 			&& connection3.connected)

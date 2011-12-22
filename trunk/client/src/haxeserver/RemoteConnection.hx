@@ -51,8 +51,8 @@ class RemoteConnection
 		id = idCounter++;
 		connected = false;
 		connecting = false;
-		connectEvent = new EventSender<RemoteConnection>(this);
-		errorEvent = new EventSender<RemoteConnection>(this);
+		connectEvent = new EventSender(this);
+		errorEvent = new EventSender(this);
 		remoteObjects = new Hash<RemoteObject>();
 		classMap = new Array<Class<Dynamic>>();
 	}

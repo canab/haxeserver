@@ -12,6 +12,7 @@ import haxeserver.test.data.SampleCommand;
 
 class SOBigDataTest extends AsincTest, implements IRemoteClient
 {
+	private static var dataSize:Int = 10000;
 	private var remote:RemoteObject;
 	private var data:String;
 	
@@ -22,7 +23,7 @@ class SOBigDataTest extends AsincTest, implements IRemoteClient
 	
 	override public function initialize():Void
 	{
-		var remoteId:String = "BaseTest" + Main.instance.connection1.userId;
+		var remoteId:String = "SOBigDataTest" + Main.instance.connection1.userId;
 		remote = new RemoteObject(remoteId);
 		remote.connect(Main.instance.connection1, this);
 	}
@@ -31,10 +32,17 @@ class SOBigDataTest extends AsincTest, implements IRemoteClient
 	
 	public function onReady():Void
 	{
-		data = createData(10000);
+		data = createData(dataSize);
 		var command:SampleCommand = new SampleCommand();
 		command.text = data;
 		remote.sendCommand(command);
+	}
+	
+	public function onCommand(command:Dynamic):Void
+	{
+		assertEquals(cast(command, SampleCommand).text, data);
+		remote.disconnect();
+		dispatchComplete();
 	}
 	
 	private function createData(size:Int):String 
@@ -47,13 +55,6 @@ class SOBigDataTest extends AsincTest, implements IRemoteClient
 		}
 		
 		return data;
-	}
-	
-	public function onCommand(command:Dynamic):Void
-	{
-		assertEquals(cast(command, SampleCommand).text, data);
-		remote.disconnect();
-		dispatchComplete();
 	}
 	
 	/* INTERFACE haxeserver.so.IRemoteClient */
