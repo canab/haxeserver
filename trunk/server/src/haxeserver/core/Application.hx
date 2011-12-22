@@ -56,7 +56,10 @@ class Application
 			server = new UnsizedRemotingServer();
 			server.initClientApi = initClientAPI;
 			server.clientDisconnected = clientDisconnected;
-			logger.info("Starting NekoServer at " + config.host + ':' + config.port);
+			logger.info("================");
+			logger.info("== HaxeServer ==");
+			logger.info("================");
+			logger.info("Starting server at " + config.host + ':' + config.port);
 			server.run(config.host, config.port);
 		}
 		catch (e:Dynamic)
