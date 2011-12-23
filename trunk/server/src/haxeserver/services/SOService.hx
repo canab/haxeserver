@@ -25,8 +25,6 @@ class SOService extends ServiceBase
 	
 	public function createSharedObject(soPrefix:String, maxUsers:Int = 0, name:String = null):String
 	{
-		trace(maxUsers);
-		
 		soMutex.acquire();
 		
 		var remoteId:String = getNextRemoteId(soPrefix);
