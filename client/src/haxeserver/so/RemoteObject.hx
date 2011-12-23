@@ -250,7 +250,6 @@ class RemoteObject
 		else
 		{
 			sendAction([SOActionTypes.COMMAND, typeId, SOUtil.getObjectData(command)]);
-			trace("action sent");
 		}
 	}
 	
