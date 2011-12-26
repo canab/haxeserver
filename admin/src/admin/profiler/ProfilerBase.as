@@ -38,10 +38,10 @@ package admin.profiler
 				var item:Object = {};
 				item.id = key;
 				item.callCount = itemData.shift();
-				item.totalTime = itemData.shift();
-				item.minTime = itemData.shift();
-				item.maxTime = itemData.shift();
-				item.averageTime = item.totalTime / item.callCount;
+				item.totalTime = String(itemData.shift()).substr(0, 6);
+				item.minTime = String(itemData.shift()).substr(0, 6);
+				item.maxTime = String(itemData.shift()).substr(0, 6);
+				item.averageTime = String(item.totalTime / item.callCount).substr(0, 6);
 				newItems.push(item);
 			}
 			items = new ArrayList(newItems);

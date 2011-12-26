@@ -32,8 +32,7 @@
 		{
 			_root = main;
 			_connection = new RemoteConnection();
-			new Boot();
-			Lib.current = new MovieClip();
+			haxe.init(new MovieClip());
 			new StartAppCommand().execute();
 		}
 		
