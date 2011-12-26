@@ -1,5 +1,7 @@
 package ;
 
+import flash.display.DisplayObject;
+import flash.display.Shape;
 import flash.events.Event;
 import flash.Lib;
 import haxelib.test.Test;
@@ -43,6 +45,7 @@ class Main
 	public var instanceId(default, null):String;
 	
 	private var suite:TestSuite;
+	private var frameDispatcher:DisplayObject;
 	
 	static function main() 
 	{
@@ -51,6 +54,7 @@ class Main
 	
 	public function new():Void 
 	{
+		frameDispatcher = new Shape();
 		initialize();
 	}
 	
@@ -110,13 +114,13 @@ class Main
 			&& connection2.connected
 			&& connection3.connected)
 		{
-			Lib.current.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			frameDispatcher.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 	}
 	
 	private function onEnterFrame(e:Event):Void 
 	{
-		Lib.current.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+		frameDispatcher.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		createTests();
 	}
 	
@@ -128,12 +132,12 @@ class Main
 		else
 			trace('FAILED');
 			
-		Lib.current.addEventListener(Event.ENTER_FRAME, repeat);
+		frameDispatcher.addEventListener(Event.ENTER_FRAME, repeat);
 	}
 	
 	private function repeat(e:Event):Void 
 	{
-		Lib.current.removeEventListener(Event.ENTER_FRAME, repeat);
+		frameDispatcher.removeEventListener(Event.ENTER_FRAME, repeat);
 		connection1.disconnect();
 		connection2.disconnect();
 		connection3.disconnect();

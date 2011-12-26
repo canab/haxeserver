@@ -5,6 +5,8 @@
 
 package haxeserver;
 
+import flash.display.DisplayObject;
+import flash.display.Shape;
 import flash.errors.Error;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
@@ -45,16 +47,19 @@ class RemoteConnection
 	
 	private var socket:Socket;
 	private var clientAPI:ClientAPI;
+	private var frameDispatcher:DisplayObject;
 	
 	public function new() 
 	{
 		id = idCounter++;
+		frameDispatcher = new Shape();
 		connected = false;
 		connecting = false;
 		connectEvent = new EventSender(this);
 		errorEvent = new EventSender(this);
 		remoteObjects = new Hash<RemoteObject>();
 		classMap = new Array<Class<Dynamic>>();
+		
 	}
 	
 	public function ping():Void 
@@ -126,7 +131,7 @@ class RemoteConnection
 		
 		serverAPI = new ServerApi(connection.S);
 		
-		Lib.current.addEventListener(Event.ENTER_FRAME, processClienAPICalls);
+		frameDispatcher.addEventListener(Event.ENTER_FRAME, processClienAPICalls);
 	}
 	
 	private function processClienAPICalls(e:Event):Void 
@@ -158,7 +163,7 @@ class RemoteConnection
 			
 		remoteObjects = new Hash<RemoteObject>();
 		
-		Lib.current.removeEventListener(Event.ENTER_FRAME, processClienAPICalls);
+		frameDispatcher.removeEventListener(Event.ENTER_FRAME, processClienAPICalls);
 	}
 	
 	private function onSequrityError(e:SecurityErrorEvent):Void 
