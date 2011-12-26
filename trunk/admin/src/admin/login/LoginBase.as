@@ -1,6 +1,6 @@
 ﻿package admin.login
 {
-	import common.utils.StringUtil;
+	import actionlib.common.utils.StringUtil;
 	import mx.containers.Canvas;
 	import mx.controls.Label;
 	import mx.controls.TextInput;

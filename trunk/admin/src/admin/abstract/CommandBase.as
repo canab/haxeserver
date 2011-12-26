@@ -1,7 +1,7 @@
 package admin.abstract
 {
-	import common.commands.ICancelableCommand;
-	import common.events.EventSender;
+	import actionlib.common.commands.ICancelableCommand;
+	import actionlib.common.events.EventSender;
 	
 	/**
 	 * ...
@@ -27,7 +27,7 @@ package admin.abstract
 		
 		protected function dispathComplete():void 
 		{
-			_completeEvent.sendEvent();
+			_completeEvent.dispatch();
 		}
 		
 		public function get completeEvent():EventSender

@@ -1,8 +1,9 @@
 package admin.abstract
 {
+	import actionlib.common.events.EventManager;
+	import actionlib.common.events.EventSender;
 	import admin.AdminApplication;
-	import common.events.EventManager;
-	import common.events.EventSender;
+	
 	/**
 	 * ...
 	 * @author canab
