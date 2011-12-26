@@ -1,2 +1,3 @@
 cd build
-ant -propertyfile local.properties
+call ant -propertyfile local.properties
+pause

@@ -31,7 +31,7 @@
 			text="Connecting..."
 			visible="{!inputEnabled}"
 		/>
-		<mx:Label text="{'revision: #' + CONFIG::revision}" />
+		<mx:Label text="{'version: ' + CONFIG::version}" />
 	</mx:VBox>
 	
 </login:LoginBase>

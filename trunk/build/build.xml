@@ -126,7 +126,7 @@
 			<arg line="-define+=CONFIG::host,&quot;'${server.config.host}'&quot;"/>
 			<arg line="-define+=CONFIG::port,${server.config.port}"/>
 			<arg line="-define+=CONFIG::autologin,false"/>
-			<arg line="-define+=CONFIG::revision,${build.number}"/>
+			<arg line="-define+=CONFIG::version,&quot;'${build.number}'&quot;"/>
 			<arg line="-library-path+=${output.client.dir}"/>
 			<arg line="-output=${output.admin.dir}/admin.swf"/>
 			<arg line="-debug=${admin.build.debug}"/>
